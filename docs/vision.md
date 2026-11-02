@@ -1,0 +1,53 @@
+# Project charter
+
+Status: established directions supplied in the original handover and reconciled with the user's Architecture & Design Update on 2026-10-26. See [ADR 0004](decisions/0004-gherkin-business-specification-authority.md) for the explicit change in business-specification authority. Proposals elsewhere remain unapproved unless expressly identified as agreed.
+
+## Purpose
+
+AAATDD is an open-source approach and prospective framework for AI-assisted software changes. It helps people define observable outcomes, preserve the authority of approved acceptance criteria, and assess independently produced verification evidence.
+
+Its principles are to specify what we want, verify that we received it, and proceed in small, safe steps. Human attention should shift toward behaviour, consequential design choices, trustworthy acceptance tests and credible evidence. Tests do not prove complete correctness or remove risk-based code review, security review or exploratory testing.
+
+AI may propose requirements, executable checks, and amendments. AI must not independently change approved acceptance criteria or redefine success to accommodate its implementation.
+
+## Established design directions
+
+- Gherkin is the authoritative executable specification for business behaviour. OpenAPI, Pact, fitness functions and other tests provide complementary verification under the common contract. Supporting Markdown records rationale and context without duplicating the functional specification. This explicitly revises the original equal-DSL direction.
+- Reuse established Gherkin/Cucumber infrastructure. Keep runner adapters, which discover/execute/collect results, distinct from technical protocol drivers. Portable Gherkin does not imply portable step implementations.
+- Explore a specification manifest, adapter contract, and verification evidence. Missing, skipped, unbound, blocked, and failed checks must be accounted for; process success alone does not establish verification.
+- Use the verification outcomes agreed in [ADR 0009](decisions/0009-distinguish-requirement-failure-from-invalid-verification.md): `PASS` for valid complete satisfaction, `FAIL` for trustworthy demonstrated requirement failure, and `INDETERMINATE` for missing/invalid verification without an established trustworthy failure. Only `PASS` permits completion. [ADR 0010](decisions/0010-preserve-failures-across-explicit-reruns.md) disables automatic scenario retries initially and preserves unresolved failures across explicit reruns. Detailed encodings and general retry/waiver policy remain open.
+- Protect the effective test oracle: Gherkin, bindings, assertions, hooks, argument transformations, fixtures, observers, relevant drivers, runner configuration, relevant dependencies and policy. The verifier and its execution configuration also need protection. Integrity checks alone do not establish semantic correctness.
+- For the initial experiment, [ADR 0012](decisions/0012-bound-the-initial-oracle-to-harness-inputs.md) bounds the oracle to a dedicated acceptance harness plus identified external execution inputs, with the SUT assessed separately. Actual inventory and amendment mechanisms remain open.
+- Keep stable logical requirement/scenario identities separate from approved content revision, implementation/environment identity and individual run identity, as agreed in [ADR 0011](decisions/0011-separate-logical-baseline-and-run-identities.md). Retained IDs never carry approval across changed authoritative content; concrete encodings remain open.
+- Use `DRAFT`, `APPROVED` and `SUPERSEDED` conceptual baseline revision states under [ADR 0013](decisions/0013-separate-baseline-authority-from-verification.md). Approval establishes immutable scoped expectations before tests pass; verification satisfaction remains separate. Amendments create new drafts; explicit supersession preserves history and obligations outside the replaced scope. Concrete mechanics remain open.
+- Require a positive control and targeted negative controls before accepting the first harness's validation evidence under [ADR 0014](decisions/0014-require-targeted-first-harness-validation-controls.md). Distinguish behavioural sensitivity, oracle integrity and evidence validity; keep controls separate from ordinary product acceptance results. Concrete variants and broader revalidation policy remain open.
+- Prefer black-box outcome observations. Privileged setup may establish preconditions; it does not authorise privileged outcome verification. Privileged observation requires narrow, authorised exceptions with scope, provider/version, permissions, environment and limitations. AI cannot approve its own exception.
+- Report verification assurance, observation boundary and portability separately. An authorised privileged observer does not automatically reduce protected L2 execution to L1. Unavailable observations cannot prove absence.
+- Support individual developers and teams through progressively stronger protection without changing the underlying verification model.
+- Keep correctness independent of any AI vendor, model, prompt format, or agent SDK.
+- Include applicable architectural, security, reliability, performance, compatibility, maintainability, accessibility, and observability fitness functions.
+- Git is the authoritative source of project knowledge. Other interfaces and indexes are projections or integrations. Reuse and index existing artifacts by relevance; retain approval/evidence provenance and content-addressed references where useful. Treat MCP-retrieved material as untrusted information, never approval authority. Retention and redaction details remain open.
+- Adapt the workflow to change type and risk. Every change needs a reason and an appropriate means of evaluating success. Business features and defects use Gherkin acceptance expectations; refactors and chores may use existing regression, compatibility, fitness and review evidence. Labels cannot authorise verification downgrades, and not every refactor needs a new numerical fitness metric. Exact sufficiency policy remains open.
+- Explore portable specialist roles and skills without requiring multiple agents.
+- Validate through a small end-to-end example, with .NET Orders API and Reqnroll currently preferred, including isolated setup, public and specifically approved privileged observations, structured evidence and attempted assertion weakening. The proposed slice remains unapproved for implementation.
+- Validate the initial complete local experiment as explicitly L1/advisory, followed by protected L2 execution before making independent-assurance claims, as accepted in [ADR 0005](decisions/0005-validate-l1-before-protected-l2.md). Running the SUT separately is part of that staging, not proof of isolation.
+- The initial example's bounded business intent is agreed in [ADR 0006](decisions/0006-bound-the-initial-orders-example.md) and expressed in [its Gherkin feature](requirements/order-stock-validation.feature). Its executable baseline and implementation remain unapproved.
+- The example's public HTTP outcome/stock observations and conditional scoped database observation are agreed in [ADR 0007](decisions/0007-use-public-outcomes-with-scoped-order-observation.md). Its concrete provider and privileged-observation exception remain unapproved.
+- The sample HTTP mapping is agreed in [ADR 0015](decisions/0015-agree-initial-sample-http-mapping.md): `POST /orders` with explicit `201` acceptance or `409` insufficient-stock bodies, and `GET /products/{sku}/stock` returning `200`, with the agreed fields and correlation checks. Detailed wire validation remains pending.
+- [ADR 0016](decisions/0016-observe-completed-sample-operations.md) requires completed sample acceptance/rejection before responding, followed by committed-state observations with a fresh observer read transaction. No polling hides incomplete work; absence is bounded to the declared read point. Concrete execution settings and general temporal semantics remain open.
+- [ADR 0017](decisions/0017-validate-fixture-readiness-before-submission.md) requires seeded-store/public-stock readiness checks against the feature before submission, with setup distinct from outcome assertions and a wrong-seed control demonstrating blocked action. Preserve independently established product failures. Concrete validation and broader fixture contracts remain open.
+- [ADR 0018](decisions/0018-inspect-all-scenario-owned-orders.md) requires observing the complete scenario-owned order population and checking expected counts/fields and accepted-response correspondence. An expected-request filter must not hide incorrect rows. Concrete queries and the observer exception remain unapproved.
+- [ADR 0019](decisions/0019-require-confirmed-scenario-teardown.md) requires cleanup attempts within established scenario ownership and confirmed required teardown for `PASS`. Preserve behavioural results and diagnostics; cleanup gaps do not erase trustworthy product failures. Concrete ownership, cleanup and retention mechanics remain open.
+- A disposable named SQLite file per scenario is selected for this sample in [ADR 0008](decisions/0008-use-disposable-sqlite-per-scenario.md). AAATDD remains independent of the sample's storage engine; concrete dependencies and implementation are not approved.
+
+## Provisional details
+
+L1 local advisory verification, L2 protected team CI, and future L3 attestation are retained design directions in the update. Exact controls and guarantees need definition; these are not SLSA levels.
+
+The hybrid model of Gherkin, thin project bindings, reusable protocol capabilities and SUT is provisional. Fixture Provider and Observation Provider contracts are conceptual; their exact APIs and observation categories remain unsettled. Start with the smallest exercised capabilities.
+
+Reqnroll is favoured first; a second Gherkin runner can later test portability. JSON Schema, Cucumber Messages/CTRF integration details, gate encodings, lifecycle storage/transition mechanics, implementation language, packaging and external integrations remain unsettled. Temporal semantics, assertion evidence, concrete sensitivity controls and broader adequacy/revalidation policy need explicit design. See the [reconciliation and proposed slices](architecture/2026-10-26-design-reconciliation.md).
+
+## Intended outcome to validate
+
+A developer can explain which approved behaviours were checked, by which approved oracle, against which implementation and environment, with what unresolved evidence gaps. Whether this reduces review effort without increasing escaped defects remains an empirical question.
