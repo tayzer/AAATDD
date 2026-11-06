@@ -11,6 +11,8 @@ $config = Join-Path $workspace 'NuGet.Local.Config'
 $previousCache = $env:NUGET_PACKAGES
 $previousCliHome = $env:DOTNET_CLI_HOME
 $previousGlobalToolPath = $env:DOTNET_ADD_GLOBAL_TOOLS_TO_PATH
+$previousTelemetry = $env:DOTNET_CLI_TELEMETRY_OPTOUT
+$previousCertificate = $env:DOTNET_GENERATE_ASPNET_CERTIFICATE
 $checks = [Collections.Generic.List[object]]::new()
 Push-Location $workspace
 try {
@@ -19,6 +21,8 @@ try {
     # A reused CLI home can execute an earlier development build of the same version.
     $env:DOTNET_CLI_HOME = Join-Path $workspace 'dotnet-home'
     $env:DOTNET_ADD_GLOBAL_TOOLS_TO_PATH = 'false'
+    $env:DOTNET_CLI_TELEMETRY_OPTOUT = '1'
+    $env:DOTNET_GENERATE_ASPNET_CERTIFICATE = 'false'
     & $Dotnet new tool-manifest | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'Tool manifest creation failed.' }
     & $Dotnet tool install Tada.Cli --version $version --configfile $config | Out-Host
@@ -139,5 +143,5 @@ public sealed record EchoRequest(string Message);
     $report = [pscustomobject]@{ workspace=$workspace; packageSha256=(Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $feed "Tada.Cli.$version.nupkg")).Hash; checks=@($checks); developmentRuns=@($red.runId,$run.runId,$refactorRun.runId); unchangedRerun=@{before=$refactorRun.runId;after=$repeat.runId;sameImplementation=$true;sameEnvironment=$true}; failureHistory=@{failure=$historyFailure.runId;nativePassingRerun=$historyRepeat.runId;nativeRerunExit=0;tadaRerunOutcome=$historyRepeat.outcome;restoredImplementation=$restored.runId}; maintenance='Behaviour-preserving refactor and warn-as-error API build passed without new business scenarios'; contextCommit=$contextCommit; context='handoff committed and read back through Git with RED/GREEN/refactor run identities'; limitation='Fresh package cache and new project on this host; not a clean-machine or requester/Codex acceptance test.' }
     [IO.File]::WriteAllText((Join-Path $workspace 'validation.json'), ($report | ConvertTo-Json -Depth 25), [Text.UTF8Encoding]::new($false))
     Write-Host "Installed-package onboarding evidence: $workspace/validation.json"
-} finally { $env:NUGET_PACKAGES=$previousCache; $env:DOTNET_CLI_HOME=$previousCliHome; $env:DOTNET_ADD_GLOBAL_TOOLS_TO_PATH=$previousGlobalToolPath; Pop-Location }
+} finally { $env:NUGET_PACKAGES=$previousCache; $env:DOTNET_CLI_HOME=$previousCliHome; $env:DOTNET_ADD_GLOBAL_TOOLS_TO_PATH=$previousGlobalToolPath; $env:DOTNET_CLI_TELEMETRY_OPTOUT=$previousTelemetry; $env:DOTNET_GENERATE_ASPNET_CERTIFICATE=$previousCertificate; Pop-Location }
 exit 0

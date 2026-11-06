@@ -22,10 +22,14 @@ if (([IO.File]::ReadAllLines((Join-Path $extracted 'SHA256SUMS')) -join "`n") -n
 $previousCache = $env:NUGET_PACKAGES
 $previousCliHome = $env:DOTNET_CLI_HOME
 $previousGlobalToolPath = $env:DOTNET_ADD_GLOBAL_TOOLS_TO_PATH
+$previousTelemetry = $env:DOTNET_CLI_TELEMETRY_OPTOUT
+$previousCertificate = $env:DOTNET_GENERATE_ASPNET_CERTIFICATE
 $userPathBefore = [Environment]::GetEnvironmentVariable('Path', 'User')
 $env:NUGET_PACKAGES = Join-Path $workspace 'fresh package cache'
 $env:DOTNET_CLI_HOME = Join-Path $workspace 'fresh cli home'
 $env:DOTNET_ADD_GLOBAL_TOOLS_TO_PATH = 'false'
+$env:DOTNET_CLI_TELEMETRY_OPTOUT = '1'
+$env:DOTNET_GENERATE_ASPNET_CERTIFICATE = 'false'
 $application = Join-Path $workspace 'My API'
 New-Item -ItemType Directory -Path $application -Force | Out-Null
 $instructions = Join-Path $application 'AGENTS.md'
@@ -50,4 +54,4 @@ try {
     $report = [pscustomobject]@{archive=$archivePath;archiveSha256=(Get-FileHash -LiteralPath $archivePath).Hash.ToLowerInvariant();packageSha256=(Get-FileHash -LiteralPath (Join-Path $extracted $manifest.package)).Hash.ToLowerInvariant();workspace=$workspace;version=$manifest.version;checks=@($checks);existingInstructionsPreserved=$true;repeatedInitCreatesNothing=$true;isolatedCliAndPackageCaches=$true;pathsContainSpaces=$true;limitation='Package transport/install/init on this host; API workflows, clean-machine validation and requester acceptance are separate.'}
     $report | ConvertTo-Json -Depth 15 | Set-Content -LiteralPath (Join-Path $workspace 'validation.json') -Encoding utf8
     Write-Host "Bundle installation evidence: $workspace/validation.json"
-} finally { $env:NUGET_PACKAGES=$previousCache; $env:DOTNET_CLI_HOME=$previousCliHome; $env:DOTNET_ADD_GLOBAL_TOOLS_TO_PATH=$previousGlobalToolPath; Pop-Location }
+} finally { $env:NUGET_PACKAGES=$previousCache; $env:DOTNET_CLI_HOME=$previousCliHome; $env:DOTNET_ADD_GLOBAL_TOOLS_TO_PATH=$previousGlobalToolPath; $env:DOTNET_CLI_TELEMETRY_OPTOUT=$previousTelemetry; $env:DOTNET_GENERATE_ASPNET_CERTIFICATE=$previousCertificate; Pop-Location }
