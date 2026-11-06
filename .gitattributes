@@ -1,5 +1,6 @@
 *.feature -text
 *.cs text eol=lf
+*.c text eol=lf
 *.csproj text eol=lf
 *.json text eol=lf
 *.md text eol=lf

@@ -4,7 +4,7 @@ Status: **IMPLEMENTATION AUTHORISED; RELEASE INCOMPLETE**. The active goal super
 
 ## User experience and evidence
 
-- [ ] Install a versioned repository-local `tada` tool from a packaged artifact on a fresh supported environment.
+- [x] Install a versioned repository-local `tada` tool from a packaged artifact on a fresh supported automated environment; requester-led installation remains separate.
 - [x] Prepare a development download bundle with install guidance, licences, notices and checksums; validate extracted-feed installation and corruption rejection.
 - [x] Initialise a new repository without overwriting existing instructions or work.
 - [ ] Agent-neutral guidance supports collaborative discovery and human-approved Gherkin, meaningful RED/GREEN, small increments and regression verification.
@@ -23,7 +23,7 @@ Status: **IMPLEMENTATION AUTHORISED; RELEASE INCOMPLETE**. The active goal super
 - [ ] Context survives a new agent session using concise Git-native records with provenance and supersession.
 - [ ] Quickstart reproduces a useful install-to-API workflow, including quality checks and failure recovery.
 - [x] Test path handling, canonicalisation, approval races, process failure, cancellation, timeouts, teardown and evidence integrity.
-- [ ] CI validates the final release source and package; licence and dependency notices match redistributed content.
+- [x] Hosted CI validates the recorded source/package checkpoint; licence and dependency notices match redistributed content. Revalidate the selected publication SHA before release.
 - [x] Document local advisory L1 limitations and actual supported runner/protocol/platform versions.
 - [ ] User acceptance: requester installs TADA and uses it with Codex to build a simple API from scratch.
 
@@ -37,6 +37,8 @@ Alpha.7 uses schema-6 baselines with `evaluated-dotnet-build-v3`, `msbuild-tasks
 
 The [local source/distribution checkpoint](validation/release-packaging.md) adds an isolated source rebuild, fresh compiler bootstrap, full API controls and installable download ZIP. Windows Git long-path support is explicit and validation avoids global-tool PATH updates. This host remains distinct from a clean supported machine.
 
-Next work: final release/provenance review, final CI and clean-machine/user acceptance. The CI workflow includes the pinned native-toolchain cache, unchanged-rerun/real-history controls, task-byte environment control and download-bundle installation, but has not yet run on the final release source.
+The [hosted checkpoint](validation/hosted-ci.md) records successful push and proposed-merge validation for public head `13c71f1`. Its downloaded package identifies that exact source commit. The correspondence audit checks 23 retained run inventories and 3,159 file digests, the redistributed DLL set, notices and bundle checksums. Hosted Windows installation is automated supported-environment evidence; it does not establish requester experience or a genuinely fresh Codex session. Historical local packaging reports retain their original source/package identities.
+
+Next work: requester-led install/discovery/API development, maintenance and a genuinely fresh agent session; resolve findings, then validate the selected publication SHA and obtain applicable merge/release authority. Keep the complete automatic execution-boundary claim unproven under the documented declared-trust policy. The CI workflow includes the pinned native-toolchain cache, unchanged-rerun/real-history controls, task-byte environment control and download-bundle installation.
 
 Git round-trip validation now passes, including generated attributes and exact-byte approval checks after clone. Actual new-agent context use and requester/Codex acceptance remain separate unverified experience gates.

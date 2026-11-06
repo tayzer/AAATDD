@@ -1,6 +1,6 @@
 # Local source and distribution checkpoint
 
-Status: **LOCAL PREVIEW VALIDATED; RELEASE INCOMPLETE**. The [machine-readable record](release-packaging.json) links the source snapshot, package, download bundle and control reports. No public source upload, GitHub release or NuGet publication is established by this checkpoint.
+Status: **LOCAL PREVIEW VALIDATED; RELEASE INCOMPLETE**. The [machine-readable record](release-packaging.json) links the historical local source snapshot, package, download bundle and control reports. The later [hosted checkpoint](hosted-ci.md) records the approved public source upload and successful hosted validation with distinct package/bundle identities. Neither checkpoint establishes a GitHub release or NuGet publication.
 
 ## Distribution
 
@@ -22,4 +22,4 @@ Prepare the review branch in the owned source snapshot, preserving the original 
 
 The public repository's main branch still contained only the original design commit when checked. The public NuGet index returned no `Tada.Cli` package at the recorded observation time; this neither reserves that identity nor grants publication permission.
 
-Remaining work includes final-source hosted CI, clean supported-environment validation, the [open provenance boundary](provenance-audit.md), genuine fresh-agent continuation and requester/Codex API acceptance. Automated fixture approvals remain separate from human business acceptance.
+The later hosted checkpoint supersedes the pending remote-CI and automated supported-environment installation findings for its recorded source commit. Remaining work includes the [open provenance boundary](provenance-audit.md), genuine fresh-agent continuation and requester/Codex install-to-API acceptance. Revalidate the selected publication SHA before release. Automated fixture approvals remain separate from human business acceptance.

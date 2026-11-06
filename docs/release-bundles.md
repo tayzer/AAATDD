@@ -2,7 +2,7 @@
 
 The download bundle lets an application developer try the packaged tool without building TADA or downloading a C compiler. It contains a local NuGet feed, installation/agent-start guidance, TADA's MIT licence, the package's third-party notices, a file manifest and SHA-256 checksums.
 
-This remains a development preview. Local validation does not establish clean-machine installation, requester acceptance or final-source remote CI. No public feed or GitHub release is assumed. Package metadata can record a parent Git commit when built from a dirty working tree; that commit alone does not identify the uncommitted implementation. Final release artifacts must come from the validated final source commit.
+This remains a development preview. The [hosted checkpoint](validation/hosted-ci.md) records automated Windows installation and API controls for an exact source commit. Requester acceptance remains pending. No public feed or GitHub release is assumed. Package metadata can record a parent Git commit when built from a dirty working tree; that commit alone does not identify the uncommitted implementation. Final release artifacts must come from the validated final source commit.
 
 ## Prepare and check a bundle
 

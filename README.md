@@ -12,7 +12,7 @@ The [alpha.7 checkpoint](docs/validation/increment-07.md) records 111 passing fo
 
 The initial supported stack is Windows x64/.NET 10 with Reqnroll/MSTest/MTP. The active [autonomous-release instruction](docs/decisions/0041-authorise-autonomous-release-implementation.md) authorises implementation and routine decisions, superseding the earlier design-only boundary. Human business acceptance, preserved oracle integrity and honest L1 claims still apply.
 
-The verifier uses C#/.NET 10, packaged as the `Tada.Cli` repository-local .NET tool. Source licence: [MIT](LICENSE). A local package installs successfully; final dependency/attribution review, clean-machine validation and publication remain incomplete.
+The verifier uses C#/.NET 10, packaged as the `Tada.Cli` repository-local .NET tool. Source licence: [MIT](LICENSE). [Hosted Windows validation](docs/validation/hosted-ci.md) passes package installation, API controls and redistribution checks at the recorded source commit. Requester-led installation, useful API development and a genuinely fresh agent session remain required before release. No GitHub release or NuGet package has been published.
 
 Run `tada init`, then read `.tada/WORKFLOW.md`. The CLI provides `tada baseline prepare`, `tada baseline review`, `tada baseline approve`, `tada run` and `tada verify`. Chores and refactors use proportionate existing checks rather than mandatory new business scenarios. Store useful session handoff in `.tada/context.md`. Historical ADRs and probe evidence retain the earlier AAATDD name.
 
