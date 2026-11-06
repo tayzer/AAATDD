@@ -25,6 +25,8 @@ Chores and refactors use proportionate checks without invented business scenario
 
 Keep unrelated dirty work intact. Do not publish packages, merge or change remote access merely to make a checklist green. The final user/Codex install-to-API acceptance is separate from automated validation.
 
+The user explicitly authorised ongoing TADA code, test, documentation and CI updates on `codex/alpha-release-validation` for draft PR #1. Continue scoped delivery and CI repair there without repeated approval questions. [ADR 0041](docs/decisions/0041-authorise-autonomous-release-implementation.md) records the grant; merge and release/package publication remain separate gates.
+
 ## Communication
 
 Use concise caveman-style chat by default. Keep persisted documentation, code and warnings in clear normal prose.
