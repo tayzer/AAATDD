@@ -1,0 +1,1 @@
+<Project><PropertyGroup><RestorePackagesWithLockFile>true</RestorePackagesWithLockFile><ReqnrollUseIntermediateOutputPathForCodeBehind>true</ReqnrollUseIntermediateOutputPathForCodeBehind><UseSharedCompilation>false</UseSharedCompilation></PropertyGroup></Project>

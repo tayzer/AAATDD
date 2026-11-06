@@ -1,0 +1,156 @@
+{
+  "targetFramework": "net10.0",
+  "sdk": "10.0.403",
+  "candidateLockSHA256": "C02E120835549E8B8CA2E0C4B02B5EB5459D073B6CC96DB17946E26CE92F91D4",
+  "projectSdk": {
+    "packageSHA512": "CDDE4C48581798091C27F050E2421353FEF644E1E1845C010FDE36FD8661DF8A40BDBE7EFE8AEB2FF69D3D41189032F06DFF0325E50679408ED7669C969FD4B8",
+    "version": "4.5.2",
+    "id": "MSTest.Sdk"
+  },
+  "packages": [
+    {
+      "id": "Microsoft.Data.Sqlite",
+      "version": "10.0.14",
+      "kind": "Direct",
+      "contentHash": "muyroan6rKrf0omZL8UF7Kw5uOGp/yBg1L/XWvkFN3WhKaNtK2IWqRZw93nIwVqjhTVDO0l4CEGhHIh+mb+sKg=="
+    },
+    {
+      "id": "MSTest.TestAdapter",
+      "version": "4.5.2",
+      "kind": "Direct",
+      "contentHash": "3ZM4AiMnHHI58VKcn4DUlz9HMtPk+ucN/WNYiB0k29gaihTPiK5vcXX49iisgbLd8aFlSoaEIRBPekKs/wDYfA=="
+    },
+    {
+      "id": "MSTest.TestFramework",
+      "version": "4.5.2",
+      "kind": "Direct",
+      "contentHash": "9U+a6ZcsIEXnC2Q8D2RRBpvo3ro83RfGLfeCJC+NomPhiCD6gi9ehpk00A1TC0Za+nB7j5sn6V1VbDanqoohsA=="
+    },
+    {
+      "id": "Reqnroll",
+      "version": "3.3.4",
+      "kind": "Direct",
+      "contentHash": "tFFx0xACekjT9F/aFZjQMNTbaxy7zNU4uXFXvU1Eybuko2Rx1RLCAzN+uPDiDxsGB/Nd0wZC0M8Ho5i9xm8Jdg=="
+    },
+    {
+      "id": "Reqnroll.MSTest",
+      "version": "3.3.4",
+      "kind": "Direct",
+      "contentHash": "N3l9STvSS9SdiV0oR9FbBpcNwMrcawLBzA5ubeet5UnS5gplwVN9wMYBwJ5DLvLnSAkg2Xiw3tRkuuVBy/YwBg=="
+    },
+    {
+      "id": "Reqnroll.Tools.MsBuild.Generation",
+      "version": "3.3.4",
+      "kind": "Direct",
+      "contentHash": "atTwejJRcKgUcJCofp4uSPKNXBav6ZITHtuD6dhByg1ubyVJirjz5TkcVCR9oFnHAEbZvOdd4cYCJNPO9rSAsQ=="
+    },
+    {
+      "id": "Cucumber.CucumberExpressions",
+      "version": "17.1.0",
+      "kind": "Transitive",
+      "contentHash": "IZFDLLwrUCKuGDXQzmAWZa+kQFpVmVwWD8wEl0UWGOR83UQfzqg8hZeSSNUOXlW0Kh3vMO6kEm3FpNC4amKMaw=="
+    },
+    {
+      "id": "Cucumber.HtmlFormatter",
+      "version": "22.2.0",
+      "kind": "Transitive",
+      "contentHash": "hlP9GGzRADDKh0/GEt2aWD9G08qEDD4z6TC6iqJt3xH8kiU3iAbg1rOCtorN13zNdaaVxdraHzznWTMT/DnM1g=="
+    },
+    {
+      "id": "Cucumber.Messages",
+      "version": "30.1.0",
+      "kind": "Transitive",
+      "contentHash": "HDfIzDd7JFDEwiNHpgOHBPEiyVjXQws+CEnVb+Lwiq58jHNA/xYwmTswbqknOxcAejCRFP1de/hHHw+ZuTzV6A=="
+    },
+    {
+      "id": "Gherkin",
+      "version": "35.0.0",
+      "kind": "Transitive",
+      "contentHash": "ha+QNevQsXEESbzazUceHTCtKOjoBTBa8kLFdKpu6vSEbb3UMt3a55RG78tIoU/C4qzIqX3jQxaIdIcYGO+IWQ=="
+    },
+    {
+      "id": "Microsoft.ApplicationInsights",
+      "version": "2.23.0",
+      "kind": "Transitive",
+      "contentHash": "nWArUZTdU7iqZLycLKWe0TDms48KKGE6pONH2terYNa8REXiqixrMOkf1sk5DHGMaUTqONU2YkS4SAXBhLStgw=="
+    },
+    {
+      "id": "Microsoft.Bcl.AsyncInterfaces",
+      "version": "9.0.6",
+      "kind": "Transitive",
+      "contentHash": "82rLw487j5jBXEi2r3WvA/cagOhcRREVRtet6izzjDMY+i392W5oNSN2KCtuIvlTpyMONEUD0MIlGAgDdsvQ/w=="
+    },
+    {
+      "id": "Microsoft.Data.Sqlite.Core",
+      "version": "10.0.14",
+      "kind": "Transitive",
+      "contentHash": "1p9rO3Q2X/L/9YrYog3vaDzi8u+WZfJCOkDYoHqmofqYP0DLPLPyZcS2Rnh/79JXAodgbs1AgsaNwLpIvC3Xew=="
+    },
+    {
+      "id": "Microsoft.Extensions.DependencyModel",
+      "version": "8.0.2",
+      "kind": "Transitive",
+      "contentHash": "mUBDZZRgZrSyFOsJ2qJJ9fXfqd/kXJwf3AiDoqLD9m6TjY5OO/vLNOb9fb4juC0487eq4hcGN/M2Rh/CKS7QYw=="
+    },
+    {
+      "id": "Microsoft.Testing.Extensions.Telemetry",
+      "version": "2.5.2",
+      "kind": "Transitive",
+      "contentHash": "j1XGKCBrmfNm0tmotMa05GlqVtb2cW5UaMkKCFHPyyFHz5rdOy7TD0SVXnZJ+QMrjPAHjRoRqn5qcsUjICSWwg=="
+    },
+    {
+      "id": "Microsoft.Testing.Extensions.TrxReport.Abstractions",
+      "version": "2.5.2",
+      "kind": "Transitive",
+      "contentHash": "+xTIaIU9H44GxOyjrfieMSZnxltGvleA3jCRtdEAzlXKb85pMmVYMLUv2JS8KwD+U2wQHUgvy5YfQfWoPEfVdQ=="
+    },
+    {
+      "id": "Microsoft.Testing.Platform",
+      "version": "2.5.2",
+      "kind": "Transitive",
+      "contentHash": "ocX0rgGY78dKfmZlZe4hB0/dvlh7wJgUAWS+KfwrqxB9DpNsjshnne9dppCKnFNEOkX4QYsrdUU++NInFPiCBw=="
+    },
+    {
+      "id": "Microsoft.Testing.Platform.MSBuild",
+      "version": "2.5.2",
+      "kind": "Transitive",
+      "contentHash": "Jey2v0hd7WHHa7pr6MRNKtA07FvxcOMTCtIhTI7uBZ/qR5m1mgCVCo5L1rtVAtqgMhGA205bUwq9+is4LiCzpw=="
+    },
+    {
+      "id": "Microsoft.TestPlatform.ObjectModel",
+      "version": "18.10.1",
+      "kind": "Transitive",
+      "contentHash": "o+PuLDRVp1iwiVAPBADZItXgm9Ck23XtPhE4kZtZVi0uYnMiiz1Dx9Cjh75kJ+ijfqnORL3VOTOaQVKi0f/ixg=="
+    },
+    {
+      "id": "MSTest.Analyzers",
+      "version": "4.5.2",
+      "kind": "Transitive",
+      "contentHash": "t6Dj9AmWO9IfkMBi3yYTf7bfgSTAetsi4LFA3xGdKbJ+gBbSDqbo41U5vYiW9puD8UGl2elsizNeJVYtwNim0Q=="
+    },
+    {
+      "id": "SQLitePCLRaw.bundle_e_sqlite3",
+      "version": "2.1.13",
+      "kind": "Transitive",
+      "contentHash": "NlDixlC7uHmo+ojXRgkNvN0tQtVGpLDZ3x2OpgNj+G07VHh5cXSszFDrAiC4BpUiPwkcaeuQkMV9WQ123xVtmQ=="
+    },
+    {
+      "id": "SQLitePCLRaw.core",
+      "version": "2.1.13",
+      "kind": "Transitive",
+      "contentHash": "2joofoinuHBFs0nMX3nKuXgxpXryRkCOdM2Ua6HBqQLLy6IW+5f28ZI+HAvMyF8vG7XfNz/lwfBfE6V4juru8Q=="
+    },
+    {
+      "id": "SQLitePCLRaw.lib.e_sqlite3",
+      "version": "2.1.13",
+      "kind": "Transitive",
+      "contentHash": "D2UAuiGxFYBqeRXjjjGgvJ5UQifzn6wefmSqeKU7XcNGKLbJRP6X7kcPZ6opOBJGdCIlgbSxTvDpBbLvsN594A=="
+    },
+    {
+      "id": "SQLitePCLRaw.provider.e_sqlite3",
+      "version": "2.1.13",
+      "kind": "Transitive",
+      "contentHash": "ZU60dSqoSNRe49KcQDUmOVgdRtjITOssVXFtiISs+zJXDI4D2Sndwpn2NOtzDQNPu0ZAvpoLPQ+GLKv6iEZn8Q=="
+    }
+  ]
+}

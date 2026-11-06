@@ -1,0 +1,28 @@
+Build started 11/5/2026 12:28:11 PM.
+     1>Project "E:\Development\git\AAATDD\experiments\compatibility-probe\CompatibilityProbe.csproj" on node 1 (default targets).
+     1>PrepareForBuild:
+         Creating directory "bin\Debug\net10.0\".
+         Creating directory "obj\Debug\net10.0\".
+         Creating directory "E:\Development\git\AAATDD\experiments\compatibility-probe\obj\Debug\net10.0\refint\".
+         Creating directory "obj\Debug\net10.0\ref".
+       CoreProcessReqnrollFeatureFilesInProject:
+         [Reqnroll] FeatureFiles: TechnicalProbe.feature
+         Task assembly was loaded from 'E:\Development\git\AAATDD\experiments\compatibility-probe\.tools\dotnet\sdk\10.0.403\Microsoft.Build.dll' while the desired location was 'E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\reqnroll.tools.msbuild.generation\3.3.4\build\netstandard2.0\Reqnroll.Tools.MsBuild.Generation.dll'.
+     1>E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\reqnroll.tools.msbuild.generation\3.3.4\build\Reqnroll.Tools.MsBuild.Generation.targets(163,5): error MSB4216: Could not run the "GenerateFeatureFileCodeBehindTask" task because MSBuild could not create or connect to a task host with runtime "NET" and architecture "x64".  Please ensure that (1) the requested runtime and/or architecture are available on the machine, and (2) that the required executable "E:\Development\git\AAATDD\experiments\compatibility-probe\.tools\dotnet\sdk\10.0.403\MSBuild.exe" exists and can be run. [E:\Development\git\AAATDD\experiments\compatibility-probe\CompatibilityProbe.csproj]
+     1>E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\reqnroll.tools.msbuild.generation\3.3.4\build\Reqnroll.Tools.MsBuild.Generation.targets(178,7): error MSB4027: The "GenerateFeatureFileCodeBehindTask" task generated invalid items from the "GeneratedFiles" output parameter. This object is no longer valid because the MetadataLoadContext that created it has been disposed. [E:\Development\git\AAATDD\experiments\compatibility-probe\CompatibilityProbe.csproj]
+     1>Done Building Project "E:\Development\git\AAATDD\experiments\compatibility-probe\CompatibilityProbe.csproj" (default targets) -- FAILED.
+
+Build FAILED.
+
+       "E:\Development\git\AAATDD\experiments\compatibility-probe\CompatibilityProbe.csproj" (default target) (1) ->
+       (CoreProcessReqnrollFeatureFilesInProject target) -> 
+         E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\reqnroll.tools.msbuild.generation\3.3.4\build\Reqnroll.Tools.MsBuild.Generation.targets(163,5): error MSB4216: Could not run the "GenerateFeatureFileCodeBehindTask" task because MSBuild could not create or connect to a task host with runtime "NET" and architecture "x64".  Please ensure that (1) the requested runtime and/or architecture are available on the machine, and (2) that the required executable "E:\Development\git\AAATDD\experiments\compatibility-probe\.tools\dotnet\sdk\10.0.403\MSBuild.exe" exists and can be run. [E:\Development\git\AAATDD\experiments\compatibility-probe\CompatibilityProbe.csproj]
+
+
+       "E:\Development\git\AAATDD\experiments\compatibility-probe\CompatibilityProbe.csproj" (default target) (1) ->
+         E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\reqnroll.tools.msbuild.generation\3.3.4\build\Reqnroll.Tools.MsBuild.Generation.targets(178,7): error MSB4027: The "GenerateFeatureFileCodeBehindTask" task generated invalid items from the "GeneratedFiles" output parameter. This object is no longer valid because the MetadataLoadContext that created it has been disposed. [E:\Development\git\AAATDD\experiments\compatibility-probe\CompatibilityProbe.csproj]
+
+    0 Warning(s)
+    2 Error(s)
+
+Time Elapsed 00:00:02.14

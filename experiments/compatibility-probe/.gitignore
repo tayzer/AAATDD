@@ -1,0 +1,6 @@
+.tools/
+.packages/
+.cli/
+.tmp/
+bin/
+obj/

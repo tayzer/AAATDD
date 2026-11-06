@@ -1,0 +1,8 @@
+Discovering tests from E:\Development\git\AAATDD\experiments\compatibility-probe\bin\Debug\net10.0\CompatibilityProbe.dll (net10.0|x64)
+
+Discovered 2 tests in assembly - E:\Development\git\AAATDD\experiments\compatibility-probe\bin\Debug\net10.0\CompatibilityProbe.dll (net10.0|x64)
+  Observe isolated execution context
+  Exercise SQLite connection roles
+
+Discovered 2 tests.
+

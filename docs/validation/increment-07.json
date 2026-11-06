@@ -1,0 +1,843 @@
+{
+  "status": "Verified development increment; release remains incomplete",
+  "version": "0.1.0-alpha.7",
+  "package": {
+    "containsSdkMsbuildBinaries": false,
+    "sha256": "864dca9b021dc757a36e2e9c5bd753164eecd42757c53d3d524935382cbb7aac",
+    "notices": "THIRD_PARTY_NOTICES.md",
+    "containsBuildLogger": true,
+    "nativeSha256": "d2cb0c542bef5b69d49fcdfd14da4e83880e9de8f977b542d292e541badd36ba",
+    "containsNativeTestFixture": false,
+    "containsCompiler": false,
+    "path": ".artifacts/packages/Tada.Cli.0.1.0-alpha.7.nupkg",
+    "installedBinariesMatchCurrentBuild": true,
+    "redistributedDlls": [
+      "tools/net10.0/any/Cucumber.Messages.dll",
+      "tools/net10.0/any/Gherkin.dll",
+      "tools/net10.0/any/Tada.BuildLogger.dll",
+      "tools/net10.0/any/Tada.Cli.dll",
+      "tools/net10.0/any/Tada.Core.dll",
+      "tools/net10.0/any/Tada.RuntimeProbe.dll",
+      "tools/net10.0/any/tada_native_observer.dll"
+    ]
+  },
+  "coreTests": {
+    "skipped": 0,
+    "failed": 0,
+    "sha256": "3f3fd21dbd15f53d0b8a4a2c48f886f074660377c79698acdb43b555a106f853",
+    "total": 111,
+    "concurrentApprovalEditIterations": 8,
+    "log": ".artifacts/core-tests-increment-07.log"
+  },
+  "orders": {
+    "report": ".artifacts/orders-workflow/64cfd1a36c3c4228b29c3caf5a9f6e1d/validation.json",
+    "sha256": "5153ff0011071da37212020a0f46e233769b59c17032139c4145c95d65e6c23e",
+    "checks": [
+      {
+        "name": "ambient response-file poison is active without isolation",
+        "exitCode": 1
+      },
+      {
+        "name": "prepare draft",
+        "exitCode": 0
+      },
+      {
+        "name": "review snapshot",
+        "exitCode": 0
+      },
+      {
+        "name": "explicit control approval",
+        "exitCode": 0
+      },
+      {
+        "name": "correct Orders",
+        "exitCode": 0
+      },
+      {
+        "name": "offline verification",
+        "exitCode": 0
+      },
+      {
+        "name": "real native SQLite module identities captured",
+        "exitCode": 0
+      },
+      {
+        "name": "unselected linked source control approval",
+        "exitCode": 0
+      },
+      {
+        "name": "unselected linked source blocks pass",
+        "exitCode": 2
+      },
+      {
+        "name": "unselected imported targets control approval",
+        "exitCode": 0
+      },
+      {
+        "name": "unselected imported targets blocks pass",
+        "exitCode": 2
+      },
+      {
+        "name": "oversubscription business defect",
+        "exitCode": 1
+      },
+      {
+        "name": "wrong persisted quantity business defect",
+        "exitCode": 1
+      },
+      {
+        "name": "unreviewed transient native control approval",
+        "exitCode": 0
+      },
+      {
+        "name": "unreviewed DLL unloaded before assertions blocks pass",
+        "exitCode": 2
+      },
+      {
+        "name": "captured transient native control approval",
+        "exitCode": 0
+      },
+      {
+        "name": "reviewed transient DLL retains a passing load identity",
+        "exitCode": 0
+      },
+      {
+        "name": "missing runtime checkpoint control approval",
+        "exitCode": 0
+      },
+      {
+        "name": "missing final API runtime snapshot blocks pass",
+        "exitCode": 2
+      },
+      {
+        "name": "oracle edit blocks execution",
+        "exitCode": 2
+      },
+      {
+        "name": "reviewed revision cannot approve changed bytes",
+        "exitCode": 3
+      },
+      {
+        "name": "custom file-read task unreviewed-input control approval",
+        "exitCode": 0
+      },
+      {
+        "name": "custom file-read task blocks pass without declared inputs",
+        "exitCode": 2
+      },
+      {
+        "name": "custom file-read task declared-input control approval",
+        "exitCode": 0
+      },
+      {
+        "name": "custom file-read task passes under explicit reviewed input contract",
+        "exitCode": 0
+      },
+      {
+        "name": "opaque custom task unreviewed-input control approval",
+        "exitCode": 0
+      },
+      {
+        "name": "opaque custom task blocks pass without declared inputs",
+        "exitCode": 2
+      },
+      {
+        "name": "opaque custom task declared-input control approval",
+        "exitCode": 0
+      },
+      {
+        "name": "opaque custom task passes under explicit reviewed input contract",
+        "exitCode": 0
+      },
+      {
+        "name": "faulty-fixture control approval",
+        "exitCode": 0
+      },
+      {
+        "name": "wrong seed blocks behaviour submission",
+        "exitCode": 2
+      },
+      {
+        "name": "cleanup control approval",
+        "exitCode": 0
+      },
+      {
+        "name": "required cleanup gap blocks pass",
+        "exitCode": 2
+      },
+      {
+        "name": "truncated evidence cannot pass",
+        "exitCode": 2
+      },
+      {
+        "name": "restored retained evidence verifies",
+        "exitCode": 0
+      },
+      {
+        "name": "incomplete metadata cannot default to success",
+        "exitCode": 2
+      },
+      {
+        "name": "changed build-input evidence cannot pass",
+        "exitCode": 2
+      },
+      {
+        "name": "changed evaluated report cannot pass",
+        "exitCode": 2
+      },
+      {
+        "name": "restored build-input evidence verifies offline",
+        "exitCode": 0
+      },
+      {
+        "name": "changed runtime-inputs.json cannot pass",
+        "exitCode": 2
+      },
+      {
+        "name": "changed execution-environment.json cannot pass",
+        "exitCode": 2
+      },
+      {
+        "name": "truncated runtime observation cannot pass",
+        "exitCode": 2
+      },
+      {
+        "name": "restored runtime evidence verifies offline",
+        "exitCode": 0
+      },
+      {
+        "name": "changed task-input evidence cannot pass",
+        "exitCode": 2
+      },
+      {
+        "name": "changed raw task journal cannot pass",
+        "exitCode": 2
+      },
+      {
+        "name": "restored task-input evidence verifies offline",
+        "exitCode": 0
+      }
+    ],
+    "controlCount": 46
+  },
+  "onboarding": {
+    "failureHistory": {
+      "nativePassingRerun": "6596bac4309c424bab62397d88822e19",
+      "restoredImplementation": "62a50ed959474778a8186d87496a30b5",
+      "nativeRerunExit": 0,
+      "tadaRerunOutcome": "FAIL",
+      "failure": "1a13a8ffcddb4a55aecb99f86b8ccf80"
+    },
+    "sha256": "73e3f626b4c4805d1697e17f139cf4ee1a7445eae0a037b68e239704f0880d39",
+    "limitation": "Fresh package cache and new project on this host; not a clean-machine or requester/Codex acceptance test.",
+    "actualRuns": 7,
+    "developmentRuns": [
+      {
+        "run": "1845016116164aff9fe4ccd38935a733",
+        "outcome": "FAIL",
+        "baseline": "sha256:6c68cc418f091532ec82fa2ab3d366bbcbd28a2d42fbab91449e94708121477a",
+        "implementation": "sha256:62b2728322701a1e8373373ff47a01df03aa6b28c8f7952286d353677fa8384e",
+        "environment": "sha256:4a2201ed3c186b1a198aeda478eb880e6614bc25f3ff1e0013b0c9e584c25deb",
+        "taskInputsDigest": "sha256:7a79a2f222c1c01b5f9aa5502a2156b4d192aad1aa72c1967593f7b21209446b",
+        "buildInputsDigest": "sha256:d3f4ac28018c056bde30825792cb3cd355f90221856af5b4cf00fa0687c6d870",
+        "runtimeInputsDigest": "sha256:0cf55a2523230bb3d33e0bbc79ba747dfb32b7b008c1b4d2b242c00c20bc723d"
+      },
+      {
+        "run": "ce1526c5cd5a456cb70ed069e639e389",
+        "outcome": "PASS",
+        "baseline": "sha256:6c68cc418f091532ec82fa2ab3d366bbcbd28a2d42fbab91449e94708121477a",
+        "implementation": "sha256:a517c7401868d3352029b1849b63ee8bd950244ed1e4eb1afb0310deae86f1bc",
+        "environment": "sha256:4a2201ed3c186b1a198aeda478eb880e6614bc25f3ff1e0013b0c9e584c25deb",
+        "taskInputsDigest": "sha256:bf79399cd91b1d70962e6d0f804f94e6a28791f06511d291ad0fbf8ce1c58bc7",
+        "buildInputsDigest": "sha256:2d799a9c415a32041155f45d559d912fc09ab959566ca41bc108ff4e9fd000d9",
+        "runtimeInputsDigest": "sha256:618aca601fda5e58e54ea409d45836a90256a2142b53f8fb2bc8f6af22de3de2"
+      },
+      {
+        "run": "7f1a83f9f5424b11a05398d847552e8f",
+        "outcome": "PASS",
+        "baseline": "sha256:6c68cc418f091532ec82fa2ab3d366bbcbd28a2d42fbab91449e94708121477a",
+        "implementation": "sha256:919ddbc1029c323f4b7124b24d6af298ab9b3ae418a11dbd21d0f5be9fd9ce7e",
+        "environment": "sha256:4a2201ed3c186b1a198aeda478eb880e6614bc25f3ff1e0013b0c9e584c25deb",
+        "taskInputsDigest": "sha256:b5cf4bb636eb6dc5f0b834b3a217d45d87cba1a4826bd047a42730ef8e60e127",
+        "buildInputsDigest": "sha256:6719c4e05e3f754e6e1cf43e3a37f739c7adb0a7aa4998eda96077550f8a07d3",
+        "runtimeInputsDigest": "sha256:739d59a72150ef807b3d3945fb1ef00ce5ee61164b07136cd7bc298b29b2efdf"
+      }
+    ],
+    "report": ".artifacts/onboarding/0878779d1690438a89b21ef23369d69c/validation.json",
+    "contextCommit": "44b0e690cc9cdcc0567e0e6170e9063fb52c09cc",
+    "unchangedSutArtifactDifferences": 0,
+    "unchangedRerun": {
+      "before": "7f1a83f9f5424b11a05398d847552e8f",
+      "sameImplementation": true,
+      "after": "445b298c405440c59adea3f20a7ddfa3",
+      "sameEnvironment": true
+    }
+  },
+  "taskEnvironment": {
+    "sha256": "1c76aac7e3f8a4f315184e92931f210099920d4c3a81bb3b9fa2edeeb13f0e46",
+    "verifiedAfterRestoration": true,
+    "sameImplementation": true,
+    "differentEnvironment": true,
+    "report": ".artifacts/onboarding/0878779d1690438a89b21ef23369d69c/.tada/task-environment-control.json",
+    "changedDigest": "sha256:6ba591c7cb445ca748498c7340d5dc17105f278842518a93e1e5a3e28c04316f",
+    "offlineSha256": "07d3f918c1c09eb80d3e3746d52a51413e3414d2d62e66874b6767d68d64435e",
+    "changedRun": "77a9f430f1464fb9bc6078f162df7722",
+    "originalBytesRestored": true,
+    "originalDigest": "sha256:a96f27e3675054c6ecbbab052190fac3c0afb25896a0be6756e696f3e446b2f5",
+    "referenceRun": "62a50ed959474778a8186d87496a30b5",
+    "offlineReport": ".artifacts/onboarding/0878779d1690438a89b21ef23369d69c/.tada/task-environment-offline.json"
+  },
+  "schemaMigration": {
+    "sha256": "4e7a2f1185aaacd192ce616f49816f082e14863a21c8bc59f4dd35fcaca0bbdf",
+    "newSchema": 6,
+    "sourceBaseline": "sha256:047276bfc9e372b6a09ca6b875d530ee53d426744bf2e65be5d9c386767f0a59",
+    "verifyExit": 2,
+    "report": ".artifacts/schema-migration/5bb987e9e88744f0a0d882dc2b978df2/validation.json",
+    "sourceSha256": "047276bfc9e372b6a09ca6b875d530ee53d426744bf2e65be5d9c386767f0a59",
+    "runExit": 2,
+    "sourceSchema": 5,
+    "copySha256": "047276bfc9e372b6a09ca6b875d530ee53d426744bf2e65be5d9c386767f0a59",
+    "reviewExit": 0
+  },
+  "discoveryEvidence": {
+    "taskOnlyEnvironmentInputs": ".artifacts/provenance-audit/3d6a29c4065b4ebeaf67dffbccf72c04/validation.json",
+    "unstableUnchangedRerun": ".artifacts/rerun-controls/54ba17dcd2fc43c5ba0e42b3989a51d6/validation.json",
+    "unstableUnchangedRerunSha256": "86346e630fcfb52d9e63fcd463370097135ba5857e163fd54e6beeda79bc6032",
+    "note": "Earlier development profile evidence identifies the defects; final-source controls above establish the fixes.",
+    "taskOnlyEnvironmentInputsSha256": "c6ce77d326e57e6b7d38f96dc8629526d70a9dd14d585986cb171e1f935292c2"
+  },
+  "provenance": {
+    "buildInputPolicy": "evaluated-dotnet-build-v3",
+    "inventorySchema": 6,
+    "taskToolsIncludedInEnvironment": true,
+    "taskInputPolicy": "msbuild-tasks-and-declared-inputs-v2",
+    "remainingBoundary": "Arbitrary I/O, non-.NET child/helper execution and manual image mapping are not automatically traced.",
+    "completeExecutionBoundary": false,
+    "implementationIdentity": "selected-source",
+    "exactArtifactHashesPreserved": true,
+    "runtimeInputPolicy": "dotnet-loader-observation-v2",
+    "trust": "Reviewed custom code honours complete declared read roots; installed SDK/pinned packages/OS, stable files and cooperative local advisory producer records remain trusted."
+  },
+  "sourceFiles": [
+    {
+      "path": ".gitattributes",
+      "sha256": "e5038c594343bfb7d0d1b768127c47b200d5a93a20f74a010dda61b53d8c33c9"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "9e4bccf9b1120de19dd24848e4e7730509262c64ace785bf3df1355094120c39"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "48ba818211780b772271b67ed1b606ab6b8661afb3c6f44ad4e4e491a9d58a4d"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "a9c58a07418cd47bea1a51b233c957119b53e59c51c0c9155167d36b89bef8da"
+    },
+    {
+      "path": "Directory.Build.props",
+      "sha256": "2fdc9d1fcd00a3de89a3f5a1da1afa8eea80f789308501ca5ce579e185290d94"
+    },
+    {
+      "path": "docs/build-task-contracts.md",
+      "sha256": "cceaff94d19c73e27d1461d170fd18a84795e54064e15edc0141cddc306d34ef"
+    },
+    {
+      "path": "docs/decisions/0041-authorise-autonomous-release-implementation.md",
+      "sha256": "98bf13987f51cddf0a56b3c41dbcb9dc837dee61e6f89e5e8412face4cfbee9f"
+    },
+    {
+      "path": "docs/quickstart.md",
+      "sha256": "1165e2d769938add64437e18f065ff1f9ee1b29040de4128589736f41c0176ab"
+    },
+    {
+      "path": "docs/release-readiness.md",
+      "sha256": "1a64780cea614505a8b09c00d72cd2a4c5348d0f9be83adef86eed66a0d462d1"
+    },
+    {
+      "path": "docs/research/native-loader-observation.md",
+      "sha256": "e436492589aa33714b823c88e2ae36058932f92c57f16379439a571cb32dc6e1"
+    },
+    {
+      "path": "docs/validation/increment-07.md",
+      "sha256": "2ccfb0065b228a3192fd7f716c91d4c2f3d9dc3fab2d457020d766da4df8e479"
+    },
+    {
+      "path": "docs/validation/provenance-audit.md",
+      "sha256": "c8644c7487d45718f471baf1e9bc86f4f11ed94f306053851afbb1404fbf05bf"
+    },
+    {
+      "path": "examples/Echo/Api/Echo.Api.csproj",
+      "sha256": "082bd8dd213fa777c432e8aa05ca6f42b71115180adaee0a479be6565679379d"
+    },
+    {
+      "path": "examples/Echo/Api/Program.cs",
+      "sha256": "8df6fd97e21f80a199eb57dcc9be055ed4cd778aa29de3615cfe11b352bf36cf"
+    },
+    {
+      "path": "examples/Echo/echo.feature",
+      "sha256": "28ceec16767b8eee89bdf1c2c4a2646c0714cae2b629f68065d66ebec2c7b905"
+    },
+    {
+      "path": "examples/Echo/EchoBindings.cs",
+      "sha256": "7be79e9642243bd7d7bbd59daab818d4fa1c4fc1c9caf64b4d6e238140b3181e"
+    },
+    {
+      "path": "examples/Echo/README.md",
+      "sha256": "41917b50611f9f0e0319290e3699d1f27f2886b0372bbdc71f96887d3d5a879d"
+    },
+    {
+      "path": "examples/Orders/.gitignore",
+      "sha256": "4ffc7140a17643584dc0c19a46fcc3e5962f1d31d39604ae56232ac053688290"
+    },
+    {
+      "path": "examples/Orders/Acceptance/OrderBindings.cs",
+      "sha256": "d96bdbeafd1744dbb69544efe9fdb2d7ea7fc491850f77a3c02c0db660e2b852"
+    },
+    {
+      "path": "examples/Orders/Acceptance/Orders.Acceptance.csproj",
+      "sha256": "505387400a3db47f2bdcec3401934d0c3a99b65ec86550ce7f8e6f6c32713260"
+    },
+    {
+      "path": "examples/Orders/Acceptance/packages.lock.json",
+      "sha256": "c02e120835549e8b8ca2e0c4b02b5eb5459d073b6cc96db17946e26ce92f91d4"
+    },
+    {
+      "path": "examples/Orders/Acceptance/reqnroll.json",
+      "sha256": "97a914c01a210ad253828224350a208093e93cdc134f98ea988b08d8690bee52"
+    },
+    {
+      "path": "examples/Orders/Acceptance/TadaRuntimeCheckpoint.cs",
+      "sha256": "b9d6de06f8f0084fb6cac5e16dbcb7471689333d9d720bf9da2869e16bba8c22"
+    },
+    {
+      "path": "examples/Orders/Api/Orders.Api.csproj",
+      "sha256": "6358c8e30fcf5fbf1a7b3e314ee8e1c43eaec959663ce51d9efac8204ac55b14"
+    },
+    {
+      "path": "examples/Orders/Api/packages.lock.json",
+      "sha256": "4b3093276840b5ac24e94cad744c80cddb94cc5f2e648f66327aae47d38f4757"
+    },
+    {
+      "path": "examples/Orders/Api/Program.cs",
+      "sha256": "28e3e02627cadf884b0145a3347dc273c2b313aad27bef172267a352a30d8afd"
+    },
+    {
+      "path": "examples/Orders/Directory.Build.props",
+      "sha256": "4c816ee68442aa25bfe8c86cba0bd59867647d47e9debf1be9b7ecb66780d36b"
+    },
+    {
+      "path": "examples/Orders/Directory.Build.targets",
+      "sha256": "17284cb74605517cbec8a8153505da71a685b28694b67b5ef80608cd79b1c0ea"
+    },
+    {
+      "path": "examples/Orders/features/order-stock-validation.feature",
+      "sha256": "24c3c0b4b54f5bdd191e51b9577fbfc22f0b2522f95779e5acb903e29f3a2c5d"
+    },
+    {
+      "path": "examples/Orders/global.json",
+      "sha256": "e0c27e2af43696b45b21a25e5d8d6c874fbf0a3bbc82197e3ab1d1910ae739a5"
+    },
+    {
+      "path": "examples/Orders/NuGet.Config",
+      "sha256": "03602f008d9306a7b09cfc2771df93d4b93123b18161fdb73ddd6e574407fd69"
+    },
+    {
+      "path": "examples/Orders/tada.json",
+      "sha256": "5755e26df710b8a14bb8c2927bf715c396ef573097d1abbc97a9e5134458d64a"
+    },
+    {
+      "path": "global.json",
+      "sha256": "e0c27e2af43696b45b21a25e5d8d6c874fbf0a3bbc82197e3ab1d1910ae739a5"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "e7564b42451a0fac9f2bd86735d09f4977f293cab4b3b33e1e374b01038e105f"
+    },
+    {
+      "path": "NuGet.Config",
+      "sha256": "03602f008d9306a7b09cfc2771df93d4b93123b18161fdb73ddd6e574407fd69"
+    },
+    {
+      "path": "README.md",
+      "sha256": "de2158d23759776ec31588b62481a8f0c028b9c0ee2bdb82e8d3fffcd6903586"
+    },
+    {
+      "path": "scripts/Build-NativeObserver.ps1",
+      "sha256": "8f528dbcc255ea88cb362d55c7f535181a82b3045857f2a568c1315a7f6e7ebb"
+    },
+    {
+      "path": "scripts/Test-Onboarding.ps1",
+      "sha256": "75a495474adacc39895f96c613e2863ee35e5b74298699f4c641d05fc8811544"
+    },
+    {
+      "path": "scripts/Test-OrdersWorkflow.ps1",
+      "sha256": "b14572729d42281f424e947209dd8d966317e23a8fb6f0b11adcbe346c64bd31"
+    },
+    {
+      "path": "scripts/Test-TaskEnvironment.ps1",
+      "sha256": "0cc0debc9a178e74573839611a6be9057fa4549fbee50eaa43cf65c86aa13832"
+    },
+    {
+      "path": "src/Tada.BuildLogger/AuditLogger.cs",
+      "sha256": "966f9fe44817984264e5f9afe7b8bf257e52a8a27a8fc3c8311604d508300997"
+    },
+    {
+      "path": "src/Tada.BuildLogger/packages.lock.json",
+      "sha256": "a4364d81a6de2707d66fbced18fbbc926c882ab96e1d1aebbb17e871285b9d75"
+    },
+    {
+      "path": "src/Tada.BuildLogger/Tada.BuildLogger.csproj",
+      "sha256": "723c78ffe4a83fca9b288b4173f53257c10aaec51e76e43b072fd1bfaede6ec4"
+    },
+    {
+      "path": "src/Tada.Cli/CliOutput.cs",
+      "sha256": "0d91eabf563e460aa1813b5eb1097ca2ba8f3cc9e41a3ddd1f3e099385350e20"
+    },
+    {
+      "path": "src/Tada.Cli/PACKAGE.md",
+      "sha256": "fec09597e80e917324a32ce31331882af4c93e16f2d956e604cec6404a195551"
+    },
+    {
+      "path": "src/Tada.Cli/packages.lock.json",
+      "sha256": "b5e6d26cd8f338b46b7ed49e06e9f25c7b0e3e3ffb2c3465d24d267f3dbdfc50"
+    },
+    {
+      "path": "src/Tada.Cli/Program.cs",
+      "sha256": "ba2e73066459670a44944dc2d5955a1d87455e3cba37eadbdae0f287be512b5d"
+    },
+    {
+      "path": "src/Tada.Cli/Tada.Cli.csproj",
+      "sha256": "f1ce7b08ca770fb57f136275130c8dfde8fc670463e08a62753dd2fc74bc41e6"
+    },
+    {
+      "path": "src/Tada.Core/BaselineStore.cs",
+      "sha256": "76572038bb0b5f2573e3068e322901c5957550ced636bd9f33507a1c55e59f2c"
+    },
+    {
+      "path": "src/Tada.Core/BuildInfo.cs",
+      "sha256": "a9b1f2b639e3518d7bc10f24e870dd1b035218ef865f1a843e022d9ad32c72c5"
+    },
+    {
+      "path": "src/Tada.Core/BuildInputs.cs",
+      "sha256": "040415d07064455940c364606117c82a4e26304415e419e4e835d3ce3184d1a2"
+    },
+    {
+      "path": "src/Tada.Core/CanonicalJson.cs",
+      "sha256": "804c225b0039f9a3b7421c4662e5e86600609bda7d59d9e6f9dc7ddd7cd6e8d9"
+    },
+    {
+      "path": "src/Tada.Core/ExecutionEnvironment.cs",
+      "sha256": "0da8888ee9e2f07f929dd65b444ae30acfce083157eb01aef1e38562d045bd18"
+    },
+    {
+      "path": "src/Tada.Core/Features.cs",
+      "sha256": "7555a50dbb72ff20444baaf2005dad13d91958f75df40f9fcb6a68ab5c93ab8e"
+    },
+    {
+      "path": "src/Tada.Core/MessagesVerifier.cs",
+      "sha256": "79e0a71ed04039f779989c04465aa46e9bb31002dd06e8aceecd13345a92db79"
+    },
+    {
+      "path": "src/Tada.Core/Model.cs",
+      "sha256": "ef13561da8ed7cc00b30c09ac0dab18c17e894a07c60383f65513a475ada1b39"
+    },
+    {
+      "path": "src/Tada.Core/Onboarding.cs",
+      "sha256": "be424057cf7c70aa55e49408ffa4525343394701fa687700304beace61e67500"
+    },
+    {
+      "path": "src/Tada.Core/packages.lock.json",
+      "sha256": "3a0dcc959798c6b62d9586efa92638ce39681f7b3cf845d214b21d14d6ebd5c5"
+    },
+    {
+      "path": "src/Tada.Core/Processes.cs",
+      "sha256": "a6c9a09b600548f5b1c908e4f0903614cb2a16bb81e13199703a0ca891ed6ac6"
+    },
+    {
+      "path": "src/Tada.Core/Repository.cs",
+      "sha256": "cdeb7ed84516bf4cea4f23369a979d5d8df566845f5eb56ffc8f2049c960d7be"
+    },
+    {
+      "path": "src/Tada.Core/RunEngine.cs",
+      "sha256": "c0fe578d77726eeaac4c2cb8671ac635eb8db01336bed64a5731dd5dd620d086"
+    },
+    {
+      "path": "src/Tada.Core/RuntimeInputs.cs",
+      "sha256": "d494ef1792af0e2d3d4104d6b34c7ee2db57bf607c3456722e3f9e8f46e60a7e"
+    },
+    {
+      "path": "src/Tada.Core/Tada.Core.csproj",
+      "sha256": "9a5935b598d4922d71abb4bd5931845f1ca7fe13abb24a13d647710e70f22d14"
+    },
+    {
+      "path": "src/Tada.Core/TaskJournal.cs",
+      "sha256": "5f3d8ad9035e3980465c5935b78fd549774b93c9c0670654880d1215f628e53b"
+    },
+    {
+      "path": "src/Tada.RuntimeProbe/native/observer.c",
+      "sha256": "a695f0f7959efcbea66dc7a8cd6976d7d08079ebf81a08209cff52bf639b41c1"
+    },
+    {
+      "path": "src/Tada.RuntimeProbe/NativeLoader.cs",
+      "sha256": "2f0d83d138c00c982c86004b8ad52303f9df653e5352744985ec1c595eaa9aba"
+    },
+    {
+      "path": "src/Tada.RuntimeProbe/packages.lock.json",
+      "sha256": "a4364d81a6de2707d66fbced18fbbc926c882ab96e1d1aebbb17e871285b9d75"
+    },
+    {
+      "path": "src/Tada.RuntimeProbe/StartupHook.cs",
+      "sha256": "c18e576001f201db70fb5bb555f83d7c629a9edd8353d01b1cbcf5f581419410"
+    },
+    {
+      "path": "src/Tada.RuntimeProbe/Tada.RuntimeProbe.csproj",
+      "sha256": "7790e00aec230cbc30760406502faeeac27ccb44eb21662ad6e6cb87799475ec"
+    },
+    {
+      "path": "tests/Tada.Core.Tests/BuildInputTests.cs",
+      "sha256": "8a2ccf0532180be121a4d83a2d40018c9bfe8c24c4be18c5974ba355edc8e932"
+    },
+    {
+      "path": "tests/Tada.Core.Tests/CliTests.cs",
+      "sha256": "08b47a6abbe65a57d7a3fb7d5095da9b87f528422912c2ef16397ef7a3b809c5"
+    },
+    {
+      "path": "tests/Tada.Core.Tests/CoreTests.cs",
+      "sha256": "029738a46edc1d0cc9adfa3318e3905b19c4edd72ee1d5162aa14b20505b42a9"
+    },
+    {
+      "path": "tests/Tada.Core.Tests/EnvironmentTests.cs",
+      "sha256": "6a4a658b9878ac97faeb13363aade329ee19d96635f11a2140ad0cc4cd36594c"
+    },
+    {
+      "path": "tests/Tada.Core.Tests/Fixtures/native.c",
+      "sha256": "819ecb55b83a59d37e1b124b26bca4416421e48da13d3d6900c1d69615187e7b"
+    },
+    {
+      "path": "tests/Tada.Core.Tests/Fixtures/orders-pass.ndjson",
+      "sha256": "515be324e7fa0ba7b9784f0b82f68a3be130a92d6b26a2cc5c2706e49a6c959f"
+    },
+    {
+      "path": "tests/Tada.Core.Tests/GitTests.cs",
+      "sha256": "af9d1e79dd485e4a4beb7527a387954015a1de134d5cc8d37fbd74132f78c3cd"
+    },
+    {
+      "path": "tests/Tada.Core.Tests/HistoryTests.cs",
+      "sha256": "620c176828b3064405441d318c503519652801237b72a6c0a77c08121ec647af"
+    },
+    {
+      "path": "tests/Tada.Core.Tests/MessagesTests.cs",
+      "sha256": "53ec7aa9a8e11a34ade85b0c741cbc4fc93054fc8a7d64b6c59c383b33fda23d"
+    },
+    {
+      "path": "tests/Tada.Core.Tests/NativeLoaderTests.cs",
+      "sha256": "5154c6fe75842fe3515438e5d4c8124107bb70cb0854cedabec2050a5c3cbee5"
+    },
+    {
+      "path": "tests/Tada.Core.Tests/packages.lock.json",
+      "sha256": "3300084e0939647a724925a28c7f69d5d2d64bb1ef8da6adc98754aa47786b4c"
+    },
+    {
+      "path": "tests/Tada.Core.Tests/ProcessTests.cs",
+      "sha256": "3880f24a7baa0d482839cc14d33c2f0881f0f9f25f7ffbb9330eec996c4bd84c"
+    },
+    {
+      "path": "tests/Tada.Core.Tests/RuntimeInputTests.cs",
+      "sha256": "089250caaf6c62849013323da64b3c04108d4c586753db2ddd4df63048d6df8b"
+    },
+    {
+      "path": "tests/Tada.Core.Tests/Tada.Core.Tests.csproj",
+      "sha256": "5eccb346016d52038408ab8da7ce6e799aa7176ca70f26a8968ce8623e356b93"
+    },
+    {
+      "path": "tests/Tada.Core.Tests/TaskJournalTests.cs",
+      "sha256": "3071ec08626a7b5d7a165262fbe13500097e7dff7918647593237128275b53eb"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "sha256": "73c2b01374bca321f0f020c9e49775625bdb56235dd80c320ba8130f35abaa01"
+    }
+  ],
+  "historicalAuthorityFiles": [
+    {
+      "path": "docs/decisions/0001-separate-intent-and-baseline-approval.md",
+      "sha256": "aa83e43dd3a28919fbbe5be13b633b31c26361f7f72a0c90f1f012c8291c5724"
+    },
+    {
+      "path": "docs/decisions/0002-clarify-acceptance-changing-uncertainty.md",
+      "sha256": "6a68126be5d9746fe4a11ea43c40a676262c00093b19e62f7f762d26c9d179dd"
+    },
+    {
+      "path": "docs/decisions/0003-support-change-appropriate-specification-artifacts.md",
+      "sha256": "bdf14ee4cb69db37fc9ac351240e481a6eb2e289e68bdc8a215d0360f8c37f1f"
+    },
+    {
+      "path": "docs/decisions/0004-gherkin-business-specification-authority.md",
+      "sha256": "3f3694625ee2d1c0b3f5a5b4c70e9a724fbc2ac8c0768e19db91e2cb8bc7507d"
+    },
+    {
+      "path": "docs/decisions/0005-validate-l1-before-protected-l2.md",
+      "sha256": "f53f14ce14478434fee0ee3e765dad70bf59a4df450cf8de3b499d41c5739193"
+    },
+    {
+      "path": "docs/decisions/0006-bound-the-initial-orders-example.md",
+      "sha256": "f3453a17bbc7d6cfdd21af1123300d41f8f5abf87f4dc5cf1cb0449044076d35"
+    },
+    {
+      "path": "docs/decisions/0007-use-public-outcomes-with-scoped-order-observation.md",
+      "sha256": "2b12a1e87a2f302270bc601ca25e2f5a16bab9b8ce0abf374fe1ef53fc6aba8e"
+    },
+    {
+      "path": "docs/decisions/0008-use-disposable-sqlite-per-scenario.md",
+      "sha256": "c181df858096988f104686897f68042beb7757305074603c17ecbdcde2aa9434"
+    },
+    {
+      "path": "docs/decisions/0009-distinguish-requirement-failure-from-invalid-verification.md",
+      "sha256": "fcfbfe19459d8c9789855a90ec531aed4040c6c2cd94e57576a99a7d89b6d43a"
+    },
+    {
+      "path": "docs/decisions/0010-preserve-failures-across-explicit-reruns.md",
+      "sha256": "a9c0f5f182263d813dad86d98109574c6d9451bcfc05c56ad112d22d13306357"
+    },
+    {
+      "path": "docs/decisions/0011-separate-logical-baseline-and-run-identities.md",
+      "sha256": "dcc7f06db6d718127d1cac45e9044414ead85454872d8b679d73bdfb819f4f0e"
+    },
+    {
+      "path": "docs/decisions/0012-bound-the-initial-oracle-to-harness-inputs.md",
+      "sha256": "9aca24e9376cf5c7b0daf606200759dcd167537f58c9dfec3aa32a1873dc85fe"
+    },
+    {
+      "path": "docs/decisions/0013-separate-baseline-authority-from-verification.md",
+      "sha256": "198e4474ac9bbb34ed60bdfb21ca207003117893337174154057ee4d90a9ab49"
+    },
+    {
+      "path": "docs/decisions/0014-require-targeted-first-harness-validation-controls.md",
+      "sha256": "1413108d03608a6daafa39ee56512ca55b67eee39ba3645c3fb93e55b4e0fb73"
+    },
+    {
+      "path": "docs/decisions/0015-agree-initial-sample-http-mapping.md",
+      "sha256": "d5047532f291fb1c3b99b96c5f46d1447b82536aef5fc60ada097de82a29de55"
+    },
+    {
+      "path": "docs/decisions/0016-observe-completed-sample-operations.md",
+      "sha256": "84b13d0f0039f3183b02e1caef7844380f4b19a5c6fd6a9d94dae1d53d2850ed"
+    },
+    {
+      "path": "docs/decisions/0017-validate-fixture-readiness-before-submission.md",
+      "sha256": "423919247dd9d9c7719d1b775c1efcb59759f60dcef23eff0d9243219fb77283"
+    },
+    {
+      "path": "docs/decisions/0018-inspect-all-scenario-owned-orders.md",
+      "sha256": "48ac55a1c603aa853a2e228a7bf82329593e97cd80a37ae1da2adda78ade08b2"
+    },
+    {
+      "path": "docs/decisions/0019-require-confirmed-scenario-teardown.md",
+      "sha256": "3dc8887ca14e2893b74c5bcb7da52edd9c33202c11ece9a4e193e3b7b0c43d80"
+    },
+    {
+      "path": "docs/decisions/0020-use-scenario-scoped-harness-components.md",
+      "sha256": "1022c7893ff578a887a7b4aaec5ebd4ab87bd6f2a89ab811561e88c52dd13ec4"
+    },
+    {
+      "path": "docs/decisions/0021-retain-native-messages-with-aaatdd-envelope.md",
+      "sha256": "098f151e8bdafc157e6df1f7df1b5178ffc911965445c1eeab40ccab49fb3c59"
+    },
+    {
+      "path": "docs/decisions/0022-select-dotnet-reqnroll-for-first-experiment.md",
+      "sha256": "5eaadd458b7537f592e46f055ce5f7b9397cba285c7b5698305e696d104f7abf"
+    },
+    {
+      "path": "docs/decisions/0023-use-mstest-with-microsoft-testing-platform.md",
+      "sha256": "cfa8b350455ae02d5aea190fbf772860583245dd69c38c15fbe5db26ae73aaf8"
+    },
+    {
+      "path": "docs/decisions/0024-run-initial-scenarios-serially.md",
+      "sha256": "d2b4e65426683f4c5f291a7ee04baf88cdfe03384b92d6f25f2d17d1fd705fbc"
+    },
+    {
+      "path": "docs/decisions/0025-use-mstest-sdk-for-acceptance-harness.md",
+      "sha256": "f888375450e8bb8dcadd3b8594449fd21ec550f61da97a0e3654d14247467c31"
+    },
+    {
+      "path": "docs/decisions/0026-target-net10-for-first-sample.md",
+      "sha256": "8f7a8865daaf7487be457da3d4fef2c6edd5abf43be11ba1843bc0df33f622b5"
+    },
+    {
+      "path": "docs/decisions/0027-use-microsoft-data-sqlite-with-direct-sql.md",
+      "sha256": "932c325a691c4a1b6fb697b12ae530827981c4ba283c47390a3627d86370ba57"
+    },
+    {
+      "path": "docs/decisions/0028-use-minimal-inventory-and-orders-schema.md",
+      "sha256": "6595fe8398fb4376edb1d79304fd3d7f56f832177b9943bcc79746324c0602fe"
+    },
+    {
+      "path": "docs/decisions/0029-use-explicit-sqlite-connection-roles.md",
+      "sha256": "8bf89d5eeed482bbc97762ec0e8084756d365dac10d72faa246a4690e69d608b"
+    },
+    {
+      "path": "docs/decisions/0030-pin-sdks-and-use-locked-restore.md",
+      "sha256": "5a4f7817debc48d528e27a5146badcc269f03117fd932e83a1a6a70a8e6e3ec0"
+    },
+    {
+      "path": "docs/decisions/0031-select-direct-version-validation-targets.md",
+      "sha256": "58d9f07a7f2250b1ca7b8c7a0f316a8dcdb134edaa8895b5dfb1ee707bfadd32"
+    },
+    {
+      "path": "docs/decisions/0032-bound-the-first-publishable-alpha.md",
+      "sha256": "ab3d924a6478b7300d1ecce2d6f3a8b40f6099c58df4d6b2d83307931b6e2219"
+    },
+    {
+      "path": "docs/decisions/0033-use-dotnet-local-tool-for-alpha-verifier.md",
+      "sha256": "51c94bd4e4151620837fe958046ad4ae49beac24113956d0af0280ef91671dda"
+    },
+    {
+      "path": "docs/decisions/0034-rename-tool-to-tada.md",
+      "sha256": "d0aa1922eb67463d76596508c3d15a2e46cd0bacb0591540d2497544d91707a6"
+    },
+    {
+      "path": "docs/decisions/0035-adopt-five-operation-alpha-cli.md",
+      "sha256": "fc6ed426505b16c65a810256c9d644fd8649c326fcc56596af1685c3d4937832"
+    },
+    {
+      "path": "docs/decisions/0036-bind-approval-to-reviewed-baseline.md",
+      "sha256": "be3461c97494b890d6c7d24e58ddeed8d5bc4632ee801265fb67d07ebfb2bc07"
+    },
+    {
+      "path": "docs/decisions/0037-hash-oracle-input-files-as-exact-bytes.md",
+      "sha256": "283bbb193fbfd61c5bf99390b1ba07a02031bbabe9edbd9eaaa7f2143867cfd9"
+    },
+    {
+      "path": "docs/decisions/0038-use-sha256-and-rfc8785-for-baseline-inventories.md",
+      "sha256": "fc6ad9d9bd24cfd386d886216779893e9c353302f64ae7debaa2d49913cbc209"
+    },
+    {
+      "path": "docs/decisions/0039-define-alpha-inventory-structure-and-ordering.md",
+      "sha256": "1a9fc010a8e0820fa7272587f0025409f6544de76097b5a3f46715e4a90aa47b"
+    },
+    {
+      "path": "docs/decisions/0040-define-alpha-scope-and-expected-cases.md",
+      "sha256": "73d2aba76b0fff97544ac484165d34d8c277d40749349c8e05dc9157a9ffaf62"
+    }
+  ],
+  "originalFeatureSha256": "24c3c0b4b54f5bdd191e51b9577fbfc22f0b2522f95779e5acb903e29f3a2c5d",
+  "repositoryChecks": {
+    "processInspection": ".artifacts/increment-07-process-inspection.json",
+    "historicalAdrsChanged": 0,
+    "brokenLocalLinks": 0,
+    "markdownFiles": 77,
+    "localLinks": 504,
+    "sourceManifestMismatches": 0,
+    "ownedApplicationProcesses": 0,
+    "remainingScenarioDatabases": 0,
+    "originalFeatureChanged": false
+  },
+  "remaining": [
+    "Final supported-provenance and release review; retain explicit automatic-observation limits.",
+    "Final-source remote CI and clean-machine validation.",
+    "Requester/Codex API acceptance and genuine fresh-session handoff.",
+    "Publication permissions and final release audit."
+  ]
+}

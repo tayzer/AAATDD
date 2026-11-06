@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "oracleRoots": ["Acceptance", "features"],
+  "execution": {
+    "project": "Acceptance/Orders.Acceptance.csproj",
+    "assembly": "Orders.Acceptance.dll",
+    "messagesFile": "tada-messages.ndjson",
+    "timeoutSeconds": 90,
+    "sutProject": "Api/Orders.Api.csproj",
+    "sutAssembly": "Orders.Api.dll"
+  },
+  "requirementPrefix": "REQ_",
+  "scenarioPrefix": "AC_",
+  "implementationRoots": ["Api"]
+}

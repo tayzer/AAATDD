@@ -1,0 +1,39 @@
+{
+  "stage": "negative",
+  "stageId": "negative-20261105T122955Z-68932621b5784032bee8791efaa03730",
+  "executable": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\dotnet.exe",
+  "arguments": [
+    "test",
+    "--project",
+    "CompatibilityProbe.csproj",
+    "--no-build",
+    "--no-restore",
+    "--results-directory",
+    "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\evidence\\negative-20261105T122955Z-68932621b5784032bee8791efaa03730"
+  ],
+  "workingDirectory": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe",
+  "processEnvironment": {
+    "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+    "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1",
+    "DOTNET_NOLOGO": "1",
+    "NUGET_SCRATCH": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp\\scratch",
+    "DOTNET_ROOT": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet",
+    "TMP": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp",
+    "DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE": "1",
+    "NUGET_PLUGINS_CACHE_PATH": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp\\plugins",
+    "TEMP": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp",
+    "DOTNET_CLI_HOME": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.cli",
+    "REQNROLL_FORMATTERS_MESSAGE": "outputFilePath=E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\evidence\\negative-20261105T122955Z-68932621b5784032bee8791efaa03730/native-messages.ndjson",
+    "AAATDD_PROBE_NEGATIVE": "1",
+    "MSBuildEnableWorkloadResolver": "false",
+    "NUGET_HTTP_CACHE_PATH": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp\\http-cache",
+    "AAATDD_PROBE_EVIDENCE_DIR": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\evidence\\negative-20261105T122955Z-68932621b5784032bee8791efaa03730",
+    "NUGET_PACKAGES": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages"
+  },
+  "startedUtc": "2026-11-05T12:29:55.7361658+00:00",
+  "finishedUtc": "2026-11-05T12:29:57.3109150+00:00",
+  "processId": 51612,
+  "timeoutMilliseconds": 60000,
+  "timedOut": false,
+  "exitCode": 2
+}

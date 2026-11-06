@@ -1,0 +1,78 @@
+[
+  {
+    "kind": "positive",
+    "runDirectory": "positive-20261105T122940Z-847b822a78934b7ab5ccca1b9d3fc02d",
+    "nativeRunId": "_0bJwaZ6qer3HX7L1PQFtg",
+    "executableExitCode": 0,
+    "nativeSuccess": true,
+    "discoveredCaseCount": 2,
+    "caseAttempts": [
+      0,
+      0
+    ],
+    "passedSteps": 10,
+    "failedSteps": 0,
+    "messageCount": 40,
+    "messageProtocol": "30.1.0",
+    "reqnrollVersion": "3.3.4",
+    "runtime": ".NET 10.0.14",
+    "sqliteVersion": "3.53.3",
+    "nativeSqlite": [
+      {
+        "name": "e_sqlite3.DLL",
+        "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\runtimes\\win-x64\\native\\e_sqlite3.DLL",
+        "sha256": "B7385D722C83FB52142A00477A726723745916D22A555711EE89834C1111FB2E"
+      }
+    ],
+    "independentContexts": [
+      "303e8718-3ca9-4210-8b69-eb7925a6b7fc",
+      "11df2778-3e42-484f-a9ad-afc8690ee8b1"
+    ],
+    "lifecycle": [
+      "before",
+      "after",
+      "before",
+      "after"
+    ],
+    "cleanupErrors": [],
+    "nativeMessagesSHA256": "55625947D2F524D5FBEAF3EB5BC912A430C8BE29A6E686A0B3CC0DEAFD32FF2B"
+  },
+  {
+    "kind": "negative",
+    "runDirectory": "negative-20261105T122955Z-68932621b5784032bee8791efaa03730",
+    "nativeRunId": "gbqjy1JnVP7bOEievpLEEQ",
+    "executableExitCode": 2,
+    "nativeSuccess": false,
+    "discoveredCaseCount": 2,
+    "caseAttempts": [
+      0,
+      0
+    ],
+    "passedSteps": 9,
+    "failedSteps": 1,
+    "messageCount": 40,
+    "messageProtocol": "30.1.0",
+    "reqnrollVersion": "3.3.4",
+    "runtime": ".NET 10.0.14",
+    "sqliteVersion": "3.53.3",
+    "nativeSqlite": [
+      {
+        "name": "e_sqlite3.DLL",
+        "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\runtimes\\win-x64\\native\\e_sqlite3.DLL",
+        "sha256": "B7385D722C83FB52142A00477A726723745916D22A555711EE89834C1111FB2E"
+      }
+    ],
+    "independentContexts": [
+      "93a88e87-58f4-441d-8fd9-9a052ba0838a",
+      "3e949495-873d-4274-8bb6-2bda43aad2c0"
+    ],
+    "lifecycle": [
+      "before",
+      "after",
+      "before",
+      "after"
+    ],
+    "cleanupErrors": [],
+    "nativeMessagesSHA256": "2DBD42BB8254DDEC09ACEA7031BD376BDF8988D42C39766411CC5B61A3BB9DE4"
+  }
+]

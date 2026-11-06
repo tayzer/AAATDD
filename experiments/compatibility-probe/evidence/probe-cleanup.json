@@ -1,0 +1,11 @@
+{
+  "StoppedOwnedProcesses": [
+    {
+      "ProcessId": 66056,
+      "Name": "VBCSCompiler.exe",
+      "ExecutablePath": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Roslyn\\bincore\\VBCSCompiler.exe"
+    }
+  ],
+  "RemainingOwnedProcesses": 0,
+  "RemainingScenarioDatabases": 0
+}

@@ -1,0 +1,35 @@
+{
+  "stage": "imports",
+  "stageId": "imports-20261105T122838Z-0bfc8bc2de024aaf83b2ffa319548c5a",
+  "executable": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\dotnet.exe",
+  "arguments": [
+    "msbuild",
+    "CompatibilityProbe.csproj",
+    "/pp:E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\evidence\\imports-20261105T122838Z-0bfc8bc2de024aaf83b2ffa319548c5a/project-preprocessed.xml"
+  ],
+  "workingDirectory": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe",
+  "processEnvironment": {
+    "AAATDD_PROBE_NEGATIVE": "0",
+    "NUGET_PACKAGES": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages",
+    "NUGET_HTTP_CACHE_PATH": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp\\http-cache",
+    "NUGET_PLUGINS_CACHE_PATH": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp\\plugins",
+    "TMP": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp",
+    "DOTNET_NOLOGO": "1",
+    "AAATDD_PROBE_EVIDENCE_DIR": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\evidence\\imports-20261105T122838Z-0bfc8bc2de024aaf83b2ffa319548c5a",
+    "DOTNET_ROOT": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet",
+    "DOTNET_CLI_HOME": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.cli",
+    "TEMP": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp",
+    "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1",
+    "DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE": "1",
+    "REQNROLL_FORMATTERS_MESSAGE": "outputFilePath=E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\evidence\\imports-20261105T122838Z-0bfc8bc2de024aaf83b2ffa319548c5a/native-messages.ndjson",
+    "MSBuildEnableWorkloadResolver": "false",
+    "NUGET_SCRATCH": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp\\scratch",
+    "DOTNET_CLI_TELEMETRY_OPTOUT": "1"
+  },
+  "startedUtc": "2026-11-05T12:28:38.8302986+00:00",
+  "finishedUtc": "2026-11-05T12:28:39.6649483+00:00",
+  "processId": 60432,
+  "timeoutMilliseconds": 300000,
+  "timedOut": false,
+  "exitCode": 0
+}
