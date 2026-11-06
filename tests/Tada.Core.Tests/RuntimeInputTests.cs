@@ -131,8 +131,16 @@ public sealed class RuntimeInputTests
         try
         {
             Environment.SetEnvironmentVariable(name, "UNREVIEWED_CONTROL");
-            var result = await Processes.Execute("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", "if ($env:TADA_ENVIRONMENT_LEAK_CONTROL) { exit 42 }; Write-Output 'clean'"],
-                project.Root, 10, ExecutionEnvironment.Capture(), replaceEnvironment: true);
+            // Use shell built-ins with AutoRun disabled. Windows PowerShell's startup/module
+            // discovery under a scrubbed environment is unrelated to this isolation boundary.
+            string shell = Environment.GetEnvironmentVariable("COMSPEC") ?? "cmd.exe";
+            string[] arguments = ["/d", "/s", "/c", "if defined TADA_ENVIRONMENT_LEAK_CONTROL (exit /b 42) else (echo clean)"];
+            var inherited = await Processes.Execute(shell, arguments, project.Root, 10);
+            Assert.IsFalse(inherited.TimedOut, inherited.Stderr);
+            Assert.AreEqual(42, inherited.ExitCode, "The positive control did not see the ambient variable.");
+            var result = await Processes.Execute(shell, arguments, project.Root, 10,
+                ExecutionEnvironment.Capture(), replaceEnvironment: true);
+            Assert.IsFalse(result.TimedOut, result.Stderr);
             Assert.AreEqual(0, result.ExitCode, result.Stderr);
             StringAssert.Contains(result.Stdout, "clean");
         }

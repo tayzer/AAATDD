@@ -35,7 +35,8 @@ jobs:
         run: |
           dotnet build tests/Tada.Core.Tests/Tada.Core.Tests.csproj --no-restore --disable-build-servers -c Release
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
-          dotnet tests/Tada.Core.Tests/bin/Release/net10.0/Tada.Core.Tests.dll --progress off --no-ansi
+          dotnet tests/Tada.Core.Tests/bin/Release/net10.0/Tada.Core.Tests.dll --progress off --no-ansi | Tee-Object .artifacts/core-tests.log
+          exit $LASTEXITCODE
       - name: Pack the tool
         run: dotnet pack src/Tada.Cli/Tada.Cli.csproj --no-restore --disable-build-servers -o .artifacts/packages
       - name: Orders end-to-end and negative controls
@@ -65,6 +66,7 @@ jobs:
           retention-days: 14
           path: |
             .artifacts/packages/*.nupkg
+            .artifacts/core-tests.log
             .artifacts/release-bundles/**/*.zip
             .artifacts/release-bundles/**/bundle.json
             .artifacts/native/*.build.json
