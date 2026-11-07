@@ -54,18 +54,20 @@ dotnet tool run tada init
 
 The local-only feed selects this package rather than an identically named public package.
 Keep the extracted feed available for later `dotnet tool restore --configfile NuGet.Bundle.Config`.
-`init` preserves existing instructions and creates `.tada/WORKFLOW.md` and `.tada/context.md`.
-If AGENTS.md already existed, review it and link the generated workflow yourself.
+`init` enables TADA as the default workflow through repository agent instructions and creates `.tada/WORKFLOW.md` and `.tada/context.md`.
+It appends a bounded TADA section to existing AGENTS.md and an existing root AGENTS.override.md while retaining their original bytes. Other existing files are preserved. The SDK host used for initialisation is recorded in new context so environment details do not belong in the project request.
 
-Open MyApi with Codex or another coding agent and start with:
+After enabling, open MyApi in a fresh Codex session (or another agent that loads repository instructions). Ask for your project normally, for example:
 
-> Read AGENTS.md, .tada/WORKFLOW.md and .tada/context.md. Help me discover one useful API behaviour, including success and failure examples. Agree the Gherkin with me before implementation. Use Reqnroll, MSTest and Microsoft.Testing.Platform against a separate API. Prepare the executable baseline for my review; do not approve expectations on my behalf. Implement in small RED/GREEN increments and preserve useful context in Git.
+> Build me a simple API for tracking my reading list.
+
+Choose your own project and wording. Do not mention TADA, Gherkin, workflow files or acceptance-test mechanics in the request. The enabled project must make the agent discover behaviour, ask for business agreement and follow the workflow itself. If you have to remind the agent to do so, record an activation/usability failure rather than counting the coached attempt as a pass.
 
 The human approves the captured specification and oracle. Broken setup is INDETERMINATE, not business RED.
 An observed response violating an agreed outcome establishes FAIL. Oracle edits require a new review and approval.
 Retained evidence can be verified without re-execution. Chores and refactors use proportionate checks without invented scenarios.
 
-After the first feature, fix a defect, refactor without changing behaviour, then start a fresh agent session from Git context.
+After the first feature, request a defect fix, a behaviour-preserving refactor and a small chore in normal language. Later start another fresh agent session with an ordinary continuation request. It must recover Git context without a handoff-reading prompt.
 Do not weaken assertions or delete failed runs to obtain PASS. Missing checkpoints, damaged evidence or unsupported inputs require investigation.
 Complete automatic I/O/child-process observation and protected independent assurance are not claimed.
 

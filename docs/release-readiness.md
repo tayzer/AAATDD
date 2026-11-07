@@ -7,7 +7,7 @@ Status: **IMPLEMENTATION AUTHORISED; RELEASE INCOMPLETE**. The active goal super
 - [x] Install a versioned repository-local `tada` tool from a packaged artifact on a fresh supported automated environment; requester-led installation remains separate.
 - [x] Prepare a development download bundle with install guidance, licences, notices and checksums; validate extracted-feed installation and corruption rejection.
 - [x] Initialise a new repository without overwriting existing instructions or work.
-- [ ] Agent-neutral guidance supports collaborative discovery and human-approved Gherkin, meaningful RED/GREEN, small increments and regression verification.
+- [ ] After project enablement, an ordinary project/change request automatically follows the TADA workflow: collaborative discovery, human-approved Gherkin where appropriate, meaningful RED/GREEN and regression verification. No workflow-specific user prompt or reminder is supplied.
 - [x] Prepare/review/approve an immutable exact-byte oracle baseline with explicit scope and preserved history.
 - [x] Build and run the actual Reqnroll/MSTest/MTP harness against a separate API; retain identities, native Messages and command evidence.
 - [x] Verify retained evidence without re-execution, detecting missing/skipped/stale/truncated evidence and altered oracle inputs.
@@ -20,7 +20,7 @@ Status: **IMPLEMENTATION AUTHORISED; RELEASE INCOMPLETE**. The active goal super
 - [x] Retain ordinary Windows loader notifications for transient DLLs, validate continuous event counts and reject queue loss/overflow; package the native observer without an end-user C compiler or additional C runtime library.
 - [x] Record actual restore/rebuild task code and supported file parameters; reject unselected file inputs and require reviewed declarations for opaque custom tasks/evaluation.
 - [ ] Validate the complete execution/import/loaded-runtime input boundary against reviewed files or explicit trusted-toolchain policy.
-- [ ] Context survives a new agent session using concise Git-native records with provenance and supersession.
+- [ ] Context survives a new agent session using concise Git-native records with provenance and supersession, recovered from an ordinary continuation request without handoff-reading instructions.
 - [ ] Quickstart reproduces a useful install-to-API workflow, including quality checks and failure recovery.
 - [x] Test path handling, canonicalisation, approval races, process failure, cancellation, timeouts, teardown and evidence integrity.
 - [x] Hosted CI validates the recorded source/package checkpoint; licence and dependency notices match redistributed content. Revalidate the selected publication SHA before release.
@@ -32,6 +32,8 @@ Unchecked means incomplete or not yet verified. The [earlier audit](architecture
 ## Current implementation increment
 
 The [alpha.7 checkpoint](validation/increment-07.md) records 111 passing focused tests, 46 Orders controls and installed-package API development with unchanged-rerun identity and real failure-history controls. A private task-cache byte change produces a distinct environment; restored-cache evidence verifies offline. Cancellation and deadline controls terminate owned child processes and preserve diagnostics. Checked items describe bounded control demonstrations, not requester business approval or whole-release completion. The [alpha.6 checkpoint](validation/increment-06.md), [alpha.5 checkpoint](validation/increment-05.md) and earlier increments remain historical evidence.
+
+Alpha.8 corrects the activation/trial approach: `init` supplies default workflow instructions even when root agent instructions already exist, and a new context records the invoking SDK host. The [ordinary-request trial](validation/default-workflow-trial.md) supersedes the earlier coached starter prompt. Existing alpha.7 CI and scripted API controls remain evidence for their recorded source/package only; they do not prove spontaneous workflow adoption by an agent or certify alpha.8.
 
 Alpha.7 uses schema-6 baselines with `evaluated-dotnet-build-v3`, `msbuild-tasks-and-declared-inputs-v2` and `dotnet-loader-observation-v2`. Implementation source identity and exact per-run artifact identities remain separate; observed task-only tools join environment identity. The [provenance audit](validation/provenance-audit.md) records the corrected gaps and remaining observation limits. [Contracts](build-task-contracts.md) trust reviewed opaque code to honour complete declarations; they do not trace arbitrary I/O or every possible child/helper execution. Complete automatic execution-boundary coverage remains unproven. Alpha.5's ordinary transient-DLL observation and compiler reproducibility evidence remain applicable historical controls.
 

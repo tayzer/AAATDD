@@ -14,7 +14,7 @@ The initial supported stack is Windows x64/.NET 10 with Reqnroll/MSTest/MTP. The
 
 The verifier uses C#/.NET 10, packaged as the `Tada.Cli` repository-local .NET tool. Source licence: [MIT](LICENSE). [Hosted Windows validation](docs/validation/hosted-ci.md) passes package installation, API controls and redistribution checks at the recorded source commit. Requester-led installation, useful API development and a genuinely fresh agent session remain required before release. No GitHub release or NuGet package has been published.
 
-Run `tada init`, then read `.tada/WORKFLOW.md`. The CLI provides `tada baseline prepare`, `tada baseline review`, `tada baseline approve`, `tada run` and `tada verify`. Chores and refactors use proportionate existing checks rather than mandatory new business scenarios. Store useful session handoff in `.tada/context.md`. Historical ADRs and probe evidence retain the earlier AAATDD name.
+Install the local tool and run `tada init` to enable it for the project. Start a fresh agent session and describe your project or change normally; repository instructions supply the TADA workflow without a special prompt. The [ordinary-request trial](docs/validation/default-workflow-trial.md) keeps real agent adoption separate from scaffolding tests. The CLI provides `tada baseline prepare`, `tada baseline review`, `tada baseline approve`, `tada run` and `tada verify`. Chores and refactors use proportionate existing checks rather than mandatory new business scenarios. Store useful session handoff in `.tada/context.md`. Historical ADRs and probe evidence retain the earlier AAATDD name.
 
 ## Design documents
 

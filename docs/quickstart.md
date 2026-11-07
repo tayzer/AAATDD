@@ -25,7 +25,7 @@ cd MyApi
 dotnet new tool-manifest
 $feedPath = [Security.SecurityElement]::Escape("$tadaSource/.artifacts/packages")
 "<configuration><packageSources><clear/><add key='local' value='$feedPath'/></packageSources></configuration>" | Set-Content NuGet.Local.Config
-dotnet tool install Tada.Cli --version 0.1.0-alpha.7 --configfile NuGet.Local.Config
+dotnet tool install Tada.Cli --version 0.1.0-alpha.8 --configfile NuGet.Local.Config
 dotnet tool run tada --version
 dotnet tool run tada init
 ```
@@ -34,15 +34,21 @@ Commit the tool manifest, configuration, guidance and useful context. Depending 
 
 On Windows, run `git config core.longpaths true` inside the application repository before committing or checking out deep snapshot paths. This is a repository-local setting; the snapshot digest directories can exceed Git's default Windows path limit in a deeply nested workspace. Validation commands supply `-c core.longpaths=true` without changing global Git settings.
 
-`init` preserves existing files, including `AGENTS.md` and `NuGet.Config`. Link `.tada/WORKFLOW.md` from existing instructions after reviewing them. The generated harness contains pending setup and no invented business requirements; an empty suite is deliberately not a pass.
+`init` enables TADA as the project's default workflow. It creates root `AGENTS.md` or appends one bounded TADA section to an existing file, preserving its original bytes. If a root `AGENTS.override.md` exists, it receives the same section because Codex selects it ahead of `AGENTS.md`. Other existing files, including `NuGet.Config`, are preserved. Repeated initialisation changes nothing; conflicting or incomplete TADA sections are reported for reconciliation. The generated harness contains pending setup and no invented business requirements; an empty suite is deliberately not a pass.
+
+The CLI records its .NET host in newly generated context so a portable SDK can be used without spelling its path in the project request. Recheck that host after moving machines. Installation makes the CLI available; `init` is the explicit per-project enable step and does not change global agent settings.
 
 New projects preserve file bytes through Git checkouts with `* -text`; `.tada/.gitattributes` independently protects captured records. Existing root attributes are not overwritten. Review equivalent rules for your oracle paths if adopting TADA in an existing repository. Exact-byte checks intentionally reject approval carry-forward after actual file changes.
 
 ## Work with Codex or another agent
 
-Open your application directory and ask:
+After enabling, start a fresh Codex chat in the application directory and ask for the project normally. For example:
 
-> Read AGENTS.md, .tada/WORKFLOW.md and .tada/context.md. Help me discover one useful API behaviour with success and failure examples. Agree the Gherkin acceptance criteria with me before implementing the API. Build a separate Reqnroll/MSTest/MTP harness and implement in small RED/GREEN increments. Do not approve expectations on my behalf.
+> Build me a simple API for tracking my reading list.
+
+Use your own project and wording. Do not supply TADA instructions, Gherkin mechanics, workflow-file paths or a special starter prompt. The enabled project must cause the agent to discover behaviour, agree executable acceptance with you and follow the appropriate workflow itself. If it needs coaching to do so, record an activation/usability failure. Follow the [ordinary-request trial](validation/default-workflow-trial.md) to assess this experience.
+
+Codex discovers project instructions when a session starts; root `AGENTS.override.md` takes precedence over root `AGENTS.md`. See the [official OpenAI documentation](https://learn.chatgpt.com/docs/agent-configuration/agents-md). Nested overrides, custom instruction discovery and size limits can affect the effective guidance. Other agents must load the repository entry point through their normal instruction mechanism; installing a CLI alone cannot alter an agent that ignores project instructions. Automatic adoption by a real fresh agent remains an experience gate, distinct from testing file generation.
 
 The core requires no model API or agent SDK. Gherkin is business authority; context Markdown indexes it and records reasoning without duplicating the functional specification.
 

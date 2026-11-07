@@ -8,6 +8,27 @@ namespace Tada.Tests;
 public sealed class CliTests
 {
     [TestMethod]
+    public async Task InitReportsActivationAndCapturesHostWithoutAWorkflowPrompt()
+    {
+        using var project = new CoreTests.Project();
+        string instructions = Path.Combine(project.Root, "AGENTS.md");
+        File.WriteAllText(instructions, "Existing project conventions.");
+        var first = await Invoke(project.Root, "init", "--json");
+        Assert.AreEqual(0, first.ExitCode, first.Stderr);
+        using var result = JsonDocument.Parse(first.Stdout);
+        Assert.AreEqual("AGENTS.md", result.RootElement.GetProperty("updated")[0].GetString());
+        StringAssert.Contains(result.RootElement.GetProperty("next").GetString()!, "describe what you want to build or change normally");
+        string context = File.ReadAllText(Path.Combine(project.Root, ".tada", "context.md"));
+        StringAssert.Contains(context, "## Local SDK host");
+        StringAssert.Contains(context, "--dotnet");
+        var repeat = await Invoke(project.Root, "init", "--json");
+        Assert.AreEqual(0, repeat.ExitCode, repeat.Stderr);
+        using var repeated = JsonDocument.Parse(repeat.Stdout);
+        Assert.AreEqual(0, repeated.RootElement.GetProperty("created").GetArrayLength());
+        Assert.AreEqual(0, repeated.RootElement.GetProperty("updated").GetArrayLength());
+    }
+
+    [TestMethod]
     public async Task ReviewShowsActualAcceptanceTextAndSupportsExplicitMachineOutput()
     {
         using var project = new CoreTests.Project();

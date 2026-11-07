@@ -185,9 +185,16 @@ public sealed class CoreTests
     {
         using var project = new Project();
         File.WriteAllText(Path.Combine(project.Root, "AGENTS.md"), "existing authority");
-        Assert.IsGreaterThan(0, Onboarding.Initialise(project.Root).Length);
-        Assert.AreEqual("existing authority", File.ReadAllText(Path.Combine(project.Root, "AGENTS.md")));
-        Assert.AreEqual(0, Onboarding.Initialise(project.Root).Length);
+        var first = Onboarding.Initialise(project.Root);
+        Assert.IsGreaterThan(0, first.Created.Length);
+        CollectionAssert.AreEqual(new[] { "AGENTS.md" }, first.Updated);
+        string enabled = File.ReadAllText(Path.Combine(project.Root, "AGENTS.md"));
+        StringAssert.StartsWith(enabled, "existing authority");
+        StringAssert.Contains(enabled, Onboarding.AgentInstructions);
+        var second = Onboarding.Initialise(project.Root);
+        Assert.AreEqual(0, second.Created.Length);
+        Assert.AreEqual(0, second.Updated.Length);
+        Assert.AreEqual(enabled, File.ReadAllText(Path.Combine(project.Root, "AGENTS.md")));
     }
 
     [TestMethod]

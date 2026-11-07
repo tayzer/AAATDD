@@ -2,15 +2,18 @@ namespace Tada;
 
 public static class Onboarding
 {
-    public static string[] Initialise(string root)
+    public sealed record Initialisation(string[] Created, string[] Updated);
+
+    public static Initialisation Initialise(string root, string? dotnetHost = null)
     {
         Directory.CreateDirectory(root);
         var repository = new Repository(root);
         var files = new Dictionary<string, string>
         {
             [".tada/WORKFLOW.md"] = Workflow,
-            [".tada/context.md"] = "# Project context\n\nRecord current goals, accepted behaviour links and unresolved questions here. Treat this as a concise index, not a second functional specification.\n",
-            ["AGENTS.md"] = "# Agent entry point\n\nRead `.tada/WORKFLOW.md` and `.tada/context.md` before changing this repository. Gherkin defines business acceptance. Ask the human to agree acceptance-changing decisions; routine implementation choices are delegated.\n",
+            [".tada/context.md"] = "# Project context\n\nRecord current goals, accepted behaviour links and unresolved questions here. Treat this as a concise index, not a second functional specification.\n"
+                + (dotnetHost == null ? "" : $"\n## Local SDK host\n\nInitialisation used `{dotnetHost}`. Recheck this path and SDK 10.0.403 before use, especially after moving machines. Use this host for SDK/tool commands and pass the same host through `--dotnet` to `tada run`. This is an environment note, not business authority.\n"),
+            ["AGENTS.md"] = "# Agent entry point\n\n" + AgentInstructions,
             ["global.json"] = "{\"sdk\":{\"version\":\"10.0.403\",\"rollForward\":\"disable\",\"allowPrerelease\":false},\"test\":{\"runner\":\"Microsoft.Testing.Platform\"}}\n",
             ["NuGet.Config"] = "<configuration><packageSources><clear/><add key=\"nuget.org\" value=\"https://api.nuget.org/v3/index.json\"/></packageSources></configuration>\n",
             [".gitattributes"] = "# Approval identities use exact file bytes. Keep Git from rewriting line endings.\n* -text\n",
@@ -78,8 +81,48 @@ public static class Onboarding
                 new Execution("tests/Acceptance/Acceptance.csproj", "Acceptance.dll", "tada-messages.ndjson")));
             created.Add("tada.json");
         }
-        return created.ToArray();
+        var updated = new List<string>();
+        if (!created.Contains("AGENTS.md") && Activate("AGENTS.md")) updated.Add("AGENTS.md");
+        // Codex selects the override instead of AGENTS.md at the same directory level.
+        // Keep the normal entry point for other agents and activate an existing override too.
+        if (File.Exists(Path.Combine(root, "AGENTS.override.md")) && Activate("AGENTS.override.md"))
+            updated.Add("AGENTS.override.md");
+        return new Initialisation(created.ToArray(), updated.ToArray());
+
+        bool Activate(string relative)
+        {
+            string path = repository.Resolve(relative);
+            using var stream = new FileStream(path, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+            using var reader = new StreamReader(stream, new System.Text.UTF8Encoding(false, true), detectEncodingFromByteOrderMarks: true, leaveOpen: true);
+            string existing;
+            try { existing = reader.ReadToEnd(); }
+            catch (System.Text.DecoderFallbackException)
+            {
+                throw new TadaException($"Cannot decode {relative} as UTF-8 or BOM-marked Unicode. Existing instructions were left unchanged.");
+            }
+            if (existing.Contains(AgentInstructions, StringComparison.Ordinal)) return false;
+            if (existing.Contains("<!-- TADA:BEGIN -->", StringComparison.Ordinal) || existing.Contains("<!-- TADA:END -->", StringComparison.Ordinal))
+                throw new TadaException($"Existing TADA guidance in {relative} differs or is incomplete. Reconcile that section before enabling; existing instructions were left unchanged.");
+            byte[] addition = reader.CurrentEncoding.GetBytes("\n\n" + AgentInstructions + "\n");
+            stream.Position = stream.Length;
+            stream.Write(addition);
+            return true;
+        }
     }
+
+    public const string AgentInstructions = """
+        <!-- TADA:BEGIN -->
+        ## TADA is enabled for this repository
+
+        Apply the TADA workflow by default to ordinary project requests. The user does not need to mention TADA, Gherkin, tests or this file in their prompt. Before acting, read `.tada/WORKFLOW.md` and `.tada/context.md`, recover the current goal and evidence, and inspect applicable project instructions. Respect explicit user decisions and flag conflicting instructions rather than silently bypassing them.
+
+        - For a new project or feature, discover the intended behaviour with the human, agree success and failure examples, and express agreed acceptance in executable Gherkin before implementing business behaviour. Prepare meaningful independent bindings and the immutable baseline for human review/approval. Never approve expectations on the human's behalf. Implement in small verified increments; distinguish business RED from broken setup.
+        - For a bug fix, use an existing agreed executable scenario when it describes the defect; otherwise agree the missing expectation. Demonstrate the intended regression, repair it and recheck existing obligations. Never weaken assertions or erase failure history to obtain PASS.
+        - For a chore or behaviour-preserving refactor, choose proportionate existing regression, build or quality checks without inventing business scenarios. Return to acceptance discussion if behaviour changes.
+        - Use the SDK/tool host recorded in context when applicable; recheck its availability and the pinned SDK. Run the repository-local tool through that host (`dotnet tool run tada`), and pass the same host through `--dotnet` when needed. Keep environment setup details out of the user's project request.
+        - Before claiming completion, verify the selected agreed expectations and useful quality checks, report unresolved gaps and local advisory L1 limits, and update concise Git-native context with evidence and the next action. A fresh session must recover this itself; do not ask the user to repeat the workflow.
+        <!-- TADA:END -->
+        """;
 
     public const string RuntimeCheckpoint = """
         using System.Diagnostics;
@@ -109,7 +152,7 @@ public static class Onboarding
     public const string Workflow = """
         # TADA agent workflow
 
-        Read this file and `context.md` at the start of each session. This workflow works with any coding agent. With Codex, ask: "Read AGENTS.md and .tada/WORKFLOW.md; help me build an API through agreed executable acceptance criteria."
+        TADA is the default development workflow for this enabled repository. Read this file and `context.md` at the start of each session without waiting for the user to request TADA. Users describe the project or change normally; the installed agent entry point supplies this process. This workflow works with any coding agent that loads the repository's instructions.
 
         ## Choose proportionate work
 
@@ -150,7 +193,7 @@ public static class Onboarding
 
         ## Bootstrap and maintenance
 
-        `tada init` creates guidance and harness scaffolding without overwriting existing files or inventing business scenarios. If AGENTS.md already existed, add a link to this workflow yourself after reviewing its existing instructions. Scenario Outlines are deliberately unsupported in the initial version.
+        `tada init` enables this default workflow and creates harness scaffolding without inventing business scenarios. It appends one bounded TADA section to existing root `AGENTS.md` and an existing root `AGENTS.override.md`, retaining their original bytes. Other existing files are preserved. Repeated initialisation is a no-op; conflicting or incomplete TADA sections need reconciliation rather than silent replacement. Start a fresh agent session after enabling so instruction discovery runs again. Scenario Outlines are deliberately unsupported in the initial version.
 
         New projects disable Git line-ending conversion with `* -text` so captured bytes survive checkouts. Existing `.gitattributes` files are preserved: review equivalent rules for your selected oracle inputs. `.tada/.gitattributes` preserves captured records independently. Formatting changes still require review; never normalise bytes to carry approval forward.
 
