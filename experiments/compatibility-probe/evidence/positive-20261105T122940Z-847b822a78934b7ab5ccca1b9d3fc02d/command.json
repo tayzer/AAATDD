@@ -1,0 +1,39 @@
+{
+  "stage": "positive",
+  "stageId": "positive-20261105T122940Z-847b822a78934b7ab5ccca1b9d3fc02d",
+  "executable": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\dotnet.exe",
+  "arguments": [
+    "test",
+    "--project",
+    "CompatibilityProbe.csproj",
+    "--no-build",
+    "--no-restore",
+    "--results-directory",
+    "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\evidence\\positive-20261105T122940Z-847b822a78934b7ab5ccca1b9d3fc02d"
+  ],
+  "workingDirectory": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe",
+  "processEnvironment": {
+    "DOTNET_ROOT": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet",
+    "NUGET_PACKAGES": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages",
+    "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+    "DOTNET_CLI_HOME": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.cli",
+    "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1",
+    "DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE": "1",
+    "NUGET_SCRATCH": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp\\scratch",
+    "NUGET_PLUGINS_CACHE_PATH": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp\\plugins",
+    "AAATDD_PROBE_NEGATIVE": "0",
+    "MSBuildEnableWorkloadResolver": "false",
+    "DOTNET_NOLOGO": "1",
+    "AAATDD_PROBE_EVIDENCE_DIR": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\evidence\\positive-20261105T122940Z-847b822a78934b7ab5ccca1b9d3fc02d",
+    "TEMP": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp",
+    "TMP": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp",
+    "NUGET_HTTP_CACHE_PATH": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp\\http-cache",
+    "REQNROLL_FORMATTERS_MESSAGE": "outputFilePath=E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\evidence\\positive-20261105T122940Z-847b822a78934b7ab5ccca1b9d3fc02d/native-messages.ndjson"
+  },
+  "startedUtc": "2026-11-05T12:29:40.9345310+00:00",
+  "finishedUtc": "2026-11-05T12:29:43.5505544+00:00",
+  "processId": 56280,
+  "timeoutMilliseconds": 60000,
+  "timedOut": false,
+  "exitCode": 0
+}

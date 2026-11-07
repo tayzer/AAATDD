@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <NativeObserverRoot>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)/../../.artifacts/native'))</NativeObserverRoot>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="$(NativeObserverRoot)/tada_native_observer.dll" Link="tada_native_observer.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+  <Target Name="BuildNativeObserver" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems"
+          Inputs="$(MSBuildProjectDirectory)/native/observer.c;$(MSBuildProjectDirectory)/../../scripts/Build-NativeObserver.ps1"
+          Outputs="$(NativeObserverRoot)/tada_native_observer.dll">
+    <Exec Command="pwsh -NoProfile -NonInteractive -File &quot;$(MSBuildProjectDirectory)/../../scripts/Build-NativeObserver.ps1&quot;" />
+  </Target>
+</Project>

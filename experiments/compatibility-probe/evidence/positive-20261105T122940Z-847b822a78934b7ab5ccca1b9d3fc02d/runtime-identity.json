@@ -1,0 +1,454 @@
+{
+  "runtime": ".NET 10.0.14",
+  "architecture": "X64",
+  "processPath": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\CompatibilityProbe.exe",
+  "assemblies": [
+    {
+      "name": "System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Private.CoreLib.dll",
+      "sha256": "69D56E12535D3A8F2F8F89AC8F97577E6DC788D26F2E7B69BE8FB5F6FF17FF28"
+    },
+    {
+      "name": "CompatibilityProbe, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\CompatibilityProbe.dll",
+      "sha256": "41780D2DF8D46ADD92D02817243D6301D27324C90E222C9D6398B6BCAB56084F"
+    },
+    {
+      "name": "System.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Runtime.dll",
+      "sha256": "D6B4189C8E9AFCE3629B27C902C198A54AD3A355EC8409D3880B3B68FB1CF445"
+    },
+    {
+      "name": "Microsoft.Testing.Platform, Version=2.5.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\Microsoft.Testing.Platform.dll",
+      "sha256": "3B924A66FE318D1EC1D48F4E253C42ECC355FD412114B628D803DEF002F6D6A3"
+    },
+    {
+      "name": "System.Console, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Console.dll",
+      "sha256": "8BE68E4CB2F0B64B5F37F7A7AA82DB2AE1648115A9B7B9381A3CFAC7CDB4AEB5"
+    },
+    {
+      "name": "System.Threading, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Threading.dll",
+      "sha256": "6C2137FB877E647A6C0F8909DB8CA7AF1E6FE95F19C6E531F6A74539FABCC6AD"
+    },
+    {
+      "name": "System.Text.Encoding.Extensions, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Text.Encoding.Extensions.dll",
+      "sha256": "FBBC0DDE38272605B8B95271CCA7202CA04D5FA115ACBCEE936E1BED611FD23C"
+    },
+    {
+      "name": "System.Runtime.InteropServices, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Runtime.InteropServices.dll",
+      "sha256": "BDE2BB33524A73E2964CD47DDF753150D685B31EBB1C4779E66CA426B2B419BF"
+    },
+    {
+      "name": "System.Linq, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Linq.dll",
+      "sha256": "1C6886FB239A6AF59DA0DC1561D9F010E2E983A1E826D6E8F8A61F7EA42A3AF1"
+    },
+    {
+      "name": "System.Collections, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Collections.dll",
+      "sha256": "78D429A901A73A09CDA6037BEFAA56B79BFA557000B2A69BA1C1210253C0B21D"
+    },
+    {
+      "name": "System.ComponentModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.ComponentModel.dll",
+      "sha256": "72B3608363E47F2CF3CF3FC9FE2FCEFB760E5292EBB9D650FA4CED3896DAB5F9"
+    },
+    {
+      "name": "Microsoft.Testing.Extensions.MSBuild, Version=2.5.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\Microsoft.Testing.Extensions.MSBuild.dll",
+      "sha256": "6CBF459486417339E63241A3D1112E312FAD308511CDE2494DB0FDFA4AA92C0B"
+    },
+    {
+      "name": "Microsoft.Testing.Extensions.Telemetry, Version=2.5.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\Microsoft.Testing.Extensions.Telemetry.dll",
+      "sha256": "87F4F67D876A05617CC280E3C56F80156D4A2E12B45A023F1C72A83651517AF9"
+    },
+    {
+      "name": "MSTest.TestAdapter, Version=4.5.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\MSTest.TestAdapter.dll",
+      "sha256": "14B166AFF3BE74487F8B4D420F8C4ADDB94F9E2DA67260044E3F824B8D64390D"
+    },
+    {
+      "name": "Microsoft.VisualStudio.TestPlatform.ObjectModel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll",
+      "sha256": "FF730C68BEBE827F74E2BDCFB571400AB328C00BE11C7FE3A1FE01143B483BC6"
+    },
+    {
+      "name": "MSTestAdapter.PlatformServices, Version=4.5.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\MSTestAdapter.PlatformServices.dll",
+      "sha256": "4D2F835FC7964CE76B22D1BE04F6E227CB1E53F01210149D558F3FD3DA495CFE"
+    },
+    {
+      "name": "MSTest.TestFramework, Version=4.5.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\MSTest.TestFramework.dll",
+      "sha256": "DF34E12D5FA91B8C19DD81A37A987A3C19B61EB1851D85B285B824049C56BD0D"
+    },
+    {
+      "name": "System.Memory, Version=10.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Memory.dll",
+      "sha256": "5BBEC55D9B01C664055180840B651B1B1F01C15F7F45EE84192B95A09F2C355B"
+    },
+    {
+      "name": "System.Xml.XDocument, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Xml.XDocument.dll",
+      "sha256": "FD3C02115F7AD89770A70F18F83C8E4CDF8C78BB4F88046923F3285FA853C7F4"
+    },
+    {
+      "name": "System.Private.Xml.Linq, Version=10.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Private.Xml.Linq.dll",
+      "sha256": "3C2EDAF8C5FAFB005E25631B8ED48A64050BD126A8A5CBA2F84B6869D6A6DF47"
+    },
+    {
+      "name": "System.Private.Xml, Version=10.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Private.Xml.dll",
+      "sha256": "3467185933C682C10A67EB6B4EB78DF5A1DEBC63D4DEF7708D23DB9FB79780FC"
+    },
+    {
+      "name": "System.Collections.Concurrent, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Collections.Concurrent.dll",
+      "sha256": "7F2AC0EC3BB9425017006CC750DC94A3C37ED175BA2F4EAA3F8F8E5CF35472E0"
+    },
+    {
+      "name": "Microsoft.Testing.Extensions.TrxReport.Abstractions, Version=2.5.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\Microsoft.Testing.Extensions.TrxReport.Abstractions.dll",
+      "sha256": "BC14F3B514A4CD5CA4E50127485766AB2A3E7775D1D69CEF9742796F3A8AE554"
+    },
+    {
+      "name": "System.Net.Http, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Net.Http.dll",
+      "sha256": "FC7AD004BDACA8763DCB23AB3A5FB01C9AED9735F678563F4F03254C9C956F8F"
+    },
+    {
+      "name": "System.Diagnostics.Process, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Diagnostics.Process.dll",
+      "sha256": "1ACAEE1D612A45F2F287675B5B84DEFED1B34A90CC659641F97043F45076FBE7"
+    },
+    {
+      "name": "System.ComponentModel.Primitives, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.ComponentModel.Primitives.dll",
+      "sha256": "953DB884B5EDFC396ED4036413240E538CDBB858C06354D976D7B2E6CCCE7167"
+    },
+    {
+      "name": "System.IO.Pipes, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.IO.Pipes.dll",
+      "sha256": "E631DAD2C1C1657F40B512D15ED4A636D20341E8A0C6DF34F2CD7D9B20848836"
+    },
+    {
+      "name": "System.Threading.Overlapped, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Threading.Overlapped.dll",
+      "sha256": "9442E2B745620403121FF4868FD430A2178029C22AE6A8DCAC77D957ADA4BE42"
+    },
+    {
+      "name": "System.Security.AccessControl, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Security.AccessControl.dll",
+      "sha256": "C83DCE7B6B0737D14771C9AD38A8726787A91472BE503D8F911BFE91668EFADB"
+    },
+    {
+      "name": "System.Security.Principal.Windows, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Security.Principal.Windows.dll",
+      "sha256": "25F1D31F27D8E9A97FA203160DBF9A8A7BE8188328AC74516002D0AC071961D9"
+    },
+    {
+      "name": "System.Security.Claims, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Security.Claims.dll",
+      "sha256": "77C7616C8F073677F8A057EF032B21D8F6DFEB19179B936BD54BAB268E71CBF5"
+    },
+    {
+      "name": "MSTest.TestFramework.Extensions, Version=4.5.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\MSTest.TestFramework.Extensions.dll",
+      "sha256": "076C0A05F2D73A4B9E53EE494576B4B4B8302E5E794A41AA2C98893B6FD33951"
+    },
+    {
+      "name": "System.Threading.Channels, Version=10.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Threading.Channels.dll",
+      "sha256": "26F3F523AE3A685B462C1B192AC752CFA8DA5DB5BA4E2714B2E64635E717A4D6"
+    },
+    {
+      "name": "System.Threading.ThreadPool, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Threading.ThreadPool.dll",
+      "sha256": "2135197F9CBC09004CA02055BF54B5E3D0E2D7A9D61C477E4EF129321EB0B4C2"
+    },
+    {
+      "name": "System.Threading.Thread, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Threading.Thread.dll",
+      "sha256": "5E1C4834ABD41D88F79872557C69D20502E2D220BDE333870E31D1A1EB4EACD2"
+    },
+    {
+      "name": "System.Xml.ReaderWriter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Xml.ReaderWriter.dll",
+      "sha256": "496DC55783342234033FE7162F618938691F25DD818633CDD386DBA6E4E1C271"
+    },
+    {
+      "name": "Reqnroll.MSTest.ReqnrollPlugin, Version=3.0.0.0, Culture=neutral, PublicKeyToken=611ce36403091019",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\Reqnroll.MSTest.ReqnrollPlugin.dll",
+      "sha256": "ECE2E206E337426E89FDFD4CA4CE89B026EA6875B6D9B52CA4837ED4F0DF355F"
+    },
+    {
+      "name": "Reqnroll, Version=3.0.0.0, Culture=neutral, PublicKeyToken=611ce36403091019",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\Reqnroll.dll",
+      "sha256": "A9B2A7051E60E38387ECAEB2A06BD6CE2174998128028A3425D3796EAA7F580D"
+    },
+    {
+      "name": "netstandard, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\netstandard.dll",
+      "sha256": "2844417955D5B11F8434FCC969F52BC09104F438AE2F4D5595C36C355D06E270"
+    },
+    {
+      "name": "System.Diagnostics.TraceSource, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Diagnostics.TraceSource.dll",
+      "sha256": "248C392F7DF6BD5DE9BE9411DFBBD61FD6AE9EA6F896EB8A9DD6445CB54AF2F2"
+    },
+    {
+      "name": "System.Diagnostics.TextWriterTraceListener, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Diagnostics.TextWriterTraceListener.dll",
+      "sha256": "A1656873DAE8B3F2A56714F5A9BCF179E8064A992943CD0B275E83310FD4EDFF"
+    },
+    {
+      "name": "System.Runtime.Intrinsics, Version=10.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Runtime.Intrinsics.dll",
+      "sha256": "61CEDF60E24E672BBDE2869CEAEE84342D22823315AAE7FB7B768E9A6E6893A2"
+    },
+    {
+      "name": "Reqnroll.Utils, Version=3.0.0.0, Culture=neutral, PublicKeyToken=611ce36403091019",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\Reqnroll.Utils.dll",
+      "sha256": "26AD4558160CB5C590474A8D11CDB3C9532D3286300D703909990A2BA73177B6"
+    },
+    {
+      "name": "Gherkin, Version=35.0.0.0, Culture=neutral, PublicKeyToken=86496cfa5b4a5851",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\Gherkin.dll",
+      "sha256": "9E18BA03BBCAA32B9D2FD9CDBFC1FF9CFE55BB873BD8D84A51A3F36B2CC5EC3D"
+    },
+    {
+      "name": "Cucumber.Messages, Version=30.1.0.0, Culture=neutral, PublicKeyToken=b10c5988214f940c",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\Cucumber.Messages.dll",
+      "sha256": "668D80A9636F569179DFDD2A5B44B0294001C36B7769DA793ECD17032B4DFA9A"
+    },
+    {
+      "name": "System.Private.Uri, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Private.Uri.dll",
+      "sha256": "EB07DE9B8F80DBC1C2CAD80598E184A8369F6CBD9D105D50BCC6CD3428E61CE8"
+    },
+    {
+      "name": "System.Diagnostics.FileVersionInfo, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Diagnostics.FileVersionInfo.dll",
+      "sha256": "B86967674838E9E7465E171D334F6B970720EBCF005326E45C1C08E5720A0054"
+    },
+    {
+      "name": "System.Text.RegularExpressions, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Text.RegularExpressions.dll",
+      "sha256": "244BE34F8333FF60B1FA87F54FEEA7E8338E2FF96FDB148A4D4BF12B7C981C86"
+    },
+    {
+      "name": "System.Text.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Text.Json.dll",
+      "sha256": "FF440FD7D4AE3D5A6D080C1EBAAAE7D5F4145EA162AB12BF8931E92B4311F469"
+    },
+    {
+      "name": "System.Text.Encodings.Web, Version=10.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Text.Encodings.Web.dll",
+      "sha256": "319EB068C30AE985653A31911086141F5BA26B99E0CE7FF083F455AD42D4C584"
+    },
+    {
+      "name": "System.Numerics.Vectors, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Numerics.Vectors.dll",
+      "sha256": "2025FBC96C75D61D82CEE26CCACB100D773A4E393630E2697A5C7BC6C4EE5A8E"
+    },
+    {
+      "name": "System.Runtime.Loader, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Runtime.Loader.dll",
+      "sha256": "B55E68BF26539914D8EB80718DC5B183F36D53C7FA20103F52C06796D33AA0C6"
+    },
+    {
+      "name": "Microsoft.Extensions.DependencyModel, Version=8.0.0.2, Culture=neutral, PublicKeyToken=adb9793829ddae60",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\Microsoft.Extensions.DependencyModel.dll",
+      "sha256": "D8EC4261597A4A119B5BD97770C605F668794A0155707C6A785C41405A7494DC"
+    },
+    {
+      "name": "System.Security.Cryptography, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Security.Cryptography.dll",
+      "sha256": "B043B1ED136164FD69606A9E7F26F1FC05D0C7CB888C0C00E3B58544623CC7E5"
+    },
+    {
+      "name": "System.Reflection.Emit.Lightweight, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Reflection.Emit.Lightweight.dll",
+      "sha256": "F43856D942AF20CD256A7358AFAD7FDB50DF4E9E307E29BEB34DFF8DBD094B6C"
+    },
+    {
+      "name": "System.Reflection.Emit.ILGeneration, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Reflection.Emit.ILGeneration.dll",
+      "sha256": "3F8D14D45F250218D9C66F158B7A218AC73D1F2DF75DBCF71A09F12F1711BF5F"
+    },
+    {
+      "name": "System.Reflection.Primitives, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Reflection.Primitives.dll",
+      "sha256": "9CC0088B3E2D6A0771063DAFD2C924538DFF5087C20610F7826A088A38C27AE0"
+    },
+    {
+      "name": "System.Threading.Tasks.Extensions, Version=10.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Threading.Tasks.Extensions.dll",
+      "sha256": "B35A1FAEECC0FB706B06F470A13FB3B1D2ADDFEF1CD5A81FB1BDBD75AD6C8FDD"
+    },
+    {
+      "name": "CucumberExpressions, Version=17.1.0.0, Culture=neutral, PublicKeyToken=86496cfa5b4a5851",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\CucumberExpressions.dll",
+      "sha256": "77E5F9D533C06BDA6AF53C273F72C3A48E99C1223B97E113C3508CF800129905"
+    },
+    {
+      "name": "Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.6, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\Microsoft.Bcl.AsyncInterfaces.dll",
+      "sha256": "E01124B5A7E24BEF5A66DB6437DE44E3C7701981E3D77513801A46DB5853B87E"
+    },
+    {
+      "name": "System.Net.Primitives, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Net.Primitives.dll",
+      "sha256": "01D8BEF670AC4265708686D37076D8D21DAF3152CD0E7B2AA264302C369F70BE"
+    },
+    {
+      "name": "System.IO.Pipelines, Version=10.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.IO.Pipelines.dll",
+      "sha256": "0306263C46F0FE7EBE87F4427D3365A23E92FAED787B81C54337349688662629"
+    },
+    {
+      "name": "System.Diagnostics.Tracing, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Diagnostics.Tracing.dll",
+      "sha256": "B8274D672EE21B7AB2B579AEC0C55795CB9FB3E1F15E9B3C2EE07D90260A3FA2"
+    },
+    {
+      "name": "System.Diagnostics.DiagnosticSource, Version=10.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Diagnostics.DiagnosticSource.dll",
+      "sha256": "C84547EA80B944C4683901E03C2E0C00E462A7B12A3657F5F3E1474A5D52EDAF"
+    },
+    {
+      "name": "System.Net.Security, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Net.Security.dll",
+      "sha256": "C03A6CBA2D1E841F78293188B8356E0890A03AD9860EB5F602E69AC8DDD253C4"
+    },
+    {
+      "name": "Microsoft.Win32.Registry, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\Microsoft.Win32.Registry.dll",
+      "sha256": "143A613FC7C87E09C02CAC0CC1469F850120BED98C5A1602AD84FC42B6C1AE63"
+    },
+    {
+      "name": "System.Net.Sockets, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Net.Sockets.dll",
+      "sha256": "7E8787C401641F3D749847C552AD8C8C600896E1AAEAD24C93440039801DC98F"
+    },
+    {
+      "name": "Microsoft.Win32.Primitives, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\Microsoft.Win32.Primitives.dll",
+      "sha256": "637ADB956E9E80549239F1707DB3885683504EFBFC2ED8EA93A3D187EF53789C"
+    },
+    {
+      "name": "Microsoft.TestPlatform.PlatformAbstractions, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\Microsoft.TestPlatform.PlatformAbstractions.dll",
+      "sha256": "8BC7FAEC348A71336AF3BFBEECAD564AD0F97A8216835ED90CD2CEFF621A3697"
+    },
+    {
+      "name": "System.Net.NameResolution, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Net.NameResolution.dll",
+      "sha256": "CC5B82C8101E3AF2AB05DEA804D333109F954F32EC49A9E4E71E3679EF4D7D58"
+    },
+    {
+      "name": "System.ComponentModel.TypeConverter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.ComponentModel.TypeConverter.dll",
+      "sha256": "8FAABCF0EA88A11425D247B19D9CC8A64A78A7C07FF977854CF4A9166E0415B7"
+    },
+    {
+      "name": "System.Runtime.Serialization.Primitives, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Runtime.Serialization.Primitives.dll",
+      "sha256": "5981EF301F6A849AE73BFA0EEB4956992FC15B00F705C35F208EAF6793A37AB3"
+    },
+    {
+      "name": "System.Collections.NonGeneric, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Collections.NonGeneric.dll",
+      "sha256": "82AB716AB740669598D8CDA36A92690BCC4B01EBBA8B21C0C4F0A7A8EE1D9248"
+    },
+    {
+      "name": "System.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.ObjectModel.dll",
+      "sha256": "16F21D6DA2DB3CE7A1C0B904BC2F3658685156A2155E5AABA8A3D45F4BC06C74"
+    },
+    {
+      "name": "System.Collections.Specialized, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Collections.Specialized.dll",
+      "sha256": "D9ED158EF29DF6146151D13260DDBB2310DA7150EB98C2637CE91D057F7786CB"
+    },
+    {
+      "name": "System.Runtime.Numerics, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Runtime.Numerics.dll",
+      "sha256": "46B0E0C9B0198446A5D4AE8579433A038D7F1199E0378EE6213A0390BDD9A99C"
+    },
+    {
+      "name": "System.Formats.Asn1, Version=10.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Formats.Asn1.dll",
+      "sha256": "614C4E1729C2011B1E40424D7B00B3DD2B76CA7ABB438C62D93048C97D9AD44A"
+    },
+    {
+      "name": "System.Diagnostics.StackTrace, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Diagnostics.StackTrace.dll",
+      "sha256": "C464FF65BB7A1EF7E70B0C610AEA951E8F71045CFDE50602832969AA02253B6E"
+    },
+    {
+      "name": "System.Linq.Expressions, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Linq.Expressions.dll",
+      "sha256": "EB9139D158B544C11B65CD32C6BFBBC2A11BFE5E9EC61ECC94999843AFD5CD2C"
+    },
+    {
+      "name": "Microsoft.Data.Sqlite, Version=10.0.14.0, Culture=neutral, PublicKeyToken=adb9793829ddae60",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\Microsoft.Data.Sqlite.dll",
+      "sha256": "5A0627964721A7ACDF5D242FA59DB4E8452305D23789DD30C5D03227A370518B"
+    },
+    {
+      "name": "System.Data.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\shared\\Microsoft.NETCore.App\\10.0.14\\System.Data.Common.dll",
+      "sha256": "E6BE5F74D117B7300523041EC239D2C7B64FC495EF954F48F81CA71507E510C6"
+    },
+    {
+      "name": "SQLitePCLRaw.core, Version=2.1.13.3146, Culture=neutral, PublicKeyToken=1488e028ca7ab535",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\SQLitePCLRaw.core.dll",
+      "sha256": "50C999A1AB2AFEACC93BCE5AC2948D3BB630D99D23EFC3CFCBD8BC11D3426EB7"
+    },
+    {
+      "name": "SQLitePCLRaw.batteries_v2, Version=2.1.13.3146, Culture=neutral, PublicKeyToken=8226ea5df37bcae9",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\SQLitePCLRaw.batteries_v2.dll",
+      "sha256": "BC69777001EB4DB81C580F62835396F67E74AAA381EEF446193A904499D5310B"
+    },
+    {
+      "name": "SQLitePCLRaw.provider.e_sqlite3, Version=2.1.13.3146, Culture=neutral, PublicKeyToken=9c301db686d0bd12",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\SQLitePCLRaw.provider.e_sqlite3.dll",
+      "sha256": "02AD639F45A26DE1919FFBB6696BDB399AD01AFC149970A163C3867162F310B3"
+    }
+  ],
+  "native": [
+    {
+      "name": "Microsoft.Data.Sqlite.dll",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\Microsoft.Data.Sqlite.dll",
+      "sha256": "5A0627964721A7ACDF5D242FA59DB4E8452305D23789DD30C5D03227A370518B"
+    },
+    {
+      "name": "SQLitePCLRaw.core.dll",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\SQLitePCLRaw.core.dll",
+      "sha256": "50C999A1AB2AFEACC93BCE5AC2948D3BB630D99D23EFC3CFCBD8BC11D3426EB7"
+    },
+    {
+      "name": "SQLitePCLRaw.batteries_v2.dll",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\SQLitePCLRaw.batteries_v2.dll",
+      "sha256": "BC69777001EB4DB81C580F62835396F67E74AAA381EEF446193A904499D5310B"
+    },
+    {
+      "name": "SQLitePCLRaw.provider.e_sqlite3.dll",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\SQLitePCLRaw.provider.e_sqlite3.dll",
+      "sha256": "02AD639F45A26DE1919FFBB6696BDB399AD01AFC149970A163C3867162F310B3"
+    },
+    {
+      "name": "e_sqlite3.DLL",
+      "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\bin\\Debug\\net10.0\\runtimes\\win-x64\\native\\e_sqlite3.DLL",
+      "sha256": "B7385D722C83FB52142A00477A726723745916D22A555711EE89834C1111FB2E"
+    }
+  ]
+}

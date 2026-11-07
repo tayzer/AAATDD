@@ -1,0 +1,518 @@
+[
+  {
+    "sha256": "7DA025998D60E85DA26CBA0E6DFA5EA1CF6A6902CB0C5FB0327825058A10459C",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\microsoft.testing.extensions.telemetry\\2.5.2\\build\\net9.0\\Microsoft.Testing.Extensions.Telemetry.props"
+  },
+  {
+    "sha256": "FE2B8A1D41A7AEF147DB33FD97EB4BAA646522599969ABEC86A620723959279D",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\microsoft.testing.extensions.telemetry\\2.5.2\\buildMultiTargeting\\Microsoft.Testing.Extensions.Telemetry.props"
+  },
+  {
+    "sha256": "D4D24CF4947A151026E8062DCD04C7ACB9917E302274EE7174960AE0FE498588",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\microsoft.testing.extensions.telemetry\\2.5.2\\buildTransitive\\net9.0\\Microsoft.Testing.Extensions.Telemetry.props"
+  },
+  {
+    "sha256": "D2A18D9A5BEB4AF2801519E2D4BFBE5DF133788797B26504F65ADB546CA5846E",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\microsoft.testing.platform.msbuild\\2.5.2\\buildMultiTargeting\\Microsoft.Testing.Platform.MSBuild.CustomTestTarget.targets"
+  },
+  {
+    "sha256": "1E50703F770E4B417F45EBD0F33B7A0D72776582BE47D10416B3FFEBFE876541",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\microsoft.testing.platform.msbuild\\2.5.2\\buildMultiTargeting\\Microsoft.Testing.Platform.MSBuild.props"
+  },
+  {
+    "sha256": "3985DC8C53C5DA5A1DE93F25F14BB1757F3B93AA150A3FFCEFDD1FDE8482C6F0",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\microsoft.testing.platform.msbuild\\2.5.2\\buildMultiTargeting\\Microsoft.Testing.Platform.MSBuild.targets"
+  },
+  {
+    "sha256": "404F747B86370AE894CCCF28FCD59295230FA81ADD338D7F9097B5C6002EBB41",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\microsoft.testing.platform.msbuild\\2.5.2\\buildTransitive\\Microsoft.Testing.Platform.MSBuild.props"
+  },
+  {
+    "sha256": "DD1AEB1AD6144F5E0A814B8EE9B83032106D1BFE7CE513F8F12A5A17B2B264D3",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\microsoft.testing.platform.msbuild\\2.5.2\\buildTransitive\\Microsoft.Testing.Platform.MSBuild.targets"
+  },
+  {
+    "sha256": "6D9EF286DEC4BD392719F5D2FE3C5A2AAA116E7C7E9336AD0CCFB04A1DE7C61B",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\microsoft.testing.platform\\2.5.2\\build\\net9.0\\Microsoft.Testing.Platform.props"
+  },
+  {
+    "sha256": "EA0D25608C5C9086BF0C2533322FA137DE5EFC1078B5EB1FE4302AEA795C382B",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\microsoft.testing.platform\\2.5.2\\buildMultiTargeting\\Microsoft.Testing.Platform.props"
+  },
+  {
+    "sha256": "00EB786984026F49C3B086450D3B2CC06368293F1C2B3518C4188DD024AD99A4",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\microsoft.testing.platform\\2.5.2\\buildMultiTargeting\\Microsoft.Testing.Platform.targets"
+  },
+  {
+    "sha256": "5B35DB6929C17447816A87A9917BF322B364F2FACC7FB3D26A5E66AB4F25DEFB",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\microsoft.testing.platform\\2.5.2\\buildTransitive\\net9.0\\Microsoft.Testing.Platform.props"
+  },
+  {
+    "sha256": "3C0767077A36BBF0EC86D504B4B8E2C97C1EFC2509E817AF8CC91685284852F2",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\microsoft.testing.platform\\2.5.2\\buildTransitive\\net9.0\\Microsoft.Testing.Platform.targets"
+  },
+  {
+    "sha256": "15A799CFA52AC44A5951BC310701A28027A14D0200BC2FDF1156A080C48D7D9E",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\mstest.analyzers\\4.5.2\\buildTransitive\\MSTest.Analyzers.props"
+  },
+  {
+    "sha256": "8A238ABDBE8910B5981CA04BAA204BBD69BDA27E68FC71078B1C8E2AD3299DA8",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\mstest.analyzers\\4.5.2\\buildTransitive\\MSTest.Analyzers.targets"
+  },
+  {
+    "sha256": "140516F412A50D1C587A56C370879ECEB4E537F5C7C29D3833B9B40EE75460D0",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\mstest.sdk\\4.5.2\\Sdk\\Runner\\ClassicEngine.targets"
+  },
+  {
+    "sha256": "19EFD3430033C18F8D90992CAAA171B6F626291C81930301F6A3ED77198FA653",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\mstest.sdk\\4.5.2\\Sdk\\Runner\\Common.targets"
+  },
+  {
+    "sha256": "F8FB8CAFFD4AF5237589473AADF7687DEB7A60617C20ABFF47B007256D756A21",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\mstest.sdk\\4.5.2\\Sdk\\Runner\\Runner.targets"
+  },
+  {
+    "sha256": "7F4D03273395E5959BA2D9DF4B86707615D0BD7E2D093E9DA1D62CBB291D1E5F",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\mstest.sdk\\4.5.2\\Sdk\\Sdk.props"
+  },
+  {
+    "sha256": "78C8DFEB22BEF2C516DE1DAF93BB29A4A07FEB8B67AF04D30430ED74FC50483A",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\mstest.sdk\\4.5.2\\Sdk\\Sdk.targets"
+  },
+  {
+    "sha256": "6A3DABC503980D8629186B7612D80E7623F5C3FCF3B3A71E5178F0F5FBC5D15C",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\mstest.testadapter\\4.5.2\\buildTransitive\\net9.0\\MSTest.TestAdapter.props"
+  },
+  {
+    "sha256": "DB84D5342A022D4A86E83334BC1FC47576AF6594F70FA6ED762BAD4C8E5C50E2",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\mstest.testadapter\\4.5.2\\buildTransitive\\net9.0\\MSTest.TestAdapter.targets"
+  },
+  {
+    "sha256": "49081B6B3EEC68A4C33C8E5D6B2A4C5FEADFBFEF8B32D3D83DDFEE43546A7893",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\mstest.testadapter\\4.5.2\\buildTransitive\\net9.0\\Parallelize.targets"
+  },
+  {
+    "sha256": "7AA2A0319FC8E0F3BDE9293D3F6E4E2539945BE2C746A3AEA2A5175F184B78F5",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\mstest.testframework\\4.5.2\\buildTransitive\\net9.0\\MSTest.TestFramework.targets"
+  },
+  {
+    "sha256": "0821114F175820DF126A9085D0D707AC6D52093EC796C18D95643AAD76C976EC",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\reqnroll.mstest\\3.3.4\\build\\Reqnroll.MsTest.props"
+  },
+  {
+    "sha256": "3A31520FA4B782831D5F8EDB214644A160BEFBF1DC06FF8951FBC056A0581641",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\reqnroll.mstest\\3.3.4\\build\\Reqnroll.MsTest.targets"
+  },
+  {
+    "sha256": "AB6309E1FC1C0EF51F0E2BC888A67BED390898BDB1086A3354C2B8803C990C67",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\reqnroll.mstest\\3.3.4\\build\\Reqnroll.TestFrameworkAdapter.props"
+  },
+  {
+    "sha256": "D66B7D491944C4FFDE63D91B18F6CB3BE9F010859004F34E8449D50DAFC0CC39",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\reqnroll.mstest\\3.3.4\\build\\Reqnroll.TestFrameworkAdapter.targets"
+  },
+  {
+    "sha256": "035EBAB13B19F00BA20FD814F692F947EE3F08ED05F28BA9C7178D011F951058",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\reqnroll.tools.msbuild.generation\\3.3.4\\build\\Reqnroll.Tools.MsBuild.Generation.props"
+  },
+  {
+    "sha256": "8367D3CFA234F8E92D9FC33F91563C5C038E6A81B18AEBFB4C068FFCB62DD7F0",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\reqnroll.tools.msbuild.generation\\3.3.4\\build\\Reqnroll.Tools.MsBuild.Generation.targets"
+  },
+  {
+    "sha256": "59E9E84308D639E9C5DE68240C9325F24011242BB478D96529709A7ECC64C25A",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\reqnroll\\3.3.4\\build\\Reqnroll.targets"
+  },
+  {
+    "sha256": "038D842FB80F6AC02C385A4DEB2EB723B9C37AD289C7D08E8F4D2981288AB1DE",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages\\sqlitepclraw.lib.e_sqlite3\\2.1.13\\buildTransitive\\net9.0\\SQLitePCLRaw.lib.e_sqlite3.targets"
+  },
+  {
+    "sha256": "686DDBAFEC38D750CE9F3BD48A41E7A95B3049E66CCE34F04DB5A3B38D41BA04",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Containers\\build\\Microsoft.NET.Build.Containers.props"
+  },
+  {
+    "sha256": "A6366FBE298E467A1C4C51C61B8781AAC435CD07CBD43862313C2446B84CEF98",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Containers\\build\\Microsoft.NET.Build.Containers.targets"
+  },
+  {
+    "sha256": "A09E6E94A2B8E4FBB8A186DB7DC67F0ACD15DFBA6AE9861B2FC6B5CC29B11D3D",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Current\\Microsoft.Common.props"
+  },
+  {
+    "sha256": "BACA1184A3B2BD00E40B10ED401CA8CB9F2DFC845BDDFE2E3FC2058BBA841BF5",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Current\\Microsoft.Common.targets\\ImportAfter\\Microsoft.NET.Build.Extensions.targets"
+  },
+  {
+    "sha256": "D7AAC7576AE94F4221E665CAE8F5B55ABF37FC73FD6F466CF6D82FCA35391796",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Current\\Microsoft.Common.targets\\ImportAfter\\Microsoft.TestPlatform.ImportAfter.targets"
+  },
+  {
+    "sha256": "428D17FAAF0737FBA66FEB5063F9A8C0D06A2ECE7C42E6CCA4A8A65220F80FBE",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Microsoft.Common.CurrentVersion.targets"
+  },
+  {
+    "sha256": "7B9B0AE85BB340547E7A7A849953EC3FAB2717D10C7AC6E914747E42A3BCDB86",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Microsoft.Common.targets"
+  },
+  {
+    "sha256": "AD54802D6E2CD6B8D17917B5ED7E78062779724B7A7CCECDB575B8F11B0D8C2D",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Microsoft.CSharp.CurrentVersion.targets"
+  },
+  {
+    "sha256": "994D4BDB3B6F8C8D19B3D30914AE8F70BB7323A74326385A3143604B4655E1D2",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Microsoft.CSharp.targets"
+  },
+  {
+    "sha256": "EF71E98ACF43CEEC0DC5564AC2B48E2E7F3BC8FD60793560D7728779AD9E1E64",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Microsoft.Managed.After.targets"
+  },
+  {
+    "sha256": "B126E4A8043A1C9028EF00ED175D953154D109AAA3605D27ED0A3F55048E978F",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Microsoft.Managed.Before.targets"
+  },
+  {
+    "sha256": "D5CF644B423603DDD4AE347EC7DCA77C1CF40F8268C964B00B8EA21827D8ECBC",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Microsoft.NET.props"
+  },
+  {
+    "sha256": "CDC51483D1B7EB85008C6CD2A3170A0F6517879DEBA3C326F13A9D62B1CD6518",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Microsoft.NETCoreSdk.BundledCliTools.props"
+  },
+  {
+    "sha256": "117782A349D515B702036FEBBE7EB0CD657DFCE89D31A3AE60355D6DE9BC1600",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Microsoft.NETCoreSdk.BundledMSBuildInformation.props"
+  },
+  {
+    "sha256": "A31BDA20851DECF7963318A6AE96ACD8DF9E866967DFF56455E6CB40352620E7",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Microsoft.NETCoreSdk.BundledVersions.props"
+  },
+  {
+    "sha256": "EF9B556E2ECF277A3354828C7471EC0BE190BE57FBB43F03A393A70E3330158D",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Microsoft.TestPlatform.targets"
+  },
+  {
+    "sha256": "BC9D8E260684A7253FC28215386E5B7CCB111B57F503EF6A0F0E36B8B47EA131",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Microsoft\\Microsoft.NET.Build.Extensions\\Microsoft.NET.Build.Extensions.targets"
+  },
+  {
+    "sha256": "811013BB3FCB87286BF9DC941F535D5D26144757DB25A2E6F5C971352D7E71C3",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\NuGet.Build.Tasks.Pack.targets"
+  },
+  {
+    "sha256": "0BD56DEA541DD607AF6287264E4F5AA3DD223E42D2FFCAC9A5230D41BBAC3D7E",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\NuGet.props"
+  },
+  {
+    "sha256": "CE10B22F349503468546CD445E3E0ED7637E6B759B90A225A6C96BA2759BD0FB",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\NuGet.targets"
+  },
+  {
+    "sha256": "A1C9C8BC54D3443E3A3A918E7384F2A8D4593534E096C5930D0CF96FB628B8F1",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Roslyn\\Microsoft.CSharp.Core.targets"
+  },
+  {
+    "sha256": "DE7445CBECCFDE19B4686DA0121D2D8426319F92EA346E2D08E09E0E13FFC3C0",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Roslyn\\Microsoft.Managed.Core.CurrentVersions.targets"
+  },
+  {
+    "sha256": "F3B8ED3E4946037E0DAA32F3901AE5BB8FC967E86C45372E7BE0F0DDA341CFCA",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Roslyn\\Microsoft.Managed.Core.targets"
+  },
+  {
+    "sha256": "19A1134FA4C2825C016DF1B8C42E375F0C744E9B1A2262222C2AC101E74F0544",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.Build.Tasks.Git\\build\\Microsoft.Build.Tasks.Git.props"
+  },
+  {
+    "sha256": "A3499B2ED15095BE71667A690D86E4A18ABB7889F224F52C7BC5459C8479AD34",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.Build.Tasks.Git\\build\\Microsoft.Build.Tasks.Git.targets"
+  },
+  {
+    "sha256": "7F48487FB82462B5CFF21891FF4DDC8D73E304B01717B98396AF2B7E22765543",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk.WindowsDesktop\\targets\\Microsoft.NET.Sdk.WindowsDesktop.props"
+  },
+  {
+    "sha256": "7E8BC3F503CD1D0C547A9F286ACA95083941EDA37458467DA399A6F42F6E77EC",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk.WindowsDesktop\\targets\\Microsoft.NET.Sdk.WindowsDesktop.WindowsForms.props"
+  },
+  {
+    "sha256": "C4E371C48EA73EC7F055919D6D13C20521AAAD73DF2130B1342D308D3AD4C99D",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk.WindowsDesktop\\targets\\Microsoft.NET.Sdk.WindowsDesktop.WPF.props"
+  },
+  {
+    "sha256": "0309171D90B9BC226EC0DB60625B0222D279A8ECEAED03BE557A3EF4E3A99B11",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk.WindowsDesktop\\targets\\System.Windows.Forms.Analyzers.props"
+  },
+  {
+    "sha256": "FAEF45E8AE7A72268C7CDD4BF6263FFD1327AC4B33BB1828963E9A03C58F8A6E",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\analyzers\\build\\Microsoft.CodeAnalysis.NetAnalyzers.props"
+  },
+  {
+    "sha256": "AF6D80BFCC7CB6C3A619FBD8582D6FA76A2D12518C1E49392BFB24BC2AC65D33",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\analyzers\\build\\Microsoft.CodeAnalysis.NetAnalyzers.targets"
+  },
+  {
+    "sha256": "6DCA8CB9EE12715874B31653D5F08B11CE4B683E415EB7D5406D31DBCC18ED5D",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\codestyle\\cs\\build\\Microsoft.CodeAnalysis.CSharp.CodeStyle.targets"
+  },
+  {
+    "sha256": "178B0DEB3EE0CC6C5BD474D5D7C4EF943FE73F895A0752F0E51B6E1CA5613EB7",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\Sdk\\Sdk.props"
+  },
+  {
+    "sha256": "F6EBBE6000871F8893F9F04A94FBDBAD1AD49CE0CB60A7506ADB6D903A23EA78",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\Sdk\\Sdk.targets"
+  },
+  {
+    "sha256": "3A738C86476DD33E38F5B5906639748801C24189163BCEC477E1548A509C80CE",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\Sdk\\UseArtifactsOutputPath.props"
+  },
+  {
+    "sha256": "DCFD4E266D05ABFADE078E2CB203B94C5E215A523B0AC124BA6A117068F32A21",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.ApiCompat.Common.targets"
+  },
+  {
+    "sha256": "5D9CB1E9952DD6B046CDA6ACA0817297FD56FEA2FAD7E226F9A025F00672E7F5",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.ApiCompat.targets"
+  },
+  {
+    "sha256": "F71A3EE9C2D735137D061FE08079FEDBEFBBA349C03B3496CD9B8A7F7B89957C",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.ApiCompat.ValidatePackage.targets"
+  },
+  {
+    "sha256": "73952FCE0634535D70BF065598CA9D6EA18D7A16A731A7BBE3D3A0FA41E5C482",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.AspireWorkloadDeprecation.targets"
+  },
+  {
+    "sha256": "9909E392786BF7F9C71D3EB4612D432787EA96BF3A5736D798566E092764A25A",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.ComposeStore.targets"
+  },
+  {
+    "sha256": "E2B955B34E8A0B7D8439A3C7F11C1373D2117DCDBBE33AB217B95BB1B1F1CC44",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.ConflictResolution.targets"
+  },
+  {
+    "sha256": "BF0B166CDC7C83860944285ACCD908DCCE4849511898C9FD0B4A07A94C42B29A",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.CrossGen.targets"
+  },
+  {
+    "sha256": "E26D785F2D7DEF254B7C6AD631E69BBED0F7D4521EC50FCE6AF849A11C601081",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.DefaultArtifactsPath.props"
+  },
+  {
+    "sha256": "40FD84862735D33C434864AAE190ABC59191AC4717A499C456A9C87896228354",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.DefaultAssemblyInfo.targets"
+  },
+  {
+    "sha256": "78C8DD73B7D27B7149339E65102CABE19FCEFBB64B12D63FEBAEA83AD9897E27",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.DefaultOutputPaths.targets"
+  },
+  {
+    "sha256": "F0F69B2214DC59F1D131A82AF2F4AB32DC85369EDE72CDFE66B99BF529E53A76",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.DefaultPackageConflictOverrides.targets"
+  },
+  {
+    "sha256": "7304A33D6DB3AADDF0968B2084B08572B45DA0CA197626C4F71422B4E8939C51",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.DesignerSupport.targets"
+  },
+  {
+    "sha256": "255B8EBA920F98B9C1A8474DCF5A2B76CC8695B1FF4C48041B0A82B10C89B700",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.DisableStandardFrameworkResolution.targets"
+  },
+  {
+    "sha256": "3CD564E7388CBF9B08970C1D47F2BDBB432037E17FF5E4C1C8089D755C53F21D",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.EolTargetFrameworks.targets"
+  },
+  {
+    "sha256": "AA4B03A8077769C82DF053A6AC1EC20FDD350AB2E02C66DFD5A76B6FE522277A",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.GenerateAssemblyInfo.targets"
+  },
+  {
+    "sha256": "DDE0FCF5488DBAC20D4F78A0B331C98BBE43A93E14572252C97A30899D9A6602",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.GenerateGlobalUsings.targets"
+  },
+  {
+    "sha256": "38C886696151932DB76122AFCD509A9CF247B5415F14E0D0CB8B24E7CB5C3121",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.GenerateSupportedRuntime.targets"
+  },
+  {
+    "sha256": "9E4CCD4A7A16C255A4B70817434142CC161F1D0D6EEB6812EC191DFDA4047E9A",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.NuGetOfflineCache.targets"
+  },
+  {
+    "sha256": "DC1E5DD1A750B9F39828666F878CBFD7455D690DB632DE57B76B5AFD01280CDD",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.ObsoleteReferences.targets"
+  },
+  {
+    "sha256": "0DD4AEA4123E95191C5654941D7F31AFE79DBC9E4693AF0A4BC511643FB3AE66",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.PackProjectTool.props"
+  },
+  {
+    "sha256": "6BAD326195C329AB2EB93B0F7AC23384883B4D3E479F7B4CD462E876BBD3F94D",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.PackProjectTool.targets"
+  },
+  {
+    "sha256": "DD3BDD29163E4A278509F5E023DAC6C9D06076A25C00BAD30F38B760840018E7",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.PackTool.props"
+  },
+  {
+    "sha256": "3C8F76050A48B0C56180864BE6FF46B68C241686398A903D3EE985BFD9B332F9",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.PreserveCompilationContext.targets"
+  },
+  {
+    "sha256": "711745B61B7E6785CA5EB7FE27A1A86B56FD47A1D9E69DCAD178F470F547A065",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Publish.targets"
+  },
+  {
+    "sha256": "5A834E537CF018BDE5C413F0D0FDC273F5A12660D04A18CBE5C7DC797916EBCF",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.RuntimeIdentifierInference.targets"
+  },
+  {
+    "sha256": "E1C018A1131AFC08C590B7D699600112E2A524656EC1CEC47E1B15824B08C803",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Sdk.Analyzers.targets"
+  },
+  {
+    "sha256": "4B9A70125E6A5FC8BBD5ED6D535A5BAC885B0FACE4ED1052EACBC23035BEA818",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Sdk.BeforeCommon.targets"
+  },
+  {
+    "sha256": "C76043E879E603192282A8AD56C9A924C6E1CC3C6172F4D44AAC278AC5ECC92D",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Sdk.Common.targets"
+  },
+  {
+    "sha256": "1CB4C9A0A55A062A7B7D4336AC76EFF17E0228ADB3DC769439D994BEBA0C467C",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Sdk.CSharp.props"
+  },
+  {
+    "sha256": "F01389D1FBAC106812DD83804AAB78C0AC18C886C762804A7686F4BA4AB3F1F7",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Sdk.CSharp.targets"
+  },
+  {
+    "sha256": "1B0CAC8B336FE4C890924F0495330714542EC6C2706CF578151C8CE163D010FD",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Sdk.DefaultItems.props"
+  },
+  {
+    "sha256": "42114BD24A86EF71BFC1A0C0B2E1F282ED9F078ACD260B5B54492005FD7E6E78",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Sdk.DefaultItems.Shared.targets"
+  },
+  {
+    "sha256": "DE64789D4301BEE79BE5E7C20D8D8D485D9000CA8E27881F96510722B0D441CF",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Sdk.DefaultItems.targets"
+  },
+  {
+    "sha256": "0A90C8EEBA724802CD37C5E0D35588437287FC8084CB98B8D114C51DA82A5AFE",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Sdk.FrameworkReferenceResolution.targets"
+  },
+  {
+    "sha256": "A802EB4416EC62E2E8DE151E77B830E5A66EC95C8C38BB3F06C47FAB757ABC53",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Sdk.ImportPublishProfile.targets"
+  },
+  {
+    "sha256": "E2CAAA19204F52E4A0A00568D536EAF902F546C4705E46DC6DF78EB945015F68",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Sdk.props"
+  },
+  {
+    "sha256": "214867F5434875725EC8832392C187C288DBA3C124912234834587CC5D271CA9",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Sdk.Shared.targets"
+  },
+  {
+    "sha256": "0158C11FBA98829651C84887BE364626A0F3484AC01282C295C3011F32D465FB",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Sdk.SourceLink.props"
+  },
+  {
+    "sha256": "77F0C9E16BDD23F300E80B751C68CDEE0EEEFAD0A3998A66AC1F6F989DE08B11",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Sdk.SourceLink.targets"
+  },
+  {
+    "sha256": "6689DD3257A4E19B61E8152F57D2BBAEFB7C4478451AE2E370E41F7A4D3120F7",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Sdk.targets"
+  },
+  {
+    "sha256": "CFE84E5627653A51A1959E9CC6BD36BA58701C239D3002CB3B62FBE6B5B651B0",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.SupportedPlatforms.props"
+  },
+  {
+    "sha256": "CAA2E9C2A44EF8C84BF047FE441D3698099AD08B7D2FCBE241E91C28CAE937A3",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.SupportedTargetFrameworks.props"
+  },
+  {
+    "sha256": "B56469C1B13FD36AAE3A1BF35308FF52EA81FF233585CE41A7655A97F1A42BA7",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.TargetFrameworkInference.targets"
+  },
+  {
+    "sha256": "86229F65DC81FEA50767B65B9A5996EA4C296B12ECC6A7A2DD996AB3E308EF03",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.Windows.props"
+  },
+  {
+    "sha256": "565F9130A5B28B8BC0E452811794620ACF1B46CFB9B187FC95B3B227ED87B040",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.WindowsSdkSupportedTargetPlatforms.props"
+  },
+  {
+    "sha256": "CB0A2CF6EA590FBD3DFBF333D32FC7EE1DB3344908AB04DC31288C5591C5136C",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.PackageDependencyResolution.targets"
+  },
+  {
+    "sha256": "CDA8B92A674E2D37CDB8F3B85050D1FBC412AA24AC12CE0D032B3A300BB7DE40",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.SourceLink.AzureRepos.Git\\build\\Microsoft.SourceLink.AzureRepos.Git.props"
+  },
+  {
+    "sha256": "5A54FD6A3369268936E188403634EE3D2953FBF3A212054CC95462C9BBAFA9F9",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.SourceLink.AzureRepos.Git\\build\\Microsoft.SourceLink.AzureRepos.Git.targets"
+  },
+  {
+    "sha256": "50A27289E8454E1A259047E6F3389CFDF43B9355488E27290B312BE0831EE6EA",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.SourceLink.Bitbucket.Git\\build\\Microsoft.SourceLink.Bitbucket.Git.props"
+  },
+  {
+    "sha256": "79ED5B1776A385C1EE7BC4DF12C4FD1168B10F2BB6C5CBFBEA173EFA8EE512CB",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.SourceLink.Bitbucket.Git\\build\\Microsoft.SourceLink.Bitbucket.Git.targets"
+  },
+  {
+    "sha256": "75AB2A42444513F851783E7246AB1F880FE2F3DA31050C34BEB440695EBE80F4",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.SourceLink.Common\\build\\InitializeSourceControlInformation.targets"
+  },
+  {
+    "sha256": "DC828F8B6348B9965E53B210BFFD9EEB2A4C330FCA3B424FEB02297FDBFD395D",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.SourceLink.Common\\build\\Microsoft.SourceLink.Common.props"
+  },
+  {
+    "sha256": "66AE2A18C3D006250B354D4A9A864C67F0870A7DC32F27E893868D4CA019DE00",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.SourceLink.Common\\build\\Microsoft.SourceLink.Common.targets"
+  },
+  {
+    "sha256": "6625231658B424E76DD01BA887058E5155E897E3C89F79F14B78733255F7D5A8",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.SourceLink.GitHub\\build\\Microsoft.SourceLink.GitHub.props"
+  },
+  {
+    "sha256": "F1B09D8453F072E9B7644BF6DADAC4979BEA3B93C42CA8F99B9D1038870481DB",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.SourceLink.GitHub\\build\\Microsoft.SourceLink.GitHub.targets"
+  },
+  {
+    "sha256": "C189A03E37A2FA11B024D1232A4841A5542CD09E8B432710736302C63E0F2BBE",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.SourceLink.GitLab\\build\\Microsoft.SourceLink.GitLab.props"
+  },
+  {
+    "sha256": "DF36C77A3214FDEC8C832436ABA13E1877EFF93D168C4A2D1E42C166D3ED6D31",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\sdk\\10.0.403\\Sdks\\Microsoft.SourceLink.GitLab\\build\\Microsoft.SourceLink.GitLab.targets"
+  },
+  {
+    "sha256": "C4225B58B69E7D59EE4FDF39948DE99DBC1E5D864A10D2F9991770E7646C2868",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\CompatibilityProbe.csproj"
+  },
+  {
+    "sha256": "9AED38F0925D9204AA07F77A4942ED88B4955F07E01305571A2D22154FE1FE58",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\Directory.Build.props"
+  },
+  {
+    "sha256": "17284CB74605517CBEC8A8153505DA71A685B28694B67B5EF80608CD79B1C0EA",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\Directory.Build.targets"
+  },
+  {
+    "sha256": "987A38E3E938F196329B9677CEEC692A665306E2B7245CD3B8542DDB47F0021C",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\obj\\CompatibilityProbe.csproj.nuget.g.props"
+  },
+  {
+    "sha256": "F44D1A2E19F03107EEC2A22D3D079345AB1BE989F11BAC9513831915CDEFBCA9",
+    "path": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\obj\\CompatibilityProbe.csproj.nuget.g.targets"
+  }
+]

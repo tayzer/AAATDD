@@ -1,0 +1,7 @@
+{
+  "formatters": {
+    "message": {
+      "outputFilePath": "probe-messages.ndjson"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "stage": "restore",
+  "stageId": "restore-20261105T122726Z-56396ec112d34237be69a0653098fc78",
+  "executable": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\dotnet.exe",
+  "arguments": [
+    "restore",
+    "CompatibilityProbe.csproj",
+    "--configfile",
+    "NuGet.Config",
+    "--verbosity",
+    "normal",
+    "-p:RestoreForceEvaluate=false"
+  ],
+  "workingDirectory": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe",
+  "processEnvironment": {
+    "DOTNET_ROOT": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet",
+    "DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE": "1",
+    "MSBuildEnableWorkloadResolver": "false",
+    "DOTNET_NOLOGO": "1",
+    "NUGET_SCRATCH": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp\\scratch",
+    "REQNROLL_FORMATTERS_MESSAGE": "outputFilePath=E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\evidence\\restore-20261105T122726Z-56396ec112d34237be69a0653098fc78/native-messages.ndjson",
+    "NUGET_HTTP_CACHE_PATH": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp\\http-cache",
+    "DOTNET_CLI_HOME": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.cli",
+    "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1",
+    "NUGET_PACKAGES": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages",
+    "TEMP": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp",
+    "TMP": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp",
+    "AAATDD_PROBE_EVIDENCE_DIR": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\evidence\\restore-20261105T122726Z-56396ec112d34237be69a0653098fc78",
+    "AAATDD_PROBE_NEGATIVE": "0",
+    "NUGET_PLUGINS_CACHE_PATH": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp\\plugins",
+    "DOTNET_CLI_TELEMETRY_OPTOUT": "1"
+  },
+  "startedUtc": "2026-11-05T12:27:26.4725447+00:00",
+  "finishedUtc": "2026-11-05T12:27:31.6512404+00:00",
+  "processId": 29452,
+  "timeoutMilliseconds": 300000,
+  "timedOut": false,
+  "exitCode": 0
+}

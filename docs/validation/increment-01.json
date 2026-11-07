@@ -1,0 +1,267 @@
+{
+  "status": "Development increment verified on this host; release incomplete",
+  "package": {
+    "path": ".artifacts/packages/Tada.Cli.0.1.0-alpha.1.nupkg",
+    "sha256": "aa8b732da6d2c266d820ce18382718d15c10a1251a03735fd8ac136c3068a047"
+  },
+  "coreTests": {
+    "total": 40,
+    "failed": 0,
+    "skipped": 0,
+    "log": ".artifacts/core-tests.log"
+  },
+  "orders": {
+    "report": ".artifacts/orders-workflow/104125040e4a48d5a7bcf1d14bded9ae/validation.json",
+    "reportSha256": "86446163772d53ae6a5f3feae551d1789faf46bd5e8826f84cde3e46367a6fa4",
+    "checks": [
+      {
+        "name": "prepare draft",
+        "exitCode": 0
+      },
+      {
+        "name": "review snapshot",
+        "exitCode": 0
+      },
+      {
+        "name": "explicit control approval",
+        "exitCode": 0
+      },
+      {
+        "name": "correct Orders",
+        "exitCode": 0
+      },
+      {
+        "name": "offline verification",
+        "exitCode": 0
+      },
+      {
+        "name": "oversubscription business defect",
+        "exitCode": 1
+      },
+      {
+        "name": "oracle edit blocks execution",
+        "exitCode": 2
+      },
+      {
+        "name": "reviewed revision cannot approve changed bytes",
+        "exitCode": 3
+      },
+      {
+        "name": "faulty-fixture control approval",
+        "exitCode": 0
+      },
+      {
+        "name": "wrong seed blocks behaviour submission",
+        "exitCode": 2
+      },
+      {
+        "name": "cleanup control approval",
+        "exitCode": 0
+      },
+      {
+        "name": "required cleanup gap blocks pass",
+        "exitCode": 2
+      },
+      {
+        "name": "truncated evidence cannot pass",
+        "exitCode": 2
+      },
+      {
+        "name": "restored retained evidence verifies",
+        "exitCode": 0
+      },
+      {
+        "name": "incomplete metadata cannot default to success",
+        "exitCode": 2
+      }
+    ],
+    "cliSha256": "8f3850849c614695166cfe9512865877ceff78967d420945e928784df3e552b2"
+  },
+  "onboarding": {
+    "report": ".artifacts/onboarding/f2ee6faf5fc94758be347ef2c38ef683/validation.json",
+    "reportSha256": "ba467300d33917173c01e3b7c8d8eefc72f2a7d3efb72859ad5c208b093387a5",
+    "runId": "59ef95438af74840a827fcc834c6f3ea",
+    "passedCases": [
+      "AC_ECHO_EMPTY",
+      "AC_ECHO_SPACES"
+    ],
+    "limitation": "Fresh package cache and new project on this host; not a clean-machine or requester/Codex acceptance test."
+  },
+  "sourceFiles": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "13ccc35d0347733675bd8d3cae546d108460df3aee26938b810f53bd2517f4c4"
+    },
+    {
+      "path": "examples/Echo/Api/Echo.Api.csproj",
+      "sha256": "082bd8dd213fa777c432e8aa05ca6f42b71115180adaee0a479be6565679379d"
+    },
+    {
+      "path": "examples/Echo/Api/Program.cs",
+      "sha256": "8df6fd97e21f80a199eb57dcc9be055ed4cd778aa29de3615cfe11b352bf36cf"
+    },
+    {
+      "path": "examples/Echo/echo.feature",
+      "sha256": "28ceec16767b8eee89bdf1c2c4a2646c0714cae2b629f68065d66ebec2c7b905"
+    },
+    {
+      "path": "examples/Echo/EchoBindings.cs",
+      "sha256": "88639f4238ed63f6109587fa7146f75eac78d370cf175a16f68f43055af82b5b"
+    },
+    {
+      "path": "examples/Echo/README.md",
+      "sha256": "f824820738e48f2dcd1ba149c6ef9431e8c1b1d3cc33b70375e7a9ddce5aaec4"
+    },
+    {
+      "path": "examples/Orders/.gitignore",
+      "sha256": "4ffc7140a17643584dc0c19a46fcc3e5962f1d31d39604ae56232ac053688290"
+    },
+    {
+      "path": "examples/Orders/Acceptance/OrderBindings.cs",
+      "sha256": "4a631dbb61f2516489304ec4731735075417de121b0a7088f40c199ba4dc5cb7"
+    },
+    {
+      "path": "examples/Orders/Acceptance/Orders.Acceptance.csproj",
+      "sha256": "505387400a3db47f2bdcec3401934d0c3a99b65ec86550ce7f8e6f6c32713260"
+    },
+    {
+      "path": "examples/Orders/Acceptance/packages.lock.json",
+      "sha256": "c02e120835549e8b8ca2e0c4b02b5eb5459d073b6cc96db17946e26ce92f91d4"
+    },
+    {
+      "path": "examples/Orders/Acceptance/reqnroll.json",
+      "sha256": "97a914c01a210ad253828224350a208093e93cdc134f98ea988b08d8690bee52"
+    },
+    {
+      "path": "examples/Orders/Api/Orders.Api.csproj",
+      "sha256": "6358c8e30fcf5fbf1a7b3e314ee8e1c43eaec959663ce51d9efac8204ac55b14"
+    },
+    {
+      "path": "examples/Orders/Api/packages.lock.json",
+      "sha256": "4b3093276840b5ac24e94cad744c80cddb94cc5f2e648f66327aae47d38f4757"
+    },
+    {
+      "path": "examples/Orders/Api/Program.cs",
+      "sha256": "28e3e02627cadf884b0145a3347dc273c2b313aad27bef172267a352a30d8afd"
+    },
+    {
+      "path": "examples/Orders/Directory.Build.props",
+      "sha256": "4c816ee68442aa25bfe8c86cba0bd59867647d47e9debf1be9b7ecb66780d36b"
+    },
+    {
+      "path": "examples/Orders/Directory.Build.targets",
+      "sha256": "17284cb74605517cbec8a8153505da71a685b28694b67b5ef80608cd79b1c0ea"
+    },
+    {
+      "path": "examples/Orders/features/order-stock-validation.feature",
+      "sha256": "24c3c0b4b54f5bdd191e51b9577fbfc22f0b2522f95779e5acb903e29f3a2c5d"
+    },
+    {
+      "path": "examples/Orders/global.json",
+      "sha256": "e0c27e2af43696b45b21a25e5d8d6c874fbf0a3bbc82197e3ab1d1910ae739a5"
+    },
+    {
+      "path": "examples/Orders/NuGet.Config",
+      "sha256": "03602f008d9306a7b09cfc2771df93d4b93123b18161fdb73ddd6e574407fd69"
+    },
+    {
+      "path": "examples/Orders/tada.json",
+      "sha256": "5755e26df710b8a14bb8c2927bf715c396ef573097d1abbc97a9e5134458d64a"
+    },
+    {
+      "path": "scripts/Test-Onboarding.ps1",
+      "sha256": "2a10e362ec234262022fbc4794755aec34b684a5195ba754cb506c0c2fe1bd9a"
+    },
+    {
+      "path": "scripts/Test-OrdersWorkflow.ps1",
+      "sha256": "ee738419de7607f74e16743c12041c6f0e118c60c11fe8a5bd421c17e492fdcb"
+    },
+    {
+      "path": "src/Tada.Cli/PACKAGE.md",
+      "sha256": "fec09597e80e917324a32ce31331882af4c93e16f2d956e604cec6404a195551"
+    },
+    {
+      "path": "src/Tada.Cli/packages.lock.json",
+      "sha256": "06d62386668400e92ed7fa63050368fd5edd902fde335e4f3dd7cf24a6e415f8"
+    },
+    {
+      "path": "src/Tada.Cli/Program.cs",
+      "sha256": "771ef66808e4ed3dccd178b79788388c8a83ea3014ac4f86f27f2544d09b3dec"
+    },
+    {
+      "path": "src/Tada.Cli/Tada.Cli.csproj",
+      "sha256": "ea7edaa2f3b77b9754b1708e90efdffbc410c9b0ce64f6b1f31f67c22ebfe355"
+    },
+    {
+      "path": "src/Tada.Core/BaselineStore.cs",
+      "sha256": "18ebcfe02367ace1b16a9841b40a35acee4a17575baabb7a2221b81b74cdaec0"
+    },
+    {
+      "path": "src/Tada.Core/CanonicalJson.cs",
+      "sha256": "05c1648065a8c53f0b1491523c5641f3bc0473c141afcc5852e0c7ded147422a"
+    },
+    {
+      "path": "src/Tada.Core/Features.cs",
+      "sha256": "7555a50dbb72ff20444baaf2005dad13d91958f75df40f9fcb6a68ab5c93ab8e"
+    },
+    {
+      "path": "src/Tada.Core/MessagesVerifier.cs",
+      "sha256": "79e0a71ed04039f779989c04465aa46e9bb31002dd06e8aceecd13345a92db79"
+    },
+    {
+      "path": "src/Tada.Core/Model.cs",
+      "sha256": "7802f8c6540b62024a8f92b14a62cc89cd448360b7d947737ccd9548daa9e3aa"
+    },
+    {
+      "path": "src/Tada.Core/Onboarding.cs",
+      "sha256": "32cf27fc65107320e1b80e32a3bab48b5c46de971073ae433bc8ddbb4792f283"
+    },
+    {
+      "path": "src/Tada.Core/packages.lock.json",
+      "sha256": "d9901b42806e3b695ae7b9ecbcbd109ae736ef92be67c99520e0e0aa0b459a6f"
+    },
+    {
+      "path": "src/Tada.Core/Processes.cs",
+      "sha256": "c62ad9c35446c223c9850b398db77db4f3b1160315680cfaf482369c5d81629d"
+    },
+    {
+      "path": "src/Tada.Core/Repository.cs",
+      "sha256": "5042809277859a29a1527364e85ebc0eb28edc1584321519760b1a5fc38af2e5"
+    },
+    {
+      "path": "src/Tada.Core/RunEngine.cs",
+      "sha256": "57f0f581a11b3b725fbda252b6d80fb8d3b5d3294f8495ba9df0e2886ffd006b"
+    },
+    {
+      "path": "src/Tada.Core/Tada.Core.csproj",
+      "sha256": "1473c41959e9f032ab230943a35c937d5c94ce6047a4086303cd5351bf92a4d9"
+    },
+    {
+      "path": "tests/Tada.Core.Tests/CoreTests.cs",
+      "sha256": "ca6af881a53342f2e0a5ab1d6242c1e27c78fbe1f125dd497fcd7c5edaf018dc"
+    },
+    {
+      "path": "tests/Tada.Core.Tests/Fixtures/orders-pass.ndjson",
+      "sha256": "515be324e7fa0ba7b9784f0b82f68a3be130a92d6b26a2cc5c2706e49a6c959f"
+    },
+    {
+      "path": "tests/Tada.Core.Tests/MessagesTests.cs",
+      "sha256": "53ec7aa9a8e11a34ade85b0c741cbc4fc93054fc8a7d64b6c59c383b33fda23d"
+    },
+    {
+      "path": "tests/Tada.Core.Tests/packages.lock.json",
+      "sha256": "d6c05d940cc7c24b808381be2b75eb587e5d4b8301c263515535d3a7abeabbcb"
+    },
+    {
+      "path": "tests/Tada.Core.Tests/Tada.Core.Tests.csproj",
+      "sha256": "118d62ade36d6009a0fdc9ac3aacaca3b358397aeed9a3828893c911efc0298b"
+    }
+  ],
+  "remaining": [
+    "Execution input/import and loaded-runtime provenance review.",
+    "Complete failure-history and interruption semantics validation.",
+    "Final CI on release source and clean-machine validation.",
+    "Requester uses installed tool with Codex to build an API from scratch.",
+    "Final release/version/publication review."
+  ]
+}

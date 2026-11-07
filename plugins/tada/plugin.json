@@ -1,0 +1,20 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "tada",
+  "version": "0.1.0-alpha.9",
+  "description": "Test-Assured Development Assistance for everyday software development.",
+  "license": "MIT",
+  "repository": "https://github.com/tayzer/AAATDD",
+  "extensions": {
+    "com.openai": {
+      "onboardingSkill": "./skills/tada/SKILL.md",
+      "interface": {
+        "displayName": "TADA",
+        "shortDescription": "Test-assured development",
+        "longDescription": "Discover agreed executable acceptance, verify small changes and recover project context through the TADA CLI.",
+        "category": "Productivity",
+        "capabilities": ["Read", "Write"]
+      }
+    }
+  }
+}

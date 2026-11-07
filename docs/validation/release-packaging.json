@@ -1,0 +1,113 @@
+{
+  "status": "Local development distribution/source checks passed; release incomplete",
+  "version": "0.1.0-alpha.7",
+  "sourceSnapshot": {
+    "manifestSha256": "718c288b8834b050153b449467d70e60e8c10113d27fd3ca4f5615c2b783bf1a",
+    "currentRuntimeSourceMismatches": 0,
+    "freshNugetPackageCache": true,
+    "files": 222,
+    "cleanMachine": false,
+    "sharedPrerequisite": "Existing pinned .NET SDK 10.0.403 on this host",
+    "initiallyNoBuildOutputsOrNativeCompilerCache": true,
+    "freshCliHome": true,
+    "manifest": ".artifacts/source-check/507a642b/source-manifest.json"
+  },
+  "sourceBuild": {
+    "gitLongPathsPerCommand": true,
+    "failed": 0,
+    "log": ".artifacts/source-check/507a642b/core-tests.log",
+    "sha256": "dc74c0298b5d8bab2ca1c1fcb20a7c1080f0b40d5180493388f40e577e510392",
+    "tests": 111,
+    "gitLongPathFailureLog": ".artifacts/source-check/507a642b/core-tests-before-path-fix.log",
+    "skipped": 0,
+    "nativeCompilerBootstrap": {
+      "compilerVersion": "0.15.2",
+      "compilerArchiveSha256": "3a0ed1e8799a2f8ce2a6e6290a9ff22e6906f8227865911fb7ddedc3cc14cb0c",
+      "compilerSha256": "d408dd38eed3e5204af841bcebf70502a4dbbb8399a3a3262be55059370bc018",
+      "source": "src/Tada.RuntimeProbe/native/observer.c",
+      "sourceSha256": "a695f0f7959efcbea66dc7a8cd6976d7d08079ebf81a08209cff52bf639b41c1",
+      "outputSha256": "d2cb0c542bef5b69d49fcdfd14da4e83880e9de8f977b542d292e541badd36ba",
+      "target": "x86_64-windows-gnu",
+      "flags": [
+        "-std=c11",
+        "-O2",
+        "-g0",
+        "-s",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-fno-stack-protector",
+        "-fno-builtin",
+        "-shared",
+        "-nostdlib",
+        "-Wl,--entry,DllMain",
+        "-Wl,/Brepro",
+        "-lkernel32"
+      ]
+    }
+  },
+  "orders": {
+    "sha256": "3be0608580be6ea4d2bcfd8ab110c854b86e72b3890a2fc4231bd8e53cc35114",
+    "report": ".artifacts/source-check/507a642b/source snapshot/.artifacts/orders-workflow/a324a2bac8e54f658dbd3ebf78229c22/validation.json",
+    "controls": 46
+  },
+  "onboarding": {
+    "report": ".artifacts/source-check/507a642b/source snapshot/.artifacts/onboarding/2305494d54a143b9a2711e48ba09a980/validation.json",
+    "packageSha256": "b02d05c1b323356a290578adeb7ce525b32e28c868be9f035a21b4fc85176bd2",
+    "unchangedRerun": {
+      "before": "05719c27b80247649ad0cf915168bc04",
+      "after": "ead6906a296f450296db057acbea11c0",
+      "sameImplementation": true,
+      "sameEnvironment": true
+    },
+    "failureHistory": {
+      "restoredImplementation": "553bccbd59fb40db830db50ea1b2f2ac",
+      "nativeRerunExit": 0,
+      "tadaRerunOutcome": "FAIL",
+      "nativePassingRerun": "fc9b8a85728f47608d8487ca03cb74b4",
+      "failure": "bcd1de30e1b944ad9ca66ce96369393d"
+    },
+    "contextCommit": "0d42d7eed430fc6128e7287b96e81b194748ed25",
+    "sha256": "958953bf5da552477f44350f14f0ea4537d7fdeb28939e29e3ebb2e8bb974fbb",
+    "developmentRuns": [
+      "38da6cfe9182477f9f7c1b535fa4cb41",
+      "d6e73c8d98fa4676ab9cc47804a8e79f",
+      "05719c27b80247649ad0cf915168bc04"
+    ]
+  },
+  "taskEnvironment": {
+    "sha256": "3aeae250349ca893699adae421c04164e4d0c8e94f81ab045fdbf86b8cc1752e",
+    "sameImplementation": true,
+    "report": ".artifacts/source-check/507a642b/source snapshot/.artifacts/onboarding/2305494d54a143b9a2711e48ba09a980/.tada/task-environment-control.json",
+    "originalBytesRestored": true,
+    "differentEnvironment": true
+  },
+  "distribution": {
+    "installReportSha256": "2fce1e389dd3db509aa65a1e62cb01a865eeab9dc4d59dedee0d55ee880da41c",
+    "archive": ".artifacts/release-bundles/0.1.0-alpha.7-84a744a5e3044b948ab7ab707ee45630/TADA-0.1.0-alpha.7-win-x64.zip",
+    "isolatedCaches": true,
+    "spacesInPaths": true,
+    "archiveSha256": "3ea90d9af4e0b4f47a936fc72c27afa5424732d77836457603b10c736f210486",
+    "userPathUnchanged": true,
+    "earlierTamperControl": ".artifacts/bundle-controls/757c912fcd3d44bb86b45a004aa4e385/validation.json",
+    "installReport": ".artifacts/bundle-install/bundle install 29d9056823c74c36a2dc2584b860d9d5/validation.json",
+    "existingInstructionsPreserved": true,
+    "packageSha256": "b02d05c1b323356a290578adeb7ce525b32e28c868be9f035a21b4fc85176bd2",
+    "record": ".artifacts/release-bundles/0.1.0-alpha.7-84a744a5e3044b948ab7ab707ee45630/bundle.json"
+  },
+  "repository": {
+    "nugetObservation": ".artifacts/source-check/507a642b/publication-preflight.json",
+    "remainingScenarioDatabases": 0,
+    "historicalAdrsChanged": 0,
+    "observedPublicMain": "473c1f99176575f37b282cac37ced1b539899be9",
+    "public": "https://github.com/tayzer/AAATDD",
+    "sourceUploadAuthorised": false,
+    "originalFeatureChanged": false
+  },
+  "remaining": [
+    "Recheck the Git-normalised local review commit; final-source hosted CI remains separate.",
+    "Complete the supported provenance release review without claiming arbitrary I/O tracing.",
+    "Clean supported-environment and requester/Codex API acceptance with a genuine fresh session.",
+    "Publication authority for the public source/release artifacts."
+  ]
+}

@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Gherkin" Version="[35.0.0]" />
+    <ProjectReference Include="../Tada.RuntimeProbe/Tada.RuntimeProbe.csproj" />
+    <ProjectReference Include="../Tada.BuildLogger/Tada.BuildLogger.csproj" />
+  </ItemGroup>
+</Project>

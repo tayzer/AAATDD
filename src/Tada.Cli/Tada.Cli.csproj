@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>tada</ToolCommandName>
+    <PackageId>Tada.Cli</PackageId>
+    <Description>Local advisory acceptance baseline and evidence verification for AI-assisted development.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
+    <Authors>TADA contributors</Authors>
+  </PropertyGroup>
+  <ItemGroup><ProjectReference Include="../Tada.Core/Tada.Core.csproj" /></ItemGroup>
+  <ItemGroup><None Include="PACKAGE.md" Pack="true" PackagePath="/" /></ItemGroup>
+  <ItemGroup><None Include="../../THIRD_PARTY_NOTICES.md" Pack="true" PackagePath="/" /></ItemGroup>
+</Project>

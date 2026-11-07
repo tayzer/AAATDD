@@ -1,0 +1,34 @@
+Build started 11/5/2026 12:27:58 PM.
+     1>Project "E:\Development\git\AAATDD\experiments\compatibility-probe\CompatibilityProbe.csproj" on node 1 (Restore target(s)).
+     1>_GetAllRestoreProjectPathItems:
+         Determining projects to restore...
+     1>Project "E:\Development\git\AAATDD\experiments\compatibility-probe\CompatibilityProbe.csproj" (1) is building "E:\Development\git\AAATDD\experiments\compatibility-probe\CompatibilityProbe.csproj" (1:6) on node 1 (_GenerateProjectRestoreGraph target(s)).
+     1>AddPrunePackageReferences:
+         Loading prune package data from PrunePackageData folder
+         Failed to load prune package data from PrunePackageData folder, loading from targeting packs instead
+         Looking for targeting packs in E:\Development\git\AAATDD\experiments\compatibility-probe\.tools\dotnet\packs\Microsoft.NETCore.App.Ref
+         Pack directories found: E:\Development\git\AAATDD\experiments\compatibility-probe\.tools\dotnet\packs\Microsoft.NETCore.App.Ref\10.0.14
+         Found package overrides file E:\Development\git\AAATDD\experiments\compatibility-probe\.tools\dotnet\packs\Microsoft.NETCore.App.Ref\10.0.14\data\PackageOverrides.txt
+     1>Done Building Project "E:\Development\git\AAATDD\experiments\compatibility-probe\CompatibilityProbe.csproj" (_GenerateProjectRestoreGraph target(s)).
+     1>Restore:
+         X.509 certificate chain validation will use the default trust store selected by .NET for code signing.
+         X.509 certificate chain validation will use the default trust store selected by .NET for timestamping.
+         Restoring packages for E:\Development\git\AAATDD\experiments\compatibility-probe\CompatibilityProbe.csproj...
+           CACHE https://api.nuget.org/v3/vulnerabilities/index.json
+           CACHE https://api.nuget.org/v3-vulnerabilities/2026.11.04.11.49.31/vulnerability.base.json
+           CACHE https://api.nuget.org/v3-vulnerabilities/2026.11.04.11.49.31/2026.11.05.11.49.38/vulnerability.update.json
+         Writing assets file to disk. Path: E:\Development\git\AAATDD\experiments\compatibility-probe\obj\project.assets.json
+         Restored E:\Development\git\AAATDD\experiments\compatibility-probe\CompatibilityProbe.csproj (in 295 ms).
+         
+         NuGet Config files used:
+             E:\Development\git\AAATDD\experiments\compatibility-probe\NuGet.Config
+         
+         Feeds used:
+             https://api.nuget.org/v3/index.json
+     1>Done Building Project "E:\Development\git\AAATDD\experiments\compatibility-probe\CompatibilityProbe.csproj" (Restore target(s)).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.81

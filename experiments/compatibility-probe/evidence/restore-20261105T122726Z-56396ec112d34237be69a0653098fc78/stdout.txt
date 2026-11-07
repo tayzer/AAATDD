@@ -1,0 +1,174 @@
+Build started 11/5/2026 12:27:26 PM.
+X.509 certificate chain validation will use the default trust store selected by .NET for code signing.
+X.509 certificate chain validation will use the default trust store selected by .NET for timestamping.
+Restoring packages for E:\Development\git\AAATDD\experiments\compatibility-probe\.tmp\scratch\a29ad80d21864bad8e15bc9d26dad8e2\5d8dbd0891234ba98f8b20cc86266541.proj...
+  GET https://api.nuget.org/v3-flatcontainer/mstest.sdk/index.json
+  OK https://api.nuget.org/v3-flatcontainer/mstest.sdk/index.json 127ms
+  GET https://api.nuget.org/v3-flatcontainer/mstest.sdk/4.5.2/mstest.sdk.4.5.2.nupkg
+  OK https://api.nuget.org/v3-flatcontainer/mstest.sdk/4.5.2/mstest.sdk.4.5.2.nupkg 13ms
+Installed MSTest.Sdk 4.5.2 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\mstest.sdk\4.5.2 with content hash wEy7Z+DUQU7NQBP9ZczvW4BpAOQaMrRlFcSAjStYsRNxq9mURkPLlN338YYr4AMSmhicH9aYixez6VfLY4TSpw==.
+  GET https://api.nuget.org/v3/vulnerabilities/index.json
+  OK https://api.nuget.org/v3/vulnerabilities/index.json 99ms
+  GET https://api.nuget.org/v3-vulnerabilities/2026.11.04.11.49.31/vulnerability.base.json
+  GET https://api.nuget.org/v3-vulnerabilities/2026.11.04.11.49.31/2026.11.05.11.49.38/vulnerability.update.json
+  OK https://api.nuget.org/v3-vulnerabilities/2026.11.04.11.49.31/vulnerability.base.json 105ms
+  OK https://api.nuget.org/v3-vulnerabilities/2026.11.04.11.49.31/2026.11.05.11.49.38/vulnerability.update.json 125ms
+     1>Project "E:\Development\git\AAATDD\experiments\compatibility-probe\CompatibilityProbe.csproj" on node 1 (Restore target(s)).
+     1>_GetAllRestoreProjectPathItems:
+         Determining projects to restore...
+     1>Project "E:\Development\git\AAATDD\experiments\compatibility-probe\CompatibilityProbe.csproj" (1) is building "E:\Development\git\AAATDD\experiments\compatibility-probe\CompatibilityProbe.csproj" (1:6) on node 1 (_GenerateProjectRestoreGraph target(s)).
+     1>AddPrunePackageReferences:
+         Loading prune package data from PrunePackageData folder
+         Failed to load prune package data from PrunePackageData folder, loading from targeting packs instead
+         Looking for targeting packs in E:\Development\git\AAATDD\experiments\compatibility-probe\.tools\dotnet\packs\Microsoft.NETCore.App.Ref
+         Pack directories found: E:\Development\git\AAATDD\experiments\compatibility-probe\.tools\dotnet\packs\Microsoft.NETCore.App.Ref\10.0.14
+         Found package overrides file E:\Development\git\AAATDD\experiments\compatibility-probe\.tools\dotnet\packs\Microsoft.NETCore.App.Ref\10.0.14\data\PackageOverrides.txt
+     1>Done Building Project "E:\Development\git\AAATDD\experiments\compatibility-probe\CompatibilityProbe.csproj" (_GenerateProjectRestoreGraph target(s)).
+     1>Restore:
+         X.509 certificate chain validation will use the default trust store selected by .NET for code signing.
+         X.509 certificate chain validation will use the default trust store selected by .NET for timestamping.
+         Restoring packages for E:\Development\git\AAATDD\experiments\compatibility-probe\CompatibilityProbe.csproj...
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.data.sqlite/index.json
+           GET https://api.nuget.org/v3-flatcontainer/reqnroll.tools.msbuild.generation/index.json
+           GET https://api.nuget.org/v3-flatcontainer/reqnroll/index.json
+           GET https://api.nuget.org/v3-flatcontainer/mstest.testframework/index.json
+           GET https://api.nuget.org/v3-flatcontainer/mstest.testadapter/index.json
+           GET https://api.nuget.org/v3-flatcontainer/reqnroll.mstest/index.json
+           OK https://api.nuget.org/v3-flatcontainer/reqnroll/index.json 59ms
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.data.sqlite/index.json 59ms
+           OK https://api.nuget.org/v3-flatcontainer/reqnroll.tools.msbuild.generation/index.json 60ms
+           OK https://api.nuget.org/v3-flatcontainer/mstest.testadapter/index.json 62ms
+           OK https://api.nuget.org/v3-flatcontainer/mstest.testframework/index.json 67ms
+           GET https://api.nuget.org/v3-flatcontainer/reqnroll.tools.msbuild.generation/3.3.4/reqnroll.tools.msbuild.generation.3.3.4.nupkg
+           GET https://api.nuget.org/v3-flatcontainer/reqnroll/3.3.4/reqnroll.3.3.4.nupkg
+           GET https://api.nuget.org/v3-flatcontainer/mstest.testadapter/4.5.2/mstest.testadapter.4.5.2.nupkg
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.data.sqlite/10.0.14/microsoft.data.sqlite.10.0.14.nupkg
+           GET https://api.nuget.org/v3-flatcontainer/mstest.testframework/4.5.2/mstest.testframework.4.5.2.nupkg
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.data.sqlite/10.0.14/microsoft.data.sqlite.10.0.14.nupkg 12ms
+           OK https://api.nuget.org/v3-flatcontainer/reqnroll/3.3.4/reqnroll.3.3.4.nupkg 14ms
+           OK https://api.nuget.org/v3-flatcontainer/reqnroll.tools.msbuild.generation/3.3.4/reqnroll.tools.msbuild.generation.3.3.4.nupkg 19ms
+           OK https://api.nuget.org/v3-flatcontainer/mstest.testframework/4.5.2/mstest.testframework.4.5.2.nupkg 19ms
+           OK https://api.nuget.org/v3-flatcontainer/mstest.testadapter/4.5.2/mstest.testadapter.4.5.2.nupkg 27ms
+           OK https://api.nuget.org/v3-flatcontainer/reqnroll.mstest/index.json 211ms
+           GET https://api.nuget.org/v3-flatcontainer/reqnroll.mstest/3.3.4/reqnroll.mstest.3.3.4.nupkg
+           OK https://api.nuget.org/v3-flatcontainer/reqnroll.mstest/3.3.4/reqnroll.mstest.3.3.4.nupkg 29ms
+           GET https://api.nuget.org/v3-flatcontainer/cucumber.cucumberexpressions/index.json
+           GET https://api.nuget.org/v3-flatcontainer/cucumber.messages/index.json
+           GET https://api.nuget.org/v3-flatcontainer/gherkin/index.json
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.bcl.asyncinterfaces/index.json
+           GET https://api.nuget.org/v3-flatcontainer/cucumber.htmlformatter/index.json
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.extensions.dependencymodel/index.json
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.data.sqlite.core/index.json
+           GET https://api.nuget.org/v3-flatcontainer/sqlitepclraw.bundle_e_sqlite3/index.json
+           GET https://api.nuget.org/v3-flatcontainer/sqlitepclraw.core/index.json
+           GET https://api.nuget.org/v3-flatcontainer/mstest.analyzers/index.json
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.testing.extensions.telemetry/index.json
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.testplatform.objectmodel/index.json
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.testing.extensions.trxreport.abstractions/index.json
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.testing.platform.msbuild/index.json
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.bcl.asyncinterfaces/index.json 10ms
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.extensions.dependencymodel/index.json 15ms
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.bcl.asyncinterfaces/9.0.6/microsoft.bcl.asyncinterfaces.9.0.6.nupkg
+           OK https://api.nuget.org/v3-flatcontainer/cucumber.htmlformatter/index.json 21ms
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.data.sqlite.core/index.json 20ms
+           OK https://api.nuget.org/v3-flatcontainer/gherkin/index.json 24ms
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.extensions.dependencymodel/8.0.2/microsoft.extensions.dependencymodel.8.0.2.nupkg
+           OK https://api.nuget.org/v3-flatcontainer/cucumber.cucumberexpressions/index.json 29ms
+           OK https://api.nuget.org/v3-flatcontainer/sqlitepclraw.bundle_e_sqlite3/index.json 27ms
+           GET https://api.nuget.org/v3-flatcontainer/cucumber.htmlformatter/22.2.0/cucumber.htmlformatter.22.2.0.nupkg
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.data.sqlite.core/10.0.14/microsoft.data.sqlite.core.10.0.14.nupkg
+           GET https://api.nuget.org/v3-flatcontainer/gherkin/35.0.0/gherkin.35.0.0.nupkg
+           OK https://api.nuget.org/v3-flatcontainer/sqlitepclraw.core/index.json 31ms
+           GET https://api.nuget.org/v3-flatcontainer/cucumber.cucumberexpressions/17.1.0/cucumber.cucumberexpressions.17.1.0.nupkg
+           GET https://api.nuget.org/v3-flatcontainer/sqlitepclraw.bundle_e_sqlite3/2.1.13/sqlitepclraw.bundle_e_sqlite3.2.1.13.nupkg
+           OK https://api.nuget.org/v3-flatcontainer/cucumber.messages/index.json 39ms
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.testplatform.objectmodel/index.json 37ms
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.extensions.dependencymodel/8.0.2/microsoft.extensions.dependencymodel.8.0.2.nupkg 15ms
+           OK https://api.nuget.org/v3-flatcontainer/mstest.analyzers/index.json 38ms
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.bcl.asyncinterfaces/9.0.6/microsoft.bcl.asyncinterfaces.9.0.6.nupkg 21ms
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.data.sqlite.core/10.0.14/microsoft.data.sqlite.core.10.0.14.nupkg 11ms
+           OK https://api.nuget.org/v3-flatcontainer/cucumber.htmlformatter/22.2.0/cucumber.htmlformatter.22.2.0.nupkg 14ms
+           OK https://api.nuget.org/v3-flatcontainer/gherkin/35.0.0/gherkin.35.0.0.nupkg 13ms
+           GET https://api.nuget.org/v3-flatcontainer/sqlitepclraw.core/2.1.13/sqlitepclraw.core.2.1.13.nupkg
+           GET https://api.nuget.org/v3-flatcontainer/cucumber.messages/30.1.0/cucumber.messages.30.1.0.nupkg
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.testplatform.objectmodel/18.10.1/microsoft.testplatform.objectmodel.18.10.1.nupkg
+           OK https://api.nuget.org/v3-flatcontainer/cucumber.cucumberexpressions/17.1.0/cucumber.cucumberexpressions.17.1.0.nupkg 14ms
+           GET https://api.nuget.org/v3-flatcontainer/mstest.analyzers/4.5.2/mstest.analyzers.4.5.2.nupkg
+           OK https://api.nuget.org/v3-flatcontainer/sqlitepclraw.bundle_e_sqlite3/2.1.13/sqlitepclraw.bundle_e_sqlite3.2.1.13.nupkg 14ms
+           OK https://api.nuget.org/v3-flatcontainer/sqlitepclraw.core/2.1.13/sqlitepclraw.core.2.1.13.nupkg 12ms
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.testing.extensions.telemetry/index.json 56ms
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.testing.platform.msbuild/index.json 58ms
+           OK https://api.nuget.org/v3-flatcontainer/cucumber.messages/30.1.0/cucumber.messages.30.1.0.nupkg 15ms
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.testplatform.objectmodel/18.10.1/microsoft.testplatform.objectmodel.18.10.1.nupkg 15ms
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.testing.extensions.telemetry/2.5.2/microsoft.testing.extensions.telemetry.2.5.2.nupkg
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.testing.extensions.trxreport.abstractions/index.json 66ms
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.testing.extensions.trxreport.abstractions/2.5.2/microsoft.testing.extensions.trxreport.abstractions.2.5.2.nupkg
+           OK https://api.nuget.org/v3-flatcontainer/mstest.analyzers/4.5.2/mstest.analyzers.4.5.2.nupkg 26ms
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.testing.extensions.telemetry/2.5.2/microsoft.testing.extensions.telemetry.2.5.2.nupkg 12ms
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.testing.extensions.trxreport.abstractions/2.5.2/microsoft.testing.extensions.trxreport.abstractions.2.5.2.nupkg 12ms
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.testing.platform.msbuild/2.5.2/microsoft.testing.platform.msbuild.2.5.2.nupkg
+           GET https://api.nuget.org/v3-flatcontainer/cucumber.messages/29.0.1/cucumber.messages.29.0.1.nupkg
+           GET https://api.nuget.org/v3-flatcontainer/sqlitepclraw.provider.e_sqlite3/index.json
+           GET https://api.nuget.org/v3-flatcontainer/sqlitepclraw.lib.e_sqlite3/index.json
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.testing.platform.msbuild/2.5.2/microsoft.testing.platform.msbuild.2.5.2.nupkg 15ms
+           OK https://api.nuget.org/v3-flatcontainer/cucumber.messages/29.0.1/cucumber.messages.29.0.1.nupkg 13ms
+           OK https://api.nuget.org/v3-flatcontainer/sqlitepclraw.provider.e_sqlite3/index.json 13ms
+           OK https://api.nuget.org/v3-flatcontainer/sqlitepclraw.lib.e_sqlite3/index.json 35ms
+           GET https://api.nuget.org/v3-flatcontainer/sqlitepclraw.provider.e_sqlite3/2.1.13/sqlitepclraw.provider.e_sqlite3.2.1.13.nupkg
+           GET https://api.nuget.org/v3-flatcontainer/sqlitepclraw.lib.e_sqlite3/2.1.13/sqlitepclraw.lib.e_sqlite3.2.1.13.nupkg
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.applicationinsights/index.json
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.testing.platform/index.json
+           OK https://api.nuget.org/v3-flatcontainer/sqlitepclraw.provider.e_sqlite3/2.1.13/sqlitepclraw.provider.e_sqlite3.2.1.13.nupkg 24ms
+           OK https://api.nuget.org/v3-flatcontainer/sqlitepclraw.lib.e_sqlite3/2.1.13/sqlitepclraw.lib.e_sqlite3.2.1.13.nupkg 27ms
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.applicationinsights/index.json 29ms
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.testing.platform/index.json 32ms
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.testing.platform/2.5.2/microsoft.testing.platform.2.5.2.nupkg
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.applicationinsights/2.23.0/microsoft.applicationinsights.2.23.0.nupkg
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.testing.platform/2.5.2/microsoft.testing.platform.2.5.2.nupkg 15ms
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.applicationinsights/2.23.0/microsoft.applicationinsights.2.23.0.nupkg 15ms
+         Installed Microsoft.Data.Sqlite 10.0.14 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\microsoft.data.sqlite\10.0.14 with content hash muyroan6rKrf0omZL8UF7Kw5uOGp/yBg1L/XWvkFN3WhKaNtK2IWqRZw93nIwVqjhTVDO0l4CEGhHIh+mb+sKg==.
+         Installed Cucumber.Messages 29.0.1 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\cucumber.messages\29.0.1 with content hash R2oo/wR3mXrbdK04Yraf+KhB01f/lyBkLQZcdxYt9XKE6tV+Af45MEk+jfbsew1SVvrAO0WvkIRwGYUozKCJvQ==.
+         Installed Microsoft.Testing.Extensions.TrxReport.Abstractions 2.5.2 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\microsoft.testing.extensions.trxreport.abstractions\2.5.2 with content hash +xTIaIU9H44GxOyjrfieMSZnxltGvleA3jCRtdEAzlXKb85pMmVYMLUv2JS8KwD+U2wQHUgvy5YfQfWoPEfVdQ==.
+         Installed Cucumber.Messages 30.1.0 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\cucumber.messages\30.1.0 with content hash HDfIzDd7JFDEwiNHpgOHBPEiyVjXQws+CEnVb+Lwiq58jHNA/xYwmTswbqknOxcAejCRFP1de/hHHw+ZuTzV6A==.
+         Installed SQLitePCLRaw.core 2.1.13 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\sqlitepclraw.core\2.1.13 with content hash 2joofoinuHBFs0nMX3nKuXgxpXryRkCOdM2Ua6HBqQLLy6IW+5f28ZI+HAvMyF8vG7XfNz/lwfBfE6V4juru8Q==.
+         Installed SQLitePCLRaw.bundle_e_sqlite3 2.1.13 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\sqlitepclraw.bundle_e_sqlite3\2.1.13 with content hash NlDixlC7uHmo+ojXRgkNvN0tQtVGpLDZ3x2OpgNj+G07VHh5cXSszFDrAiC4BpUiPwkcaeuQkMV9WQ123xVtmQ==.
+         Installed Gherkin 35.0.0 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\gherkin\35.0.0 with content hash ha+QNevQsXEESbzazUceHTCtKOjoBTBa8kLFdKpu6vSEbb3UMt3a55RG78tIoU/C4qzIqX3jQxaIdIcYGO+IWQ==.
+         Installed Cucumber.HtmlFormatter 22.2.0 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\cucumber.htmlformatter\22.2.0 with content hash hlP9GGzRADDKh0/GEt2aWD9G08qEDD4z6TC6iqJt3xH8kiU3iAbg1rOCtorN13zNdaaVxdraHzznWTMT/DnM1g==.
+         Installed Microsoft.Bcl.AsyncInterfaces 9.0.6 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\microsoft.bcl.asyncinterfaces\9.0.6 with content hash 82rLw487j5jBXEi2r3WvA/cagOhcRREVRtet6izzjDMY+i392W5oNSN2KCtuIvlTpyMONEUD0MIlGAgDdsvQ/w==.
+         Installed Reqnroll 3.3.4 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\reqnroll\3.3.4 with content hash tFFx0xACekjT9F/aFZjQMNTbaxy7zNU4uXFXvU1Eybuko2Rx1RLCAzN+uPDiDxsGB/Nd0wZC0M8Ho5i9xm8Jdg==.
+         Installed Microsoft.Extensions.DependencyModel 8.0.2 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\microsoft.extensions.dependencymodel\8.0.2 with content hash mUBDZZRgZrSyFOsJ2qJJ9fXfqd/kXJwf3AiDoqLD9m6TjY5OO/vLNOb9fb4juC0487eq4hcGN/M2Rh/CKS7QYw==.
+         Installed Reqnroll.MSTest 3.3.4 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\reqnroll.mstest\3.3.4 with content hash N3l9STvSS9SdiV0oR9FbBpcNwMrcawLBzA5ubeet5UnS5gplwVN9wMYBwJ5DLvLnSAkg2Xiw3tRkuuVBy/YwBg==.
+         Installed SQLitePCLRaw.provider.e_sqlite3 2.1.13 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\sqlitepclraw.provider.e_sqlite3\2.1.13 with content hash ZU60dSqoSNRe49KcQDUmOVgdRtjITOssVXFtiISs+zJXDI4D2Sndwpn2NOtzDQNPu0ZAvpoLPQ+GLKv6iEZn8Q==.
+         Installed Microsoft.Data.Sqlite.Core 10.0.14 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\microsoft.data.sqlite.core\10.0.14 with content hash 1p9rO3Q2X/L/9YrYog3vaDzi8u+WZfJCOkDYoHqmofqYP0DLPLPyZcS2Rnh/79JXAodgbs1AgsaNwLpIvC3Xew==.
+         Installed MSTest.Analyzers 4.5.2 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\mstest.analyzers\4.5.2 with content hash t6Dj9AmWO9IfkMBi3yYTf7bfgSTAetsi4LFA3xGdKbJ+gBbSDqbo41U5vYiW9puD8UGl2elsizNeJVYtwNim0Q==.
+         Installed Microsoft.Testing.Extensions.Telemetry 2.5.2 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\microsoft.testing.extensions.telemetry\2.5.2 with content hash j1XGKCBrmfNm0tmotMa05GlqVtb2cW5UaMkKCFHPyyFHz5rdOy7TD0SVXnZJ+QMrjPAHjRoRqn5qcsUjICSWwg==.
+         Installed Microsoft.ApplicationInsights 2.23.0 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\microsoft.applicationinsights\2.23.0 with content hash nWArUZTdU7iqZLycLKWe0TDms48KKGE6pONH2terYNa8REXiqixrMOkf1sk5DHGMaUTqONU2YkS4SAXBhLStgw==.
+         Installed Microsoft.Testing.Platform 2.5.2 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\microsoft.testing.platform\2.5.2 with content hash ocX0rgGY78dKfmZlZe4hB0/dvlh7wJgUAWS+KfwrqxB9DpNsjshnne9dppCKnFNEOkX4QYsrdUU++NInFPiCBw==.
+         Installed MSTest.TestAdapter 4.5.2 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\mstest.testadapter\4.5.2 with content hash 3ZM4AiMnHHI58VKcn4DUlz9HMtPk+ucN/WNYiB0k29gaihTPiK5vcXX49iisgbLd8aFlSoaEIRBPekKs/wDYfA==.
+         Installed Microsoft.Testing.Platform.MSBuild 2.5.2 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\microsoft.testing.platform.msbuild\2.5.2 with content hash Jey2v0hd7WHHa7pr6MRNKtA07FvxcOMTCtIhTI7uBZ/qR5m1mgCVCo5L1rtVAtqgMhGA205bUwq9+is4LiCzpw==.
+         Installed Microsoft.TestPlatform.ObjectModel 18.10.1 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\microsoft.testplatform.objectmodel\18.10.1 with content hash o+PuLDRVp1iwiVAPBADZItXgm9Ck23XtPhE4kZtZVi0uYnMiiz1Dx9Cjh75kJ+ijfqnORL3VOTOaQVKi0f/ixg==.
+         Installed MSTest.TestFramework 4.5.2 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\mstest.testframework\4.5.2 with content hash 9U+a6ZcsIEXnC2Q8D2RRBpvo3ro83RfGLfeCJC+NomPhiCD6gi9ehpk00A1TC0Za+nB7j5sn6V1VbDanqoohsA==.
+         Installed Reqnroll.Tools.MsBuild.Generation 3.3.4 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\reqnroll.tools.msbuild.generation\3.3.4 with content hash atTwejJRcKgUcJCofp4uSPKNXBav6ZITHtuD6dhByg1ubyVJirjz5TkcVCR9oFnHAEbZvOdd4cYCJNPO9rSAsQ==.
+         Installed SQLitePCLRaw.lib.e_sqlite3 2.1.13 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\sqlitepclraw.lib.e_sqlite3\2.1.13 with content hash D2UAuiGxFYBqeRXjjjGgvJ5UQifzn6wefmSqeKU7XcNGKLbJRP6X7kcPZ6opOBJGdCIlgbSxTvDpBbLvsN594A==.
+         Installed Cucumber.CucumberExpressions 17.1.0 from https://api.nuget.org/v3/index.json to E:\Development\git\AAATDD\experiments\compatibility-probe\.packages\cucumber.cucumberexpressions\17.1.0 with content hash IZFDLLwrUCKuGDXQzmAWZa+kQFpVmVwWD8wEl0UWGOR83UQfzqg8hZeSSNUOXlW0Kh3vMO6kEm3FpNC4amKMaw==.
+         Generating MSBuild file E:\Development\git\AAATDD\experiments\compatibility-probe\obj\CompatibilityProbe.csproj.nuget.g.props.
+         Generating MSBuild file E:\Development\git\AAATDD\experiments\compatibility-probe\obj\CompatibilityProbe.csproj.nuget.g.targets.
+         Writing assets file to disk. Path: E:\Development\git\AAATDD\experiments\compatibility-probe\obj\project.assets.json
+         Writing packages lock file at disk. Path: E:\Development\git\AAATDD\experiments\compatibility-probe\packages.lock.json
+         Restored E:\Development\git\AAATDD\experiments\compatibility-probe\CompatibilityProbe.csproj (in 3.15 sec).
+         
+         NuGet Config files used:
+             E:\Development\git\AAATDD\experiments\compatibility-probe\NuGet.Config
+         
+         Feeds used:
+             https://api.nuget.org/v3/index.json
+         
+         Installed:
+             25 package(s) to E:\Development\git\AAATDD\experiments\compatibility-probe\CompatibilityProbe.csproj
+     1>Done Building Project "E:\Development\git\AAATDD\experiments\compatibility-probe\CompatibilityProbe.csproj" (Restore target(s)).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:04.85

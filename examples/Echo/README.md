@@ -1,0 +1,7 @@
+# Echo onboarding control
+
+These candidate examples exercise the installed TADA package in a newly initialised project. The [onboarding script](../../scripts/Test-Onboarding.ps1) installs the local package, runs `init`, creates an unimplemented HTTP host and meaningful bindings, prepares/reviews an oracle and records an explicitly labelled automated control approval. It establishes assertion RED from HTTP 501, implements the endpoint, establishes GREEN under the same oracle, verifies retained evidence, and commits/reads back a lightweight maintenance/context handoff in a local control Git repository.
+
+The candidate feature demonstrates whitespace preservation and rejection without privileged database observation. The script also extracts the endpoint response function as a behaviour-preserving refactor, reruns the same oracle and performs a warn-as-error build without adding scenarios. Automated control approval is not requester business acceptance. No TADA core changes are made for this project. Source templates are copied into a fresh working directory; ephemeral outputs stay outside the example sources.
+
+The generated API uses a separate implementation library through a reviewed project reference. Bindings request `TadaRuntimeCheckpoint.Complete(api)` before process termination; the helper comes from `tada init`. The application has no TADA project/package reference. Located managed assemblies and cooperative native snapshots are retained for each process, with missing final snapshots treated as evidence gaps.

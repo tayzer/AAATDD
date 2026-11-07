@@ -1,0 +1,37 @@
+{
+  "stage": "build",
+  "stageId": "build-20261105T122856Z-9d96eef62911434fb8a442b6f3b1877b",
+  "executable": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\dotnet.exe",
+  "arguments": [
+    "build",
+    "CompatibilityProbe.csproj",
+    "--no-restore",
+    "--verbosity",
+    "normal"
+  ],
+  "workingDirectory": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe",
+  "processEnvironment": {
+    "NUGET_HTTP_CACHE_PATH": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp\\http-cache",
+    "TEMP": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp",
+    "AAATDD_PROBE_EVIDENCE_DIR": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\evidence\\build-20261105T122856Z-9d96eef62911434fb8a442b6f3b1877b",
+    "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+    "DOTNET_NOLOGO": "1",
+    "DOTNET_CLI_HOME": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.cli",
+    "AAATDD_PROBE_NEGATIVE": "0",
+    "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1",
+    "REQNROLL_FORMATTERS_MESSAGE": "outputFilePath=E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\evidence\\build-20261105T122856Z-9d96eef62911434fb8a442b6f3b1877b/native-messages.ndjson",
+    "NUGET_PLUGINS_CACHE_PATH": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp\\plugins",
+    "NUGET_PACKAGES": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages",
+    "TMP": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp",
+    "MSBuildEnableWorkloadResolver": "false",
+    "DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE": "1",
+    "NUGET_SCRATCH": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp\\scratch",
+    "DOTNET_ROOT": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet"
+  },
+  "startedUtc": "2026-11-05T12:28:56.8310012+00:00",
+  "finishedUtc": "2026-11-05T12:29:00.8394510+00:00",
+  "processId": 9712,
+  "timeoutMilliseconds": 300000,
+  "timedOut": false,
+  "exitCode": 0
+}

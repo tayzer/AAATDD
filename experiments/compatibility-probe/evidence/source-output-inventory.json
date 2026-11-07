@@ -1,0 +1,67 @@
+{
+  "Sources": [
+    {
+      "relativePath": "global.json",
+      "sha256": "E5A8E714F4FEEF6CEF607D06EF5FA62F65679FC29AB232CAE9EA7955F6984F2E"
+    },
+    {
+      "relativePath": "NuGet.Config",
+      "sha256": "AA54224EEB24F6C19796BBBC7E1D2ACC3839ABA8B33E0FDD433E66A1DFFD8AAB"
+    },
+    {
+      "relativePath": "Directory.Build.props",
+      "sha256": "9AED38F0925D9204AA07F77A4942ED88B4955F07E01305571A2D22154FE1FE58"
+    },
+    {
+      "relativePath": "Directory.Build.targets",
+      "sha256": "17284CB74605517CBEC8A8153505DA71A685B28694B67B5EF80608CD79B1C0EA"
+    },
+    {
+      "relativePath": "CompatibilityProbe.csproj",
+      "sha256": "C4225B58B69E7D59EE4FDF39948DE99DBC1E5D864A10D2F9991770E7646C2868"
+    },
+    {
+      "relativePath": "reqnroll.json",
+      "sha256": "9067E697370FE3DB81607396E0AD431731E44CB25DB8A1898CC9AF2AC69B4BB2"
+    },
+    {
+      "relativePath": "TechnicalProbe.feature",
+      "sha256": "1A374C751FD932F4E4D5F58FAE8927AF7ED7B1760FC7D3B43A2529F8EA6979D3"
+    },
+    {
+      "relativePath": "ProbeBindings.cs",
+      "sha256": "4C37707FBA00B636B63B154E4FD6BC32E7965EE6B8A6993760A7097C4B4E2D77"
+    },
+    {
+      "relativePath": "Run-ProbeStage.ps1",
+      "sha256": "2579C0FADA7D99F03C4729778BD38CAEF6A78346E4F48585E5931AD57D733D15"
+    },
+    {
+      "relativePath": "packages.lock.json",
+      "sha256": "C02E120835549E8B8CA2E0C4B02B5EB5459D073B6CC96DB17946E26CE92F91D4"
+    }
+  ],
+  "Outputs": [
+    {
+      "relativePath": "bin/Debug/net10.0/CompatibilityProbe.exe",
+      "sha256": "CA88A5923F2E6998E89696190579FD92480F2609DF617732787088A8F3B8F2D3"
+    },
+    {
+      "relativePath": "bin/Debug/net10.0/CompatibilityProbe.dll",
+      "sha256": "41780D2DF8D46ADD92D02817243D6301D27324C90E222C9D6398B6BCAB56084F"
+    },
+    {
+      "relativePath": "bin/Debug/net10.0/CompatibilityProbe.deps.json",
+      "sha256": "A0D84072C1385B7DDEED9B7466C39FAD8BE7450C3A25FB8C92C3BD799EA44ED8"
+    },
+    {
+      "relativePath": "bin/Debug/net10.0/CompatibilityProbe.runtimeconfig.json",
+      "sha256": "256DDA2706E1151BB95987B6B5BE610BF68D64E058285B19E7E958222FC90414"
+    },
+    {
+      "relativePath": "bin/Debug/net10.0/CompatibilityProbe.pdb",
+      "sha256": "BD75BDA011F91D195252688986A59A503FAC76F967C81D87D92B0477DF3C3988"
+    }
+  ],
+  "Association": "Built by retained successful build command; loaded assembly hashes retained in both runtime-identity records. L1 provenance only."
+}
