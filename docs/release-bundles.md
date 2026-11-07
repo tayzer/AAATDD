@@ -9,7 +9,7 @@ This remains a development preview. The [hosted checkpoint](validation/hosted-ci
 After building and validating the tool package, run from the repository root:
 
 ```powershell
-$bundle = & ./scripts/New-ReleaseBundle.ps1 -Package .artifacts/packages/Tada.Cli.0.1.0-alpha.8.nupkg
+$bundle = & ./scripts/New-ReleaseBundle.ps1 -Package .artifacts/packages/Tada.Cli.0.1.0-alpha.9.nupkg
 pwsh -File scripts/Test-ReleaseBundle.ps1 -Archive $bundle.archive
 ```
 
@@ -21,7 +21,7 @@ The output is a fresh directory under `.artifacts/release-bundles/`; existing ar
 
 Extract the ZIP and follow its README. The application prerequisites are Windows x64, .NET SDK 10.0.403 and Git for Windows. Use `dotnet tool run tada` from the application directory. No model API or agent SDK is required.
 
-After `init` enables the project, open a fresh agent session and describe your project normally. The installed repository guidance must start collaborative requirements discovery without a workflow-specific prompt. Agree success/failure examples and Gherkin, review the executable oracle, then approve it yourself. The agent must not approve business expectations for you. Build the separate API in small increments, use meaningful business RED/GREEN and preserve existing obligations during maintenance.
+Use the [TADA plugin](plugin.md) for automatic workflow selection through the host's enable/disable controls. The CLI bundle prepares and verifies projects. With the plugin enabled, open a fresh session and describe your project normally. Agree success/failure examples and Gherkin, review the executable oracle and declare approval. Build the separate API in small verified increments and preserve existing obligations during maintenance.
 
 For the final experience check, request a bug fix, a refactor and a chore normally, then continue in another fresh agent session without telling it to read a handoff. Record any missing guidance or confusing recovery steps. A reminder to use TADA is evidence of a failed adoption attempt, even if a coached retry succeeds. The [ordinary-request trial](validation/default-workflow-trial.md) and [release checklist](release-readiness.md) keep these requester gates separate from automated controls.
 

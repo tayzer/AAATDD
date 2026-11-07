@@ -54,14 +54,13 @@ dotnet tool run tada init
 
 The local-only feed selects this package rather than an identically named public package.
 Keep the extracted feed available for later `dotnet tool restore --configfile NuGet.Bundle.Config`.
-`init` enables TADA as the default workflow through repository agent instructions and creates `.tada/WORKFLOW.md` and `.tada/context.md`.
-It appends a bounded TADA section to existing AGENTS.md and an existing root AGENTS.override.md while retaining their original bytes. Other existing files are preserved. The SDK host used for initialisation is recorded in new context so environment details do not belong in the project request.
+`init` prepares `.tada/WORKFLOW.md`, `.tada/context.md` and harness scaffolding. It migrates recognised generated agent rules from earlier alphas so the host plugin controls can govern automatic workflow selection. The SDK host used for preparation is recorded in new context.
 
-After enabling, open MyApi in a fresh Codex session (or another agent that loads repository instructions). Ask for your project normally, for example:
+Enable the matching TADA plugin through the host's plugin controls. The plugin distribution includes this verifier package and its setup helper. Open MyApi in a fresh session and ask for your project normally.
 
 > Build me a simple API for tracking my reading list.
 
-Choose your own project and wording. Do not mention TADA, Gherkin, workflow files or acceptance-test mechanics in the request. The enabled project must make the agent discover behaviour, ask for business agreement and follow the workflow itself. If you have to remind the agent to do so, record an activation/usability failure rather than counting the coached attempt as a pass.
+Choose your own project and wording. The enabled plugin should make the agent discover behaviour, ask for business agreement and follow the workflow itself. Record reminders or missing adoption as usability findings. Check disable and re-enable controls in fresh sessions as part of the experience trial.
 
 The human approves the captured specification and oracle. Broken setup is INDETERMINATE, not business RED.
 An observed response violating an agreed outcome establishes FAIL. Oracle edits require a new review and approval.
@@ -73,6 +72,7 @@ Complete automatic I/O/child-process observation and protected independent assur
 
 The manifest and SHA256SUMS identify this bundle's files. Checksums establish correspondence, not publisher authentication.
 Repository and full development quickstart: https://github.com/tayzer/AAATDD
+Plugin installation and activation: https://github.com/tayzer/AAATDD/blob/codex/alpha-release-validation/docs/plugin.md
 '@
 [IO.File]::WriteAllText((Join-Path $payload 'README.md'), $guide.Replace('VERSION_PLACEHOLDER', $version), [Text.UTF8Encoding]::new($false))
 $assets = @('LICENSE','README.md','THIRD_PARTY_NOTICES.md',"feed/$packageName")

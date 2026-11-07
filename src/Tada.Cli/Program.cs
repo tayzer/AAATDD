@@ -63,7 +63,7 @@ try
         if (!string.Equals(Path.GetFileNameWithoutExtension(host), "dotnet", StringComparison.OrdinalIgnoreCase)) host = null;
         var result = Onboarding.Initialise(root, host);
         Print(new { status = "initialised", created = result.Created, updated = result.Updated,
-            next = "TADA is enabled. Start a fresh agent session in this project and describe what you want to build or change normally." });
+            next = "Project prepared. Enable the TADA plugin, start a fresh agent session and describe what you want to build or change normally." });
         return 0;
     }
     var repository = new Repository(root);

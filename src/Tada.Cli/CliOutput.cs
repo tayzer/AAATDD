@@ -72,10 +72,10 @@ public static class CliOutput
         }
         else if (value.TryGetProperty("created", out var created))
         {
-            text.AppendLine("TADA enabled. Existing project content was retained; agent guidance changes are listed below.");
+            text.AppendLine("TADA project prepared. Use the host plugin controls to enable or disable automatic workflow selection.");
             foreach (var path in created.EnumerateArray()) text.AppendLine("  Created: " + path.GetString());
             if (value.TryGetProperty("updated", out var updated))
-                foreach (var path in updated.EnumerateArray()) text.AppendLine("  Enabled TADA in: " + path.GetString());
+                foreach (var path in updated.EnumerateArray()) text.AppendLine("  Migrated legacy guidance in: " + path.GetString());
             text.AppendLine(value.GetProperty("next").GetString());
             text.AppendLine("If .gitattributes already existed, review line-ending rules for exact-byte oracle inputs.");
         }

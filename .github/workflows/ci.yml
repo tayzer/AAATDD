@@ -41,6 +41,12 @@ jobs:
         run: dotnet pack src/Tada.Cli/Tada.Cli.csproj --no-restore --disable-build-servers -o .artifacts/packages
       - name: Orders end-to-end and negative controls
         run: pwsh -File scripts/Test-OrdersWorkflow.ps1
+      - name: Package the TADA plugin and check project setup
+        run: |
+          [xml]$properties = Get-Content Directory.Build.props -Raw
+          $version = [string]$properties.Project.PropertyGroup.Version
+          $plugin = & ./scripts/New-TadaPlugin.ps1 -Package ".artifacts/packages/Tada.Cli.$version.nupkg"
+          pwsh -File scripts/Test-TadaPlugin.ps1 -PluginRoot $plugin.pluginRoot
       - name: Installed-package onboarding and second API
         run: pwsh -File scripts/Test-Onboarding.ps1
       - name: Observed task-only tool environment identity
@@ -69,6 +75,8 @@ jobs:
             .artifacts/core-tests.log
             .artifacts/release-bundles/**/*.zip
             .artifacts/release-bundles/**/bundle.json
+            .artifacts/plugin-bundles/**/*.zip
+            .artifacts/plugin-bundles/**/plugin.json
             .artifacts/native/*.build.json
             .artifacts/native/tests/*.build.json
             .artifacts/**/validation.json

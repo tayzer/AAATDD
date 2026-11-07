@@ -13,7 +13,6 @@ public static class Onboarding
             [".tada/WORKFLOW.md"] = Workflow,
             [".tada/context.md"] = "# Project context\n\nRecord current goals, accepted behaviour links and unresolved questions here. Treat this as a concise index, not a second functional specification.\n"
                 + (dotnetHost == null ? "" : $"\n## Local SDK host\n\nInitialisation used `{dotnetHost}`. Recheck this path and SDK 10.0.403 before use, especially after moving machines. Use this host for SDK/tool commands and pass the same host through `--dotnet` to `tada run`. This is an environment note, not business authority.\n"),
-            ["AGENTS.md"] = "# Agent entry point\n\n" + AgentInstructions,
             ["global.json"] = "{\"sdk\":{\"version\":\"10.0.403\",\"rollForward\":\"disable\",\"allowPrerelease\":false},\"test\":{\"runner\":\"Microsoft.Testing.Platform\"}}\n",
             ["NuGet.Config"] = "<configuration><packageSources><clear/><add key=\"nuget.org\" value=\"https://api.nuget.org/v3/index.json\"/></packageSources></configuration>\n",
             [".gitattributes"] = "# Approval identities use exact file bytes. Keep Git from rewriting line endings.\n* -text\n",
@@ -82,17 +81,14 @@ public static class Onboarding
             created.Add("tada.json");
         }
         var updated = new List<string>();
-        if (!created.Contains("AGENTS.md") && Activate("AGENTS.md")) updated.Add("AGENTS.md");
-        // Codex selects the override instead of AGENTS.md at the same directory level.
-        // Keep the normal entry point for other agents and activate an existing override too.
-        if (File.Exists(Path.Combine(root, "AGENTS.override.md")) && Activate("AGENTS.override.md"))
-            updated.Add("AGENTS.override.md");
+        foreach (string entry in new[] { "AGENTS.md", "AGENTS.override.md" })
+            if (File.Exists(Path.Combine(root, entry)) && RemoveLegacyGuidance(entry)) updated.Add(entry);
         return new Initialisation(created.ToArray(), updated.ToArray());
 
-        bool Activate(string relative)
+        bool RemoveLegacyGuidance(string relative)
         {
             string path = repository.Resolve(relative);
-            using var stream = new FileStream(path, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+            using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read | FileShare.Delete);
             using var reader = new StreamReader(stream, new System.Text.UTF8Encoding(false, true), detectEncodingFromByteOrderMarks: true, leaveOpen: true);
             string existing;
             try { existing = reader.ReadToEnd(); }
@@ -100,16 +96,56 @@ public static class Onboarding
             {
                 throw new TadaException($"Cannot decode {relative} as UTF-8 or BOM-marked Unicode. Existing instructions were left unchanged.");
             }
-            if (existing.Contains(AgentInstructions, StringComparison.Ordinal)) return false;
+            var sections = new List<string>();
             if (existing.Contains("<!-- TADA:BEGIN -->", StringComparison.Ordinal) || existing.Contains("<!-- TADA:END -->", StringComparison.Ordinal))
-                throw new TadaException($"Existing TADA guidance in {relative} differs or is incomplete. Reconcile that section before enabling; existing instructions were left unchanged.");
-            byte[] addition = reader.CurrentEncoding.GetBytes("\n\n" + AgentInstructions + "\n");
-            stream.Position = stream.Length;
-            stream.Write(addition);
+            {
+                int start = existing.IndexOf(AgentInstructions, StringComparison.Ordinal);
+                if (start < 0 || existing.IndexOf("<!-- TADA:BEGIN -->", StringComparison.Ordinal) != start ||
+                    existing.LastIndexOf("<!-- TADA:BEGIN -->", StringComparison.Ordinal) != start ||
+                    existing.IndexOf("<!-- TADA:END -->", StringComparison.Ordinal) != start + AgentInstructions.Length - "<!-- TADA:END -->".Length ||
+                    existing.LastIndexOf("<!-- TADA:END -->", StringComparison.Ordinal) != start + AgentInstructions.Length - "<!-- TADA:END -->".Length)
+                    throw new TadaException($"Edited or incomplete legacy TADA guidance in {relative} requires reconciliation before plugin controls can govern the workflow.");
+                string owned = AgentInstructions;
+                if (start >= 2 && existing.AsSpan(start - 2, 2).SequenceEqual("\n\n")) owned = "\n\n" + owned;
+                if (existing.AsSpan(start + AgentInstructions.Length).StartsWith("\n")) owned += "\n";
+                sections.Add(owned);
+            }
+            if (existing.Contains(LegacyEntryParagraph, StringComparison.Ordinal)) sections.Add(LegacyEntryParagraph);
+            if (sections.Count == 0) return false;
+            // Preserve the BOM, encoding and every byte outside known generated guidance.
+            stream.Position = 0;
+            byte[] remaining = new byte[checked((int)stream.Length)];
+            stream.ReadExactly(remaining);
+            byte[] original = remaining;
+            foreach (string section in sections)
+            {
+                byte[] encoded = reader.CurrentEncoding.GetBytes(section);
+                int offset = remaining.AsSpan().IndexOf(encoded);
+                if (offset < 0) throw new TadaException($"Cannot locate the legacy guidance bytes in {relative}.");
+                remaining = [.. remaining.AsSpan(0, offset), .. remaining.AsSpan(offset + encoded.Length)];
+            }
+            string temporary = path + ".tada-" + Guid.NewGuid().ToString("N") + ".tmp";
+            try
+            {
+                using (var output = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+                {
+                    output.Write(remaining);
+                    output.Flush(flushToDisk: true);
+                }
+                reader.Dispose();
+                stream.Dispose();
+                if (!File.ReadAllBytes(path).AsSpan().SequenceEqual(original))
+                    throw new TadaException($"Instructions changed while migrating {relative}. Retry against the current file.");
+                File.Move(temporary, path, overwrite: true);
+            }
+            finally { if (File.Exists(temporary)) File.Delete(temporary); }
             return true;
         }
     }
 
+    private const string LegacyEntryParagraph = "Read `.tada/WORKFLOW.md` and `.tada/context.md` before changing this repository. Gherkin defines business acceptance. Ask the human to agree acceptance-changing decisions; routine implementation choices are delegated.\n";
+
+    // Exact alpha.8 bytes form the migration signature.
     public const string AgentInstructions = """
         <!-- TADA:BEGIN -->
         ## TADA is enabled for this repository
@@ -152,7 +188,7 @@ public static class Onboarding
     public const string Workflow = """
         # TADA agent workflow
 
-        TADA is the default development workflow for this enabled repository. Read this file and `context.md` at the start of each session without waiting for the user to request TADA. Users describe the project or change normally; the installed agent entry point supplies this process. This workflow works with any coding agent that loads the repository's instructions.
+        Apply this workflow when the TADA plugin is enabled or the user explicitly requests it. The plugin supplies automatic workflow selection for ordinary software requests. Read this file and `context.md` when applying TADA to recover project knowledge. The host's plugin controls govern automatic selection in fresh sessions.
 
         ## Choose proportionate work
 
@@ -193,7 +229,7 @@ public static class Onboarding
 
         ## Bootstrap and maintenance
 
-        `tada init` enables this default workflow and creates harness scaffolding without inventing business scenarios. It appends one bounded TADA section to existing root `AGENTS.md` and an existing root `AGENTS.override.md`, retaining their original bytes. Other existing files are preserved. Repeated initialisation is a no-op; conflicting or incomplete TADA sections need reconciliation rather than silent replacement. Start a fresh agent session after enabling so instruction discovery runs again. Scenario Outlines are deliberately unsupported in the initial version.
+        `tada init` prepares project scaffolding and records the invoking SDK host in new context. Enable or disable the TADA plugin through the host's plugin controls. Initialisation removes the exact legacy alpha.8 TADA block from root agent instructions so the plugin toggle can govern automatic behaviour. Edited legacy blocks require reconciliation. Existing baseline, review, approval and run records remain project knowledge for future work. Scenario Outlines are deliberately unsupported in the initial version.
 
         New projects disable Git line-ending conversion with `* -text` so captured bytes survive checkouts. Existing `.gitattributes` files are preserved: review equivalent rules for your selected oracle inputs. `.tada/.gitattributes` preserves captured records independently. Formatting changes still require review; never normalise bytes to carry approval forward.
 

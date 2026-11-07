@@ -8,7 +8,7 @@ namespace Tada.Tests;
 public sealed class CliTests
 {
     [TestMethod]
-    public async Task InitReportsActivationAndCapturesHostWithoutAWorkflowPrompt()
+    public async Task InitPreparesTheProjectAndLeavesActivationToThePlugin()
     {
         using var project = new CoreTests.Project();
         string instructions = Path.Combine(project.Root, "AGENTS.md");
@@ -16,7 +16,9 @@ public sealed class CliTests
         var first = await Invoke(project.Root, "init", "--json");
         Assert.AreEqual(0, first.ExitCode, first.Stderr);
         using var result = JsonDocument.Parse(first.Stdout);
-        Assert.AreEqual("AGENTS.md", result.RootElement.GetProperty("updated")[0].GetString());
+        Assert.AreEqual(0, result.RootElement.GetProperty("updated").GetArrayLength());
+        Assert.AreEqual("Existing project conventions.", File.ReadAllText(instructions));
+        StringAssert.Contains(result.RootElement.GetProperty("next").GetString()!, "Enable the TADA plugin");
         StringAssert.Contains(result.RootElement.GetProperty("next").GetString()!, "describe what you want to build or change normally");
         string context = File.ReadAllText(Path.Combine(project.Root, ".tada", "context.md"));
         StringAssert.Contains(context, "## Local SDK host");
