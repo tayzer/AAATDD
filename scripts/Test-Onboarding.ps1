@@ -135,7 +135,7 @@ public sealed record EchoRequest(string Message);
     if ($LASTEXITCODE -ne 0) { throw 'Maintenance build check failed.' }
     if (!(Select-String -LiteralPath .tada/context.md -SimpleMatch $run.runId)) { throw 'Context handoff lost run provenance.' }
     $manifest = if (Test-Path dotnet-tools.json) { 'dotnet-tools.json' } else { '.config/dotnet-tools.json' }
-    ControlGit @('add','--','AGENTS.md','.gitattributes','.gitignore','Directory.Build.props','Directory.Build.targets','global.json','NuGet.Config','tada.json',$manifest,'Api','Domain','features','tests/Acceptance','.tada/context.md','.tada/WORKFLOW.md','.tada/.gitattributes','.tada/baselines','.tada/snapshots','.tada/reviews','.tada/approvals') | Out-Host
+    ControlGit @('add','--','.gitattributes','.gitignore','Directory.Build.props','Directory.Build.targets','global.json','NuGet.Config','tada.json',$manifest,'Api','Domain','features','tests/Acceptance','.tada/context.md','.tada/WORKFLOW.md','.tada/.gitattributes','.tada/baselines','.tada/snapshots','.tada/reviews','.tada/approvals') | Out-Host
     ControlGit @('commit','--quiet','-m','test: preserve API workflow handoff') | Out-Host
     $contextCommit = (ControlGit @('rev-parse','HEAD') -join '').Trim()
     $persistedContext = (ControlGit @('show','HEAD:.tada/context.md')) -join "`n"
