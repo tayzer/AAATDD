@@ -10,13 +10,19 @@ The TODO migration gate was already completed in the application repository, `D:
 
 Run `86ab495683274aadb5bae6b4f3170c7c` passed all 14 cases. This candidate reverified the retained evidence as PASS with 14 cases and no reasons. Earlier approvals, failed runs and business changes remain retained in the application repository. This closes the previously stale request for migration approval.
 
+The acknowledgement-reader repair below changes captured helper code. Comparative review `1be09e4807dc4afdb31d6d9a4127f4ce` proposes baseline `sha256:8cf369cb654fa08290a76d309032a7831037042cbc1e1464c566712ccb55f15c` against the current approved baseline. Only `tests/Acceptance/TadaRuntimeCheckpoint.cs` changes. A byte-exact helper backup is retained in the delivery checkout. Human approval of this new helper-only revision is pending.
+
 ## Checkpoint race and repair
 
 PR #1 merged as `f3ccef8aa40a4f2f0c8656fd9daedec3b3389ab4`. Both validation runs at its head `673d6f733922d0eb12466dc7af04f7777a65ae11` passed. The merged-main [run 42690796228](https://github.com/tayzer/AAATDD/actions/runs/42690796228) then failed during an opaque-task positive control. Runtime observation retained an IOException while reading a checkpoint request still held by its writer, producing INDETERMINATE.
 
 `CheckpointWaitsForLegacyRequestWriterBeforeCompletingObservation` reproduced that error before the repair. The observer now defers Windows sharing/lock violations from that read to its next timer tick. It continues observation and preserves mismatched-identity and final-snapshot checks. Existing helper and oracle bytes are unchanged.
 
-After the repair, the full focused/replay suite passed 137 tests with zero failures and skips. Logs are retained in the isolated delivery checkout's `.artifacts/`, including the original failing regression. The initial restricted restore failure is setup evidence. Locked restores and the unchanged-source build succeeded with the required network/process permissions.
+The first local Orders attempt then exposed a separate acknowledgement-read sharing conflict in teardown. Run `0ead90752e204681b088dc50be844244` is retained as INDETERMINATE. A two-case regression reproduced the helper failure for both correct and mismatched acknowledgement identities. The generated helper and Orders helper now retry only Windows sharing/lock violations within the existing ten-second deadline. A completed acknowledgement still requires the matching run identity.
+
+After both repairs, the full focused/replay suite passed 139 tests with zero failures and skips. The generated and tested sample helper text also matches. Logs are retained in the isolated delivery checkout's `.artifacts/`, including both failing regressions and the failed Orders attempt. The initial restricted restore failure is setup evidence. Locked restores and the unchanged-source build succeeded with the required network/process permissions.
+
+An attempted local repack overlapped the first Orders run and failed because Windows held the active CLI DLLs open. Its diagnostics are retained. Packaging and CLI execution are serialized for the final committed candidate.
 
 ## Remaining validation and publication
 

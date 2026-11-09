@@ -4,7 +4,7 @@ Status is **SUPPORTED TRUSTED-TOOLCHAIN BOUNDARY REVIEWED; FINAL CANDIDATE VALID
 
 ## Alpha.12 supported-boundary review
 
-The release profile uses inventory schema 6, `evaluated-dotnet-build-v4`, `msbuild-tasks-and-declared-inputs-v2` and `dotnet-loader-observation-v2`. Review covered `BuildInputs.Capture/Verify/CheckCurrent`, `TaskJournal.CheckEvaluation/Audit/Verify`, `ExecutionEnvironment.Capture/Tools`, `RunEngine.Run/Verify`, `RuntimeInputs.CapturePlatform/Verify` and the managed/native observer. The 137-test local suite passed after the checkpoint repair. Full Orders and installed-package controls remain required for the selected candidate.
+The release profile uses inventory schema 6, `evaluated-dotnet-build-v4`, `msbuild-tasks-and-declared-inputs-v2` and `dotnet-loader-observation-v2`. Review covered `BuildInputs.Capture/Verify/CheckCurrent`, `TaskJournal.CheckEvaluation/Audit/Verify`, `ExecutionEnvironment.Capture/Tools`, `RunEngine.Run/Verify`, `RuntimeInputs.CapturePlatform/Verify` and the managed/native observer. The 139-test local suite passed after the checkpoint request/acknowledgement repairs. Full Orders and installed-package controls remain required for the selected candidate.
 
 The explicit trusted-toolchain policy has these obligations.
 

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tada.RuntimeProbe;
@@ -7,6 +8,45 @@ namespace Tada.Tests;
 [TestClass, DoNotParallelize]
 public sealed class RuntimeCheckpointTests
 {
+    [TestMethod]
+    [DataRow(false)]
+    [DataRow(true)]
+    public async Task HelperWaitsForAcknowledgementSharingConflictAndChecksIdentity(bool wrongIdentity)
+    {
+        using var project = new CoreTests.Project();
+        using var process = Process.GetCurrentProcess();
+        string? previousDirectory = Environment.GetEnvironmentVariable("TADA_RUNTIME_DIRECTORY");
+        string? previousRun = Environment.GetEnvironmentVariable("TADA_RUN_ID");
+        string run = Guid.NewGuid().ToString("N");
+        string request = Path.Combine(project.Root, $"{process.Id}.checkpoint-request");
+        string acknowledgement = Path.Combine(project.Root, $"{process.Id}.checkpoint-complete");
+        try
+        {
+            Environment.SetEnvironmentVariable("TADA_RUNTIME_DIRECTORY", project.Root);
+            Environment.SetEnvironmentVariable("TADA_RUN_ID", run);
+            Task completion;
+            using (var writer = new FileStream(acknowledgement, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+            {
+                writer.Write(Encoding.UTF8.GetBytes(wrongIdentity ? Guid.NewGuid().ToString("N") : run));
+                writer.Flush();
+                completion = Task.Run(() => TadaRuntimeCheckpoint.Complete(process));
+                Assert.IsTrue(SpinWait.SpinUntil(() => File.Exists(request), TimeSpan.FromSeconds(10)));
+                Thread.Sleep(100);
+            }
+            if (wrongIdentity)
+            {
+                var error = await Assert.ThrowsExactlyAsync<IOException>(() => completion);
+                StringAssert.Contains(error.Message, "belongs to another run");
+            }
+            else await completion;
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable("TADA_RUNTIME_DIRECTORY", previousDirectory);
+            Environment.SetEnvironmentVariable("TADA_RUN_ID", previousRun);
+        }
+    }
+
     [TestMethod]
     public void CheckpointWaitsForLegacyRequestWriterBeforeCompletingObservation()
     {
