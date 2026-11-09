@@ -1,10 +1,21 @@
 param(
     [Parameter(Mandatory)][string]$PluginRoot,
-    [string]$Dotnet = 'dotnet'
+    [string]$Dotnet = 'dotnet',
+    [string]$Archive
 )
 
 $ErrorActionPreference = 'Stop'
 $plugin = (Resolve-Path -LiteralPath $PluginRoot).Path
+$repository = Split-Path $PSScriptRoot -Parent
+$workspace = Join-Path $repository ('.artifacts/plugin-controls/' + [guid]::NewGuid().ToString('N'))
+if ($Archive) {
+    $plugin = Join-Path $workspace 'extracted plugin'
+    [IO.Compression.ZipFile]::ExtractToDirectory((Resolve-Path -LiteralPath $Archive).Path, $plugin)
+}
+$catalog = Get-Content -LiteralPath (Join-Path $plugin '.agents/plugins/marketplace.json') -Raw | ConvertFrom-Json
+if ($catalog.name -ne 'tada-development' -or @($catalog.plugins).Count -ne 1 -or
+    $catalog.plugins[0].name -ne 'tada' -or $catalog.plugins[0].source.source -ne 'local' -or
+    $catalog.plugins[0].source.path -ne './') { throw 'Standalone plugin marketplace must resolve its own plugin root.' }
 $manifest = Get-Content -LiteralPath (Join-Path $plugin 'plugin.json') -Raw | ConvertFrom-Json
 if ($manifest.'$schema' -ne 'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json' -or $manifest.name -ne 'tada') { throw 'Unsupported plugin identity.' }
 if ($manifest.extensions.'com.openai'.PSObject.Properties.Name -contains 'onboardingSkill') {
@@ -12,8 +23,6 @@ if ($manifest.extensions.'com.openai'.PSObject.Properties.Name -contains 'onboar
 }
 $entry = Join-Path $plugin 'skills/tada/SKILL.md'
 if (!(Test-Path -LiteralPath $entry) -or !(Test-Path -LiteralPath (Join-Path $plugin 'skills/tada/agents/openai.yaml'))) { throw 'Plugin skill or invocation metadata is missing.' }
-$repository = Split-Path $PSScriptRoot -Parent
-$workspace = Join-Path $repository ('.artifacts/plugin-controls/' + [guid]::NewGuid().ToString('N'))
 $application = Join-Path $workspace 'My API'
 New-Item -ItemType Directory -Path $application -Force | Out-Null
 $instructions = Join-Path $application 'AGENTS.md'
@@ -36,6 +45,8 @@ try {
     $report = [ordered]@{
         version = $manifest.version
         pluginRoot = $plugin
+        standaloneArchive = $Archive
+        standaloneMarketplaceResolvesPluginRoot = $true
         application = $application
         setupRepeatedSuccessfully = $true
         originalInstructionsByteExact = $true

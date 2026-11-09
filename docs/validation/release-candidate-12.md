@@ -24,6 +24,16 @@ After both repairs, the full focused/replay suite passed 139 tests with zero fai
 
 An attempted local repack overlapped the first Orders run and failed because Windows held the active CLI DLLs open. Its diagnostics are retained. Packaging and CLI execution are serialized for the final committed candidate.
 
+## Local code validation and standalone installation
+
+At code commit `398c4bc028b187179926a53639854b88085a678c`, all 46 Orders controls and fresh-package onboarding passed. Onboarding includes meaningful Echo RED/GREEN/refactor, native Debug/Release tests, stable rerun identities, retained real failure history and a Git-committed context handoff. The task-byte control passed with the same implementation, a distinct environment and original private-cache bytes restored. Plugin preparation, bundle installation and deliberate bundle-corruption rejection also passed.
+
+Both hosted Windows runs at that code commit passed, [push 42695961110](https://github.com/tayzer/AAATDD/actions/runs/42695961110) and [proposed merge 42695970708](https://github.com/tayzer/AAATDD/actions/runs/42695970708). These runs precede the final standalone-catalog packaging change.
+
+Download-install review then found that the standalone plugin ZIP omitted the marketplace catalog required by its installation instructions. A control against the old archive failed on the missing catalog. Packaging now includes a root-resolving `.agents/plugins/marketplace.json` and README. Validation extracts the ZIP before installing its feed. Actual Codex CLI marketplace registration and plugin installation from that extracted ZIP passed in an isolated child-process Codex home. These controls grant no fresh-agent or requester acceptance.
+
+The final packaging-only commit requires its own exact-source hosted validation and artifact correspondence audit. Local logs and machine-readable control reports remain in the delivery checkout's `.artifacts/`.
+
 ## Remaining validation and publication
 
 The candidate is prepared in an isolated checkout. Local Orders, installed-package onboarding, task-environment identity, plugin and bundle controls must finish. The committed source then requires hosted Windows validation and an audit of its exact package, notices, plugin and bundle. The [release notes](../releases/0.1.0-alpha.12.md) describe the proposed assets.
