@@ -1,0 +1,126 @@
+[
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0001-separate-intent-and-baseline-approval.md",
+    "Hash": "AA83E43DD3A28919FBBE5BE13B633B31C26361F7F72A0C90F1F012C8291C5724"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0002-clarify-acceptance-changing-uncertainty.md",
+    "Hash": "6A68126BE5D9746FE4A11EA43C40A676262C00093B19E62F7F762D26C9D179DD"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0003-support-change-appropriate-specification-artifacts.md",
+    "Hash": "BDF14EE4CB69DB37FC9AC351240E481A6EB2E289E68BDC8A215D0360F8C37F1F"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0004-gherkin-business-specification-authority.md",
+    "Hash": "3F3694625EE2D1C0B3F5A5B4C70E9A724FBC2AC8C0768E19DB91E2CB8BC7507D"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0005-validate-l1-before-protected-l2.md",
+    "Hash": "F53F14CE14478434FEE0EE3E765DAD70BF59A4DF450CF8DE3B499D41C5739193"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0006-bound-the-initial-orders-example.md",
+    "Hash": "F3453A17BBC7D6CFDD21AF1123300D41F8F5ABF87F4DC5CF1CB0449044076D35"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0007-use-public-outcomes-with-scoped-order-observation.md",
+    "Hash": "2B12A1E87A2F302270BC601CA25E2F5A16BAB9B8CE0ABF374FE1EF53FC6ABA8E"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0008-use-disposable-sqlite-per-scenario.md",
+    "Hash": "C181DF858096988F104686897F68042BEB7757305074603C17ECBDCDE2AA9434"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0009-distinguish-requirement-failure-from-invalid-verification.md",
+    "Hash": "FCFBFE19459D8C9789855A90EC531AED4040C6C2CD94E57576A99A7D89B6D43A"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0010-preserve-failures-across-explicit-reruns.md",
+    "Hash": "A9C0F5F182263D813DAD86D98109574C6D9451BCFC05C56AD112D22D13306357"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0011-separate-logical-baseline-and-run-identities.md",
+    "Hash": "DCC7F06DB6D718127D1CAC45E9044414EAD85454872D8B679D73BDFB819F4F0E"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0012-bound-the-initial-oracle-to-harness-inputs.md",
+    "Hash": "9ACA24E9376CF5C7B0DAF606200759DCD167537F58C9DFEC3AA32A1873DC85FE"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0013-separate-baseline-authority-from-verification.md",
+    "Hash": "198E4474AC9BBB34ED60BDFB21CA207003117893337174154057EE4D90A9AB49"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0014-require-targeted-first-harness-validation-controls.md",
+    "Hash": "1413108D03608A6DAAFA39EE56512CA55B67EEE39BA3645C3FB93E55B4E0FB73"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0015-agree-initial-sample-http-mapping.md",
+    "Hash": "D5047532F291FB1C3B99B96C5F46D1447B82536AEF5FC60ADA097DE82A29DE55"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0016-observe-completed-sample-operations.md",
+    "Hash": "84B13D0F0039F3183B02E1CAEF7844380F4B19A5C6FD6A9D94DAE1D53D2850ED"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0017-validate-fixture-readiness-before-submission.md",
+    "Hash": "423919247DD9D9C7719D1B775C1EFCB59759F60DCEF23EFF0D9243219FB77283"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0018-inspect-all-scenario-owned-orders.md",
+    "Hash": "48AC55A1C603AA853A2E228A7BF82329593E97CD80A37AE1DA2ADDA78ADE08B2"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0019-require-confirmed-scenario-teardown.md",
+    "Hash": "3DC8887CA14E2893B74C5BCB7DA52EDD9C33202C11ECE9A4E193E3B7B0C43D80"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0020-use-scenario-scoped-harness-components.md",
+    "Hash": "1022C7893FF578A887A7B4AAEC5EBD4AB87BD6F2A89AB811561E88C52DD13EC4"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0021-retain-native-messages-with-aaatdd-envelope.md",
+    "Hash": "098F151E8BDAFC157E6DF1F7DF1B5178FFC911965445C1EEAB40CCAB49FB3C59"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0022-select-dotnet-reqnroll-for-first-experiment.md",
+    "Hash": "5EAADD458B7537F592E46F055CE5F7B9397CBA285C7B5698305E696D104F7ABF"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0023-use-mstest-with-microsoft-testing-platform.md",
+    "Hash": "CFA8B350455AE02D5AEA190FBF772860583245DD69C38C15FBE5DB26AE73AAF8"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0024-run-initial-scenarios-serially.md",
+    "Hash": "D2B4E65426683F4C5F291A7EE04BAF88CDFE03384B92D6F25F2D17D1FD705FBC"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0025-use-mstest-sdk-for-acceptance-harness.md",
+    "Hash": "F888375450E8BB8DCADD3B8594449FD21EC550F61DA97A0E3654D14247467C31"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0026-target-net10-for-first-sample.md",
+    "Hash": "8F7A8865DAAF7487BE457DA3D4FEF2C6EDD5ABF43BE11BA1843BC0DF33F622B5"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0027-use-microsoft-data-sqlite-with-direct-sql.md",
+    "Hash": "932C325A691C4A1B6FB697B12AE530827981C4BA283C47390A3627D86370BA57"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0028-use-minimal-inventory-and-orders-schema.md",
+    "Hash": "6595FE8398FB4376EDB1D79304FD3D7F56F832177B9943BCC79746324C0602FE"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0029-use-explicit-sqlite-connection-roles.md",
+    "Hash": "8BF89D5EEED482BBC97762EC0E8084756D365DAC10D72FAA246A4690E69D608B"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0030-pin-sdks-and-use-locked-restore.md",
+    "Hash": "5A4F7817DEBC48D528E27A5146BADCC269F03117FD932E83A1A6A70A8E6E3EC0"
+  },
+  {
+    "Path": "E:\\Development\\git\\AAATDD\\docs\\decisions\\0031-select-direct-version-validation-targets.md",
+    "Hash": "58D9F07A7F2250B1CA7B8C7A0F316A8DCDB134EDAA8895B5DFB1EE707BFADD32"
+  }
+]

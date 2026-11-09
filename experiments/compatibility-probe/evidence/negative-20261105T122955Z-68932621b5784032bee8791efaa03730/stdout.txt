@@ -1,0 +1,47 @@
+Running tests from E:\Development\git\AAATDD\experiments\compatibility-probe\bin\Debug\net10.0\CompatibilityProbe.dll (net10.0|x64)
+failed Observe isolated execution context (117ms)
+  from E:\Development\git\AAATDD\experiments\compatibility-probe\bin\Debug\net10.0\CompatibilityProbe.dll (net10.0|x64)
+  Assertion failed.
+  PROBE_EXPECTED_ASSERTION_FAILURE: deliberate sensitivity control.
+    at CompatibilityProbe.ProbeBindings.ObserveValue() in E:\Development\git\AAATDD\experiments\compatibility-probe\ProbeBindings.cs:66
+    at InvokeStub_Action`1.Invoke(Object, Span`1)
+    at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    --- End of stack trace from previous location ---
+    at Reqnroll.Bindings.BindingInvoker.InvokeBindingAsync(IBinding binding, IContextManager contextManager, Object[] arguments, ITestTracer testTracer, DurationHolder durationHolder)
+    at Reqnroll.Infrastructure.TestExecutionEngine.ExecuteStepMatchAsync(BindingMatch match, Object[] arguments, DurationHolder durationHolder)
+    at Reqnroll.Infrastructure.TestExecutionEngine.ExecuteStepMatchAsync(BindingMatch match, Object[] arguments, DurationHolder durationHolder)
+    at Reqnroll.Infrastructure.TestExecutionEngine.<>c__DisplayClass57_0.<<ExecuteStepAsync>b__7>d.MoveNext()
+    --- End of stack trace from previous location ---
+    at Reqnroll.Infrastructure.TestExecutionEngine.<>c__DisplayClass57_0.<<ExecuteStepAsync>g__HandleStepExecutionExceptions|0>d.MoveNext()
+    at Reqnroll.Infrastructure.TestExecutionEngine.OnAfterLastStepAsync()
+    at Reqnroll.TestRunner.CollectScenarioErrorsAsync()
+    at CompatibilityProbe.TechnicalCompatibilityProbeFeature.ScenarioCleanupAsync()
+    at CompatibilityProbe.TechnicalCompatibilityProbeFeature.ObserveIsolatedExecutionContext() in E:\Development\git\AAATDD\experiments\compatibility-probe\TechnicalProbe.feature:9
+    at Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.Execution.TestMethodInfo.ExecuteInternalAsync(Object[] arguments, CancellationTokenSource timeoutTokenSource, TestInvocationState invocationState)
+  Standard output
+    -> Loading plugin E:\Development\git\AAATDD\experiments\compatibility-probe\bin\Debug\net10.0\CompatibilityProbe.dll
+    -> Loading plugin E:\Development\git\AAATDD\experiments\compatibility-probe\bin\Debug\net10.0\Reqnroll.MSTest.ReqnrollPlugin.dll
+    -> Using reqnroll.json
+    
+    
+    
+    TestContext Messages:
+    Given an independent probe context
+    -> done: ProbeBindings.GivenContext() (0.0s)
+    When a technical value is recorded
+    -> done: ProbeBindings.RecordValue() (0.0s)
+    Then the technical value is observed
+    -> error: Assertion failed.
+    PROBE_EXPECTED_ASSERTION_FAILURE: deliberate sensitivity control. (0.0s)
+    
+  Error output
+E:\Development\git\AAATDD\experiments\compatibility-probe\bin\Debug\net10.0\CompatibilityProbe.dll (net10.0|x64) failed with 1 error(s) (754ms)
+Exit code: 2
+
+Test run summary: Failed!
+  total: 2
+  failed: 1
+  succeeded: 1
+  skipped: 0
+  duration: 922ms
+Test run completed with non-success exit code: 2 (see: https://aka.ms/testingplatform/exitcodes)

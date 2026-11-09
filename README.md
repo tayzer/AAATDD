@@ -1,10 +1,20 @@
-# AAATDD
+# TADA
 
-AI-Assisted Acceptance Test-Driven Development: human-approved Gherkin business specifications, protected acceptance criteria, and independent verification in small increments. Git is the intended authority for project knowledge.
+**Test-Assured Development Assistance**: human-approved Gherkin business specifications, protected acceptance criteria, and independent verification in small increments. Git is the intended authority for project knowledge. Formerly AAATDD; the current alpha is explicitly L1/advisory.
 
-**Current phase: design only.** No runtime, CLI, framework dependencies, or implementation language has been selected.
+**Development alpha: implementation in progress, not release-ready.** The CLI now supports onboarding, exact-byte baseline capture, review/approval, real Reqnroll/MSTest/MTP execution and retained-evidence verification. The Orders example runs a separate ASP.NET Core API with disposable scenario databases. Results remain explicitly local L1/advisory.
 
-Start with [design status](docs/design-status.md). It distinguishes established directions from proposals and identifies the next decision.
+Start with the [quickstart](docs/quickstart.md) to build and install a repository-local tool package and use the workflow with Codex or another agent. No model API or agent SDK is required. The [release checklist](docs/release-readiness.md) records what still needs validation. No public package release is claimed.
+
+For a packaged preview without compiling TADA, see [development download bundles](docs/release-bundles.md). Bundles contain the tool package, installation/agent-start guidance, licence notices and checksums.
+
+The [alpha.7 checkpoint](docs/validation/increment-07.md) records 111 passing focused tests and 46 Orders controls. Installed-package development demonstrates RED/GREEN/refactor, stable unchanged-rerun identities, preserved real failure history and task-cache byte drift producing a distinct environment. Cancellation retains diagnostics and terminates owned process trees. See the [provenance audit](docs/validation/provenance-audit.md) and [build-task contracts](docs/build-task-contracts.md) for the explicit trust boundary. These are automated controls, not requester acceptance or proof of complete execution-input discovery. The [alpha.6 checkpoint](docs/validation/increment-06.md) and earlier checkpoints remain historical evidence.
+
+The initial supported stack is Windows x64/.NET 10 with Reqnroll/MSTest/MTP. The active [autonomous-release instruction](docs/decisions/0041-authorise-autonomous-release-implementation.md) authorises implementation and routine decisions, superseding the earlier design-only boundary. Human business acceptance, preserved oracle integrity and honest L1 claims still apply.
+
+The verifier uses C#/.NET 10, packaged as the `Tada.Cli` repository-local .NET tool. Source licence: [MIT](LICENSE). [Hosted Windows validation](docs/validation/hosted-ci.md) passes package installation, API controls and redistribution checks at the recorded source commit. Requester-led installation, useful API development and a genuinely fresh agent session remain required before release. No GitHub release or NuGet package has been published.
+
+Install the [TADA plugin](docs/plugin.md) and use the host's normal plugin controls to enable or disable the workflow. Describe your project or change normally in a fresh session. The plugin supplies agent behaviour and the repository-local CLI supplies verification. `tada init` prepares project files and migrates recognised legacy instruction blocks. The [ordinary-request trial](docs/validation/default-workflow-trial.md) covers enabled, disabled and re-enabled sessions. The CLI provides `tada baseline prepare`, `tada baseline review`, `tada baseline approve`, `tada run` and `tada verify`. Chores and refactors use proportionate existing checks. Store useful session handoff in `.tada/context.md`. Historical ADRs and probe evidence retain the earlier AAATDD name.
 
 ## Design documents
 
@@ -15,6 +25,9 @@ Start with [design status](docs/design-status.md). It distinguishes established 
 - [Execution boundaries and reuse research](docs/research/execution-boundaries.md)
 - [Initial sample business specification](docs/requirements/order-stock-validation.feature)
 - [First experiment executable-baseline proposal](docs/architecture/first-experiment-baseline-proposal.md)
+- [Completed technical compatibility probe](docs/research/compatibility-probe-results.md)
+- [Alpha delivery readiness and evidence gaps](docs/architecture/alpha-delivery-readiness.md)
+- [Proposed alpha file inventory and path handling](docs/architecture/alpha-file-inventory-proposal.md)
 - [Open questions and risks](docs/open-questions.md)
 
-New design decisions require explicit agreement before they are recorded as accepted. Implementation requires separate, explicit authorisation.
+Routine engineering decisions are delegated by the active goal. Agents must not silently weaken approved acceptance criteria or claim release readiness merely because internal tests pass.

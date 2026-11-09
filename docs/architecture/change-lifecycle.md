@@ -38,7 +38,7 @@ Status: **ACCEPTED** in [ADR 0002](../decisions/0002-clarify-acceptance-changing
 
 The first checkpoint needs a practical rule for incomplete information. Exhaustively specifying every detail is not achievable. Letting the agent silently choose business rules would undermine human ownership of acceptance.
 
-Build on [BDD example mapping](https://cucumber.io/docs/bdd/example-mapping/), which separates rules, examples, unanswered questions and deferred scope. The following blocking policy is an AAATDD decision, not a claim about that source.
+Build on [BDD example mapping](https://cucumber.io/docs/bdd/example-mapping/), which separates rules, examples, unanswered questions and deferred scope. The following blocking policy is a TADA decision, not a claim about that source.
 
 | Approach | Trade-off |
 | --- | --- |

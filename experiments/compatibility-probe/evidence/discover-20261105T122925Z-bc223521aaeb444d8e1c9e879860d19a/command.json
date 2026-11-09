@@ -1,0 +1,38 @@
+{
+  "stage": "discover",
+  "stageId": "discover-20261105T122925Z-bc223521aaeb444d8e1c9e879860d19a",
+  "executable": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet\\dotnet.exe",
+  "arguments": [
+    "test",
+    "--project",
+    "CompatibilityProbe.csproj",
+    "--no-build",
+    "--no-restore",
+    "--list-tests"
+  ],
+  "workingDirectory": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe",
+  "processEnvironment": {
+    "DOTNET_CLI_HOME": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.cli",
+    "NUGET_PLUGINS_CACHE_PATH": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp\\plugins",
+    "TMP": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp",
+    "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1",
+    "AAATDD_PROBE_EVIDENCE_DIR": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\evidence\\discover-20261105T122925Z-bc223521aaeb444d8e1c9e879860d19a",
+    "DOTNET_ROOT": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tools\\dotnet",
+    "DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE": "1",
+    "DOTNET_NOLOGO": "1",
+    "TEMP": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp",
+    "MSBuildEnableWorkloadResolver": "false",
+    "AAATDD_PROBE_NEGATIVE": "0",
+    "NUGET_HTTP_CACHE_PATH": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp\\http-cache",
+    "NUGET_PACKAGES": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.packages",
+    "NUGET_SCRATCH": "E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\.tmp\\scratch",
+    "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+    "REQNROLL_FORMATTERS_MESSAGE": "outputFilePath=E:\\Development\\git\\AAATDD\\experiments\\compatibility-probe\\evidence\\discover-20261105T122925Z-bc223521aaeb444d8e1c9e879860d19a/native-messages.ndjson"
+  },
+  "startedUtc": "2026-11-05T12:29:25.5777694+00:00",
+  "finishedUtc": "2026-11-05T12:29:27.5911447+00:00",
+  "processId": 65308,
+  "timeoutMilliseconds": 60000,
+  "timedOut": false,
+  "exitCode": 0
+}

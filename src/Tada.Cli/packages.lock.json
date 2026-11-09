@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0": {
+      "Cucumber.Messages": {
+        "type": "Transitive",
+        "resolved": "29.0.1",
+        "contentHash": "R2oo/wR3mXrbdK04Yraf+KhB01f/lyBkLQZcdxYt9XKE6tV+Af45MEk+jfbsew1SVvrAO0WvkIRwGYUozKCJvQ=="
+      },
+      "Gherkin": {
+        "type": "Transitive",
+        "resolved": "35.0.0",
+        "contentHash": "ha+QNevQsXEESbzazUceHTCtKOjoBTBa8kLFdKpu6vSEbb3UMt3a55RG78tIoU/C4qzIqX3jQxaIdIcYGO+IWQ==",
+        "dependencies": {
+          "Cucumber.Messages": "29.0.1"
+        }
+      },
+      "tada.buildlogger": {
+        "type": "Project"
+      },
+      "tada.core": {
+        "type": "Project",
+        "dependencies": {
+          "Gherkin": "[35.0.0, 35.0.0]",
+          "Tada.BuildLogger": "[0.1.0-alpha.6, )",
+          "Tada.RuntimeProbe": "[0.1.0-alpha.6, )"
+        }
+      },
+      "tada.runtimeprobe": {
+        "type": "Project"
+      }
+    }
+  }
+}

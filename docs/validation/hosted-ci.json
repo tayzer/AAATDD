@@ -1,0 +1,71 @@
+{
+  "status": "Hosted artifact correspondence audit passed; requester acceptance remains pending",
+  "sourceCommit": "13c71f15a84664168b47fd99f4ffc5e33d4eb3cf",
+  "pushRun": 42257265484,
+  "pullRequestRun": 42257273467,
+  "pullRequestMergeCommit": "03218b070cbf969f67b197dfff23a33fafe86b3b",
+  "baseCommit": "473c1f99176575f37b282cac37ced1b539899be9",
+  "artifactId": 13523224800,
+  "artifactServiceDigest": "sha256:a06fed52263f7176fe877b2bbcaf745f416dbf49ad84bc84e06b615e2d286b5b",
+  "artifactServiceDigestLocallyRecomputed": false,
+  "packageSha256": "0347e159c5669523721da1b1a224b94cc356dcfb46d20ac061f81c2766b3d994",
+  "archiveSha256": "889480ff91f7d84e2a9db1a066e9cb89aaa756c8ffa26381049452efe981675a",
+  "nativeObserverSha256": "d2cb0c542bef5b69d49fcdfd14da4e83880e9de8f977b542d292e541badd36ba",
+  "nativeSourceCheckout": {
+    "gitLfSha256": "a695f0f7959efcbea66dc7a8cd6976d7d08079ebf81a08209cff52bf639b41c1",
+    "hostedCrLfSha256": "4c6cd84fc5541ee33e74dbcf9c655ff91dfc83132abf7186989e433006cf4c89",
+    "explanation": "Git core.autocrlf expanded unpinned .c source. Exact hosted source hash matches that expansion; native output is byte-identical. Oracle hashes are never normalised."
+  },
+  "focusedTests": 111,
+  "skippedTests": 0,
+  "ordersControls": 46,
+  "checkedRunInventories": 23,
+  "checkedFileDigests": 3159,
+  "redistributedDlls": [
+    "Cucumber.Messages.dll",
+    "Gherkin.dll",
+    "tada_native_observer.dll",
+    "Tada.BuildLogger.dll",
+    "Tada.Cli.dll",
+    "Tada.Core.dll",
+    "Tada.RuntimeProbe.dll"
+  ],
+  "noticesMatchSource": true,
+  "reports": [
+    {
+      "path": "core-tests.log",
+      "sha256": "466d8fb8609d1600a9f51164d318d88422d8d8c4236a4d714011be9441f96d7f"
+    },
+    {
+      "path": "orders-workflow/88882a5a90e14066bfbdf7b6e7fca34a/validation.json",
+      "sha256": "7c9cdc7abbaf46ba765e3a358fae2fda329d0db68f1c848d33f2eb07f4b07c65"
+    },
+    {
+      "path": "onboarding/df6703c7040b48ad9b798bbc504096b0/validation.json",
+      "sha256": "7207b53cdd427506dd534bd747e264828053454907d04337855eeb07d8b7907d"
+    },
+    {
+      "path": "onboarding/df6703c7040b48ad9b798bbc504096b0/.tada/task-environment-control.json",
+      "sha256": "ed8ea76966b41d904481dc5e58b0f9c63e238d1a895ded19d94f22c932bd747d"
+    },
+    {
+      "path": "bundle-install/bundle install 6fd3ef64cece47a08f41d5c9040c5ddd/validation.json",
+      "sha256": "4294f46a1eea19f75592f4277cfbdf4bfc83ebcdcdb8e292372b2608ec3209a7"
+    },
+    {
+      "path": "native/tada_native_observer.dll.build.json",
+      "sha256": "d4771a0f080d9b9414d3962c063d27276edf201b96cf846261ac4470348df75e"
+    },
+    {
+      "path": "release-bundles/0.1.0-alpha.7-119861ec493546529e0b35b1a1dabb13/bundle.json",
+      "sha256": "bd11d436096ad3572db2482929215bcaf6dd3a0af7d002c54be4178cbf486751"
+    }
+  ],
+  "remaining": [
+    "Requester-led installation, business discovery and agreed executable expectations.",
+    "Requester/Codex API development, defect recovery, refactor and chore.",
+    "A genuinely fresh agent session recovering Git-native project context.",
+    "Revalidate selected publication SHA, then applicable merge/release approval.",
+    "Complete automatic I/O/helper execution coverage remains unproven; retain documented declared-trust policy."
+  ]
+}

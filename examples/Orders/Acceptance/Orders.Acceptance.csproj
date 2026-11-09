@@ -1,0 +1,18 @@
+<Project Sdk="MSTest.Sdk/4.5.2">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable>
+    <OutputType>Exe</OutputType><EnableMSTestRunner>true</EnableMSTestRunner><UseVSTest>false</UseVSTest>
+    <TestingExtensionsProfile>None</TestingExtensionsProfile><RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <ReqnrollUseIntermediateOutputPathForCodeBehind>true</ReqnrollUseIntermediateOutputPathForCodeBehind>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Api/Orders.Api.csproj" ReferenceOutputAssembly="false" Private="false" OutputItemType="TadaSutOutput" />
+    <PackageReference Include="Reqnroll.MSTest" Version="[3.3.4]" />
+    <PackageReference Include="Reqnroll" Version="[3.3.4]" />
+    <PackageReference Include="Reqnroll.Tools.MsBuild.Generation" Version="[3.3.4]" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="[10.0.14]" />
+    <None Update="reqnroll.json" CopyToOutputDirectory="PreserveNewest" />
+    <ReqnrollFeatureFile Include="../features/*.feature" Link="Features/%(Filename)%(Extension)" />
+  </ItemGroup>
+  <Import Project="Tada.Acceptance.targets" />
+</Project>

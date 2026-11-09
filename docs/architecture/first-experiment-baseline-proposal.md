@@ -1,14 +1,46 @@
 # First experiment: executable-baseline proposal
 
-Status: **PARTIALLY DECIDED**. Prepared: 2026-10-27; updated: 2026-10-28. ADRs 0009–0019 accept verification outcomes, identity/baseline policies and the sample HTTP, readiness, observation and teardown policies described below. Remaining choices and concrete controls are proposals unless explicitly marked agreed. This document grants no implementation or privileged-observation authority. The [Gherkin feature](../requirements/order-stock-validation.feature) remains the single business specification.
+Status: **PARTIALLY DECIDED**. Prepared: 2026-10-27; updated: 2026-11-05. ADRs 0009–0031 accept verification outcomes, identity/baseline policies, evidence composition, the .NET 10 sample stack and direct validation targets, minimal database schema, explicit connection roles, pinning/restore controls and sample verification policies described below. Remaining choices and concrete controls are proposals unless explicitly marked agreed. This document grants no implementation or privileged-observation authority. The [Gherkin feature](../requirements/order-stock-validation.feature) remains the single business specification.
 
 ## Agreed foundation
 
 [ADR 0005](../decisions/0005-validate-l1-before-protected-l2.md) selects L1 first and L2 next. [ADR 0006](../decisions/0006-bound-the-initial-orders-example.md) agrees the bounded business intent. [ADR 0007](../decisions/0007-use-public-outcomes-with-scoped-order-observation.md) agrees the observation split. [ADR 0008](../decisions/0008-use-disposable-sqlite-per-scenario.md) selects a disposable named SQLite file per scenario.
 
-The core outcomes, initial retry policy and identity roles below are agreed in [ADR 0009](../decisions/0009-distinguish-requirement-failure-from-invalid-verification.md), [ADR 0010](../decisions/0010-preserve-failures-across-explicit-reruns.md) and [ADR 0011](../decisions/0011-separate-logical-baseline-and-run-identities.md). Other details remain proposed. Reqnroll/.NET, native Cucumber Messages and Microsoft.Data.Sqlite are candidates backed by the [reuse research](../research/execution-boundaries.md); compatible release versions, resolved dependencies and the runner's test framework remain unselected.
+The core outcomes, initial retry policy and identity roles below are agreed in [ADR 0009](../decisions/0009-distinguish-requirement-failure-from-invalid-verification.md), [ADR 0010](../decisions/0010-preserve-failures-across-explicit-reruns.md) and [ADR 0011](../decisions/0011-separate-logical-baseline-and-run-identities.md). ADRs 0021–0027 select evidence composition, the .NET 10 sample stack with MSTest/MTP and the direct-SQL provider approach. Compatible release versions and resolved dependencies remain unselected; the [reuse research](../research/execution-boundaries.md) records capabilities rather than tested compatibility.
 
 [ADR 0012](../decisions/0012-bound-the-initial-oracle-to-harness-inputs.md) also accepts the dedicated-harness execution-input boundary. That boundary does not approve the concrete inventory or its implementation.
+
+## Agreed first-experiment stack
+
+Status: **AGREED** in [ADR 0022](../decisions/0022-select-dotnet-reqnroll-for-first-experiment.md), resolving Q14's initial sample-stack choice. Use C#/.NET with Reqnroll for the dedicated acceptance harness and a small separately running ASP.NET Core HTTP SUT. This is a sample choice, not an AAATDD-wide implementation-language decision.
+
+The [reuse research](../research/execution-boundaries.md#existing-capabilities) identifies Reqnroll's native Cucumber Messages support and scenario-lifetime hooks/context, together with standard .NET HTTP capabilities. That fits the agreed synchronous HTTP/SQLite sample and evidence composition. Share reviewed technical plumbing where appropriate without referencing the SUT implementation assembly or sharing its business-rule implementation with assertions. The SUT still runs separately under ADRs 0005 and 0012; choosing the same ecosystem establishes no independence guarantee.
+
+Cucumber.js remains a credible later portability candidate; it was not selected for the first adapter. Select exact SDK, Reqnroll/test-framework/provider/native versions and assess compatibility before executable-baseline approval. The framework/verifier language, packaging and public APIs remain open. This decision authorises no scaffolding, restore, installation or execution.
+
+### Agreed MSTest/MTP and serial scenario scheduling
+
+Status: **AGREED** framework/platform in [ADR 0023](../decisions/0023-use-mstest-with-microsoft-testing-platform.md): use MSTest with Microsoft.Testing.Platform. The earlier NUnit recommendation was not selected. [Official-source follow-up research](../research/2026-11-03-mstest-mtp.md) documents support and the remaining end-to-end compatibility review. ADR 0025 selects the SDK arrangement below; exact versions, concrete MTP selection and command-line/configuration details remain unapproved.
+
+**Agreed scheduling in [ADR 0024](../decisions/0024-run-initial-scenarios-serially.md):** explicitly disable scenario parallelism for the first experiment, while retaining independent per-scenario setup and no order dependency. This narrows the first lifecycle/evidence exercise, not the future framework's concurrency capabilities. Serial execution supplies no independence or L2 guarantee. Exact scheduling configuration remains unapproved; no package installation or execution is authorised.
+
+### Agreed MSTest SDK project arrangement
+
+Status: **AGREED** in [ADR 0025](../decisions/0025-use-mstest-sdk-for-acceptance-harness.md), resolving Q14's initial harness project arrangement. Use `MSTest.Sdk` for the acceptance harness, with the Reqnroll MSTest integration (`Reqnroll.MSTest`). The [MSTest/MTP research](../research/2026-11-03-mstest-mtp.md) records Microsoft's SDK-based MTP route and the manual-configuration alternative. The SDK route centralises MSTest/MTP dependency alignment; it does not itself establish Reqnroll build/discovery or formatter compatibility.
+
+Keep the separately running SUT on its ASP.NET Core project SDK. Reqnroll generated-test imports, SDK/package versions, MTP invocation and native-message production must be reviewed as one coherent pinned configuration. Manual `Microsoft.NET.Sdk` plus explicit MSTest/MTP properties/packages remains a possible amendment if evidence shows the SDK arrangement cannot meet the approved baseline. Do not silently change the selected MTP platform. No concrete SDK/project file, dependency graph or implementation is approved by this decision.
+
+### Agreed .NET 10 LTS target
+
+Status: **AGREED** in [ADR 0026](../decisions/0026-target-net10-for-first-sample.md), resolving Q14's initial target-framework choice. Target both the acceptance harness and separate sample API at `net10.0` using a stable .NET 10 SDK. Microsoft's [support policy](https://dotnet.microsoft.com/en-us/platform/support/policy) lists .NET 10 as active LTS through 2028-11-14; .NET 8 and 9 support ends on 2026-11-10. Reqnroll's [compatibility documentation](https://docs.reqnroll.net/latest/installation/compatibility.html) lists .NET 10. These are documentation findings, not a tested dependency graph.
+
+This supplies a supported common sample target and a native MTP CLI path without adopting a preview target. It does not choose the future framework/verifier's target or require multi-targeting. Exact SDK/runtime patches, package versions, platform settings and compatibility evidence remain pending review. No SDK installation, project creation or execution is authorised.
+
+### Agreed SQLite provider and direct SQL
+
+Status: **AGREED** in [ADR 0027](../decisions/0027-use-microsoft-data-sqlite-with-direct-sql.md), resolving Q24's sample provider approach. Use `Microsoft.Data.Sqlite` with direct parameterised SQL for SUT persistence, fixture setup/validation and the distinct read-only observer. [Current provider research](../research/2026-11-03-sqlite-provider.md) records the documented capabilities and alternatives. This is a bounded sample choice, not a universal provider API or an approved privileged exception.
+
+Keep SUT persistence code separate from harness observation/assertion SQL. Sharing the technical provider does not establish independence. Exact schema, commands, provider/native versions, dependency graph and transaction/pooling/open settings remain pending review. No package installation or execution is authorised.
 
 ## Agreed sample HTTP mapping
 
@@ -27,7 +59,34 @@ Require response identities to match the request/product being observed. Concret
 
 ## Proposed fixture, persistence and observation
 
-Use a scenario-owned absolute path beneath a dedicated test directory. Record ownership and environment identity before creating the file; never use a supplied production connection string. Proposed minimal schema: inventory keyed by product SKU with available quantity, and orders with order/request/customer identities, product SKU and quantity. Exact schema and SQL remain review items rather than implemented migrations.
+Use a scenario-owned absolute path beneath a dedicated test directory. Record ownership and environment identity before creating the file; never use a supplied production connection string. Concrete path/ownership settings and SQL remain review items rather than implemented migrations.
+
+### Agreed minimal two-table schema
+
+Status: **AGREED** in [ADR 0028](../decisions/0028-use-minimal-inventory-and-orders-schema.md), resolving Q24's initial table/column structure. Use these two tables in each disposable scenario store:
+
+| Table | Agreed columns |
+| --- | --- |
+| `inventory` | `product_sku TEXT PRIMARY KEY NOT NULL`, `available INTEGER NOT NULL` |
+| `orders` | `order_id TEXT PRIMARY KEY NOT NULL`, `request_id TEXT NOT NULL`, `customer_id TEXT NOT NULL`, `product_sku TEXT NOT NULL`, `quantity INTEGER NOT NULL` |
+
+These columns map the already agreed observations to explicit stored fields. Keep `request_id` non-unique: correlation adds no idempotency promise. No separate customer/product catalogue, event history or ORM mapping is proposed for this bounded sample. Do not infer additional request-validation behaviour from the field types.
+
+This decision selects the minimal table/column structure and stated constraints, not a complete production schema or validation suite. Additional constraints, indexes, SQLite strict-table mode, identity-generation rules, schema-identity encoding and actual DDL/queries remain review items; they must not silently change acceptance. Parameterise runtime values in seed, persistence and observation commands. The Gherkin remains the single business specification; concrete provider/native versions and the observer exception remain pending review.
+
+### Agreed explicit connection roles without pooling
+
+Status: **AGREED** in [ADR 0029](../decisions/0029-use-explicit-sqlite-connection-roles.md), resolving Q24's initial open-mode/pooling profile. Use the same established absolute scenario-owned database path with explicit role-specific open modes:
+
+| Role | Agreed mode | Purpose |
+| --- | --- | --- |
+| Fixture creation/seed | `ReadWriteCreate` | Only fixture setup creates the owned database |
+| SUT persistence | `ReadWrite` | Open the prepared store without silently creating a missing one |
+| Outcome observer | `ReadOnly` | Inspect the prepared store without write/create authority |
+
+Set `Pooling=False` for these sample connections to simplify deterministic handle release before file cleanup. Microsoft's [connection-string documentation](https://learn.microsoft.com/en-us/dotnet/standard/data/sqlite/connection-strings) documents these modes and pooling controls; defaults permit file creation and pooling, so record explicit settings in the eventual baseline. Opening read-write does not itself restrict SQL privileges within the file; read-only connection mode is not an operating-system isolation boundary.
+
+This profile interprets the already agreed fixture ownership, distinct read-only observation and required teardown. It does not replace ownership/path validation, establish that two supplied paths identify the same store, or approve the privileged-observer exception. Verify the actual resolved provider/native behaviour under the selected versions. Connection builders, SQL/transaction settings, locking/timeouts and raw configuration identity remain review items.
 
 ### Agreed fixture readiness before the action
 
@@ -63,11 +122,11 @@ Retain collected behavioural evidence and report cleanup separately. Required cl
 
 Capture observation/error evidence before disposal where possible; teardown failure must not erase already collected evidence. Exact diagnostic storage, retention, raw-database preservation and any authorised retention exception remain open. This policy does not make successful cleanup evidence of behavioural correctness or authorise actual deletion during design.
 
-### Current proposal: separate responsibilities without a provider framework
+### Agreed scenario-scoped component model
 
-Status: **PROPOSAL**, Q18's initial component model. Follow the [responsibility-separation research](../research/execution-boundaries.md#is-fixtureactionobservationassertion-separation-useful) with ordinary scenario-scoped classes or functions in the dedicated harness:
+Status: **AGREED** in [ADR 0020](../decisions/0020-use-scenario-scoped-harness-components.md), resolving Q18's initial component model. Follow the [responsibility-separation research](../research/execution-boundaries.md#is-fixtureactionobservationassertion-separation-useful) with ordinary scenario-scoped classes or functions in the dedicated harness:
 
-| Responsibility | Proposed owner |
+| Responsibility | Agreed owner |
 | --- | --- |
 | Establish and validate starting state; own teardown | Fixture code |
 | Send the HTTP action and capture transport details | Thin technical HTTP helper |
@@ -78,8 +137,6 @@ An observer reports measured values or evidence unavailability; it does not deci
 
 These responsibilities can share reviewed technical plumbing. They do not require separate processes, published extension APIs, provider registries or a universal assertion DSL in the first experiment. This is an organisation boundary, not an independence or L2 trust boundary. Exact classes, APIs, wire/result types and selected package versions remain unapproved.
 
-**Focused question:** Should the first harness use ordinary scenario-scoped fixture, HTTP-action, observation and assertion components, keeping measurement separate from acceptance without building a provider framework yet?
-
 ### Privileged-observation exception proposal
 
 | Field | Proposed scope or remaining prerequisite |
@@ -87,16 +144,46 @@ These responsibilities can share reviewed technical plumbing. They do not requir
 | Requirement/scenarios | The two cases in the agreed Orders feature; durable identity mapping still needs review |
 | Capability | Read persisted-order existence/count and relevant fields in the scenario-owned SQLite store |
 | Rationale | The minimal sample has no adequate public order query; reassess if such an interface becomes available |
-| Provider/version | A small local observer is proposed; source digest and resolved provider/native versions must be supplied before approval |
+| Provider/version | Microsoft.Data.Sqlite with direct SQL is selected in ADR 0027; the local observer implementation/source digest and resolved provider/native versions still need review before exception approval |
 | Environment/permissions | Synthetic local L1 test data only; read-only database connection; no unrelated stores or fixture write authority |
 | Limits | Schema coupling, declared read point, no future-absence proof, and no protection against same-user file tampering |
 | Authorisation | Pending explicit executable-baseline review; this table is not an approved exception |
 
 ## Proposed approval and evidence boundary
 
-Version the agreed feature and design records in Git before selecting the executable baseline. The working directory currently has no Git repository. Pin the reviewed feature, bindings, assertions, hooks, fixture/observer code, technical helper, runner/configuration, relevant dependencies and policy. Record the identified SUT artifact and environment separately. Do not treat a branch name or runner-generated case ID as a complete identity.
+### Agreed pinned SDKs and locked dependency restore
 
-Retain native Cucumber Messages with attempts and source-case relationships. Propose a small evidence envelope containing baseline/policy and SUT/harness/environment identities, expected-case inventory, collected results, fixture/observation provenance and gate reasons. Establish the approved expected inventory before execution filters; do not derive it solely from the cases reported as run. These fields are design candidates, not an approved JSON schema. Retain original statuses rather than reducing missing, skipped or unbound work to a passing scenario count. L1 approvals and integrity checks remain advisory.
+Status: **AGREED** in [ADR 0030](../decisions/0030-pin-sdks-and-use-locked-restore.md), resolving Q4's initial reproducible-input mechanisms. Pin the exact stable .NET 10 SDK with SDK roll-forward disabled and prereleases excluded, and pin the selected `MSTest.Sdk` version separately. Review and retain per-project NuGet lock files and use locked restore without force-evaluation or automatic lock regeneration during verification. Prevent later build/test steps from silently restoring a different graph.
+
+The [pinning/restore research](../research/2026-11-03-reproducible-inputs.md) records documented mechanisms and limits. Capture actual resolved managed/native dependencies and runtime identity separately; SDK pinning does not pin every running process, and a lock file does not authenticate loaded binaries or cover every imported/project-SDK input. This decision does not establish L2 isolation or deterministic binary output.
+
+Prepare updates as reviewed changes. Changes affecting approved harness/toolchain inputs follow baseline amendment rules; SUT dependencies remain separately assessed implementation/environment inputs. Exact versions, files, package-source policy, identity encodings and commands remain unapproved. This selects no executable baseline and authorises no restore or installation.
+
+### Agreed direct-version validation targets
+
+Status: **AGREED** in [ADR 0031](../decisions/0031-select-direct-version-validation-targets.md), resolving Q14's first direct-version targets. The [version review](../research/2026-11-05-version-candidates.md) records stable .NET SDK `10.0.403`, `MSTest.Sdk` `4.5.2`, aligned Reqnroll/MSTest integration and generation `3.3.4`, and `Microsoft.Data.Sqlite` `10.0.14`. Primary listings establish availability and dependency constraints, not tested compatibility.
+
+The complete transitive/native graph, shipped SDK imports, actual runtime and Cucumber Messages schema remain unresolved. The decision chooses validation targets, not approved lock files, the privileged exception, implementation or a runnable baseline. The review lists the concrete evidence still needed under the selected MTP path.
+
+### Completed bounded compatibility probe
+
+Status: **EXPLICITLY AUTHORISED AND COMPLETED**, 2026-11-05. The user approved the [bounded plan](compatibility-probe-plan.md), and the [evidence report](../research/compatibility-probe-results.md) records candidate-graph discovery/locked restore, generation/build, serial native MTP discovery and controls, message relationships and SQLite role/cleanup checks. The technical harness implements no Orders API/business bindings or AAATDD runtime.
+
+The user's separate approval authorised only the probe and reporting paths. Its candidate graph and bounded compatibility observations do not approve Orders coverage, the full oracle or the privileged exception. Execution stopped after reporting; broader implementation remains subject to the design-only handover.
+
+### Remaining approval and evidence details
+
+Version the agreed feature and design records in Git before selecting the executable baseline. Git metadata was observed at probe start on 2026-11-05, but the probe performed no staging or commits and did not establish an approved Git baseline. Pin the reviewed feature, bindings, assertions, hooks, fixture/observer code, technical helper, runner/configuration, relevant dependencies and policy. Record the identified SUT artifact and environment separately. Do not treat a branch name or runner-generated case ID as a complete identity.
+
+ADR 0021 agrees native Cucumber Messages plus a small AAATDD envelope linking baseline/policy and SUT/harness/environment identities, expected-case inventory, fixture/observation provenance and gate reasons to execution evidence. Establish the approved expected inventory before execution filters under ADR 0011; do not derive it solely from the cases reported as run. Concrete field/schema encodings remain design candidates. Retain original statuses rather than reducing missing, skipped or unbound work to a passing scenario count. L1 approvals and integrity checks remain advisory.
+
+### Agreed evidence composition
+
+Status: **AGREED** in [ADR 0021](../decisions/0021-retain-native-messages-with-aaatdd-envelope.md), resolving Q12's first-experiment evidence composition. Retain the native Cucumber Messages stream as the primary runner evidence, including original statuses, source/case links and attempts. Add a small AAATDD envelope linking that evidence to the approved baseline/policy, assessed implementation/environment, expected inventory, fixture/observation provenance and gate reasons. Approval and completeness cannot be inferred from native runner success alone.
+
+This follows the [runner-evidence research](../research/execution-boundaries.md#existing-capabilities): the native format supplies execution relationships, while AAATDD must establish approval, expected coverage and evidence validity. Validate supported versions and stream completeness before accepting evidence as sufficient for `PASS`; unsupported or truncated evidence cannot silently become success. Apply ADR 0009 when trustworthy failures coexist with evidence gaps.
+
+An optional CTRF projection may support generic reports. It is derived output, not a substitute for the retained native stream or AAATDD approval/coverage checks. Defer the exact envelope schema, compatible versions, artifact-link/digest encoding and projection rules until their review. This is a composition decision, not a claim that native messages are authentic or that L1 producers are protected. The envelope references approval; it cannot grant it.
 
 ## Agreed verification-outcome semantics
 

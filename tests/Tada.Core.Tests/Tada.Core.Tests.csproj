@@ -1,0 +1,21 @@
+<Project Sdk="MSTest.Sdk/4.5.2">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TestingExtensionsProfile>None</TestingExtensionsProfile>
+    <EnableMSTestRunner>true</EnableMSTestRunner>
+    <UseVSTest>false</UseVSTest>
+  </PropertyGroup>
+  <ItemGroup><ProjectReference Include="../../src/Tada.Core/Tada.Core.csproj" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="../../src/Tada.Cli/Tada.Cli.csproj" /></ItemGroup>
+  <ItemGroup>
+    <Compile Include="../../src/Tada.Core/Templates/TadaAcceptance.cs.txt" Link="Controls/TadaAcceptance.cs" />
+    <None Update="Fixtures/*.ndjson" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../docs/requirements/order-stock-validation.feature" Link="Fixtures/orders.feature" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../.artifacts/native/tests/tada_fixture.dll" Link="Fixtures/tada_fixture.dll" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <Target Name="BuildNativeFixture" BeforeTargets="PrepareForBuild"
+          Inputs="$(MSBuildProjectDirectory)/Fixtures/native.c;$(MSBuildProjectDirectory)/../../scripts/Build-NativeObserver.ps1"
+          Outputs="$(MSBuildProjectDirectory)/../../.artifacts/native/tests/tada_fixture.dll">
+    <Exec Command="pwsh -NoProfile -NonInteractive -File &quot;$(MSBuildProjectDirectory)/../../scripts/Build-NativeObserver.ps1&quot; -Fixture" />
+  </Target>
+</Project>

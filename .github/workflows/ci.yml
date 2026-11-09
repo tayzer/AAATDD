@@ -1,0 +1,88 @@
+name: Release validation
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: tada-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+      DOTNET_GENERATE_ASPNET_CERTIFICATE: 'false'
+      DOTNET_ADD_GLOBAL_TOOLS_TO_PATH: 'false'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.403
+      - uses: actions/cache@v4
+        with:
+          path: .artifacts/native-toolchain
+          key: zig-windows-x64-0.15.2-3a0ed1e8799a2f8ce2a6e6290a9ff22e6906f8227865911fb7ddedc3cc14cb0c
+      - name: Restore locked core and test graphs
+        run: |
+          dotnet restore tests/Tada.Core.Tests/Tada.Core.Tests.csproj --locked-mode
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          dotnet restore src/Tada.Cli/Tada.Cli.csproj --locked-mode
+      - name: Build and run focused/replay tests
+        run: |
+          dotnet build tests/Tada.Core.Tests/Tada.Core.Tests.csproj --no-restore --disable-build-servers -c Release
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          dotnet tests/Tada.Core.Tests/bin/Release/net10.0/Tada.Core.Tests.dll --progress off --no-ansi | Tee-Object .artifacts/core-tests.log
+          exit $LASTEXITCODE
+      - name: Pack the tool
+        run: dotnet pack src/Tada.Cli/Tada.Cli.csproj --no-restore --disable-build-servers -o .artifacts/packages
+      - name: Orders end-to-end and negative controls
+        run: pwsh -File scripts/Test-OrdersWorkflow.ps1
+      - name: Package the TADA plugin and check project setup
+        run: |
+          [xml]$properties = Get-Content Directory.Build.props -Raw
+          $version = [string]$properties.Project.PropertyGroup.Version
+          $plugin = & ./scripts/New-TadaPlugin.ps1 -Package ".artifacts/packages/Tada.Cli.$version.nupkg"
+          pwsh -File scripts/Test-TadaPlugin.ps1 -PluginRoot $plugin.pluginRoot
+      - name: Installed-package onboarding and second API
+        run: pwsh -File scripts/Test-Onboarding.ps1
+      - name: Observed task-only tool environment identity
+        run: |
+          $file = Get-ChildItem .artifacts/onboarding -Filter validation.json -Recurse -File | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+          $report = Get-Content -LiteralPath $file.FullName -Raw | ConvertFrom-Json
+          $reference = $report.failureHistory.restoredImplementation
+          $record = Get-Content -LiteralPath (Join-Path $report.workspace ".tada/runs/$reference/run.json") -Raw | ConvertFrom-Json
+          pwsh -File scripts/Test-TaskEnvironment.ps1 -Workspace $report.workspace -Baseline $record.baseline -ReferenceRun $reference
+      - name: Prepare and install the download bundle
+        run: |
+          [xml]$properties = Get-Content Directory.Build.props -Raw
+          $version = [string]$properties.Project.PropertyGroup.Version
+          $bundle = & ./scripts/New-ReleaseBundle.ps1 -Package ".artifacts/packages/Tada.Cli.$version.nupkg"
+          pwsh -File scripts/Test-ReleaseBundle.ps1 -Archive $bundle.archive
+      - name: Retain package and validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-validation-${{ github.sha }}
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 14
+          path: |
+            .artifacts/packages/*.nupkg
+            .artifacts/core-tests.log
+            .artifacts/release-bundles/**/*.zip
+            .artifacts/release-bundles/**/bundle.json
+            .artifacts/plugin-bundles/**/*.zip
+            .artifacts/plugin-bundles/**/plugin.json
+            .artifacts/native/*.build.json
+            .artifacts/native/tests/*.build.json
+            .artifacts/**/validation.json
+            .artifacts/**/run.json
+            .artifacts/**/result.json
+            .artifacts/**/tada-messages.ndjson
+            .artifacts/orders-workflow/*/.tada/**
+            .artifacts/onboarding/*/.tada/**
+            !.artifacts/**/.tada/scratch/**
