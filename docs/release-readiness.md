@@ -1,6 +1,6 @@
 # First release checklist
 
-Status is **EXPERIENCE ACCEPTED; PUBLICATION PENDING**. The active goal supersedes the earlier design-only workflow under [ADR 0041](decisions/0041-authorise-autonomous-release-implementation.md). Final publication requires the exact-source and artifact closeout below.
+Status is **PUBLIC ALPHA RELEASED; DOWNLOAD AND INSTALLATION VERIFIED**. Version `0.1.0-alpha.12` was published on 2026-11-09 at 21:57 UTC. The active goal supersedes the earlier design-only workflow under [ADR 0041](decisions/0041-authorise-autonomous-release-implementation.md). The [release page](https://github.com/tayzer/AAATDD/releases/tag/v0.1.0-alpha.12) contains the approved assets and manifest.
 
 ## User experience and evidence
 
@@ -65,13 +65,15 @@ The user activated a release goal for `0.1.0-alpha.12`, Windows x64, SDK 10.0.40
 2. Completed. The requester explicitly approved the new checkpoint helper review. Approval `d43f7299e2154b0580309c55b1e1cc1d` records that decision. New run `fa6adcc5f7534ca5a626438e03a9fb83` and retained verification passed all 14 cases.
 3. Review completed against implementation, existing controls and the explicit trusted-toolchain policy. Unsupported observation cases and the unproven complete automatic execution-boundary claim remain documented.
 4. Completed at implementation/packaging commit `892a2aa`. The isolated checkout passes locked restores, 139 focused/replay tests, 46 Orders controls, fresh-cache onboarding, task-byte environment identity, plugin setup, actual native CLI installation/state controls, bundle installation and corruption rejection. Both hosted Windows runs pass. Failed attempts and unrelated local work remain preserved.
-5. Validate the selected candidate commit in hosted Windows CI. Audit the exact downloadable package and plugin against that commit, notices and checksums. Exercise the published installation instructions against the candidate artifacts, including a documented failure-recovery path.
-6. Present the concrete candidate, evidence, remaining limitations and downloadable artifacts for publication approval. The proposed first distribution is a GitHub prerelease containing the CLI package, download bundle, matching plugin ZIP and checksums. Confirm any NuGet publication target, package access and authority separately. Publish only the approved validated artifacts, then check their downloaded bytes and installation path.
+5. Completed. Publication source `a5b4570e27e46cb334546b10ce8bb2fc7b71ae7b` passed push and proposed-merge Windows CI. The downloaded artifact audit checked 23 runs, 13 baselines and 3,675 file digests. Exact hosted package/plugin/bundle contents, notices and checksums passed correspondence and local installation controls.
+6. Completed. The requester explicitly approved PR #2's pinned source and the five audited publication assets. The PR merged, and the GitHub prerelease was published with tag `v0.1.0-alpha.12` targeting that source. Downloaded bytes and GitHub digest receipts match approval. Installation from both downloaded ZIPs passed.
 
 Release blockers are failed experience controls, unresolved supported-boundary defects, missing required human approval, failing candidate validation or artifact correspondence, and missing publication authority. Proposed application-repository approval adapters remain separately scoped work in the CI guide.
 
 ## Publication closeout
 
-- [ ] Validate the selected final documentation/source checkpoint in hosted Windows CI and audit its exact downloadable assets. The release manifest identifies the selected SHA, runs and asset hashes.
-- [ ] Obtain explicit approval for the concrete merge and GitHub prerelease candidate.
-- [ ] Publish the approved source tag and audited artifacts, then verify downloaded bytes and installation.
+- [x] Validate the selected final documentation/source checkpoint in hosted Windows CI and audit its exact downloadable assets. The release manifest identifies the selected SHA, runs and asset hashes.
+- [x] Obtain explicit approval for the concrete merge and GitHub prerelease candidate.
+- [x] Publish the approved source tag and audited artifacts, then verify downloaded bytes and installation.
+
+The published package SHA-256 is `798727249d09c8e49135b9ab1d8f1be9ce52e69f352b64e0fa4497e50d495426`. After downloading it, the TODO project's normal wrapper passed all 14 cases in run `2dcf562d45b542fa922fd46a42ec9b99`, and retained verification passed. Actual observer/logger hashes match the published package. The approved manifest bytes and previous cached builds remain preserved.

@@ -1,10 +1,10 @@
 # Supported provenance audit
 
-Status is **SUPPORTED TRUSTED-TOOLCHAIN BOUNDARY REVIEWED; FINAL CANDIDATE VALIDATION OPEN**. The 2026-11-09 review covers the alpha.12 v4/v2/v2 policies below and the existing controls. Historical alpha.6/alpha.7 findings remain preserved. Exhaustive automatic I/O observation and protected assurance remain outside the supported claim. See the [release checklist](../release-readiness.md).
+Status is **SUPPORTED TRUSTED-TOOLCHAIN BOUNDARY REVIEWED AND RELEASE VALIDATED**. The 2026-11-09 review covers the alpha.12 v4/v2/v2 policies below and the existing controls. Historical alpha.6/alpha.7 findings remain preserved. Exhaustive automatic I/O observation and protected assurance remain outside the supported claim. See the [release checklist](../release-readiness.md).
 
 ## Alpha.12 supported-boundary review
 
-The release profile uses inventory schema 6, `evaluated-dotnet-build-v4`, `msbuild-tasks-and-declared-inputs-v2` and `dotnet-loader-observation-v2`. Review covered `BuildInputs.Capture/Verify/CheckCurrent`, `TaskJournal.CheckEvaluation/Audit/Verify`, `ExecutionEnvironment.Capture/Tools`, `RunEngine.Run/Verify`, `RuntimeInputs.CapturePlatform/Verify` and the managed/native observer. The 139-test local suite passed after the checkpoint request/acknowledgement repairs. Full Orders and installed-package controls remain required for the selected candidate.
+The release profile uses inventory schema 6, `evaluated-dotnet-build-v4`, `msbuild-tasks-and-declared-inputs-v2` and `dotnet-loader-observation-v2`. Review covered `BuildInputs.Capture/Verify/CheckCurrent`, `TaskJournal.CheckEvaluation/Audit/Verify`, `ExecutionEnvironment.Capture/Tools`, `RunEngine.Run/Verify`, `RuntimeInputs.CapturePlatform/Verify` and the managed/native observer. The 139-test local suite passed after the checkpoint request/acknowledgement repairs. Full Orders and installed-package controls passed for the selected publication source, as recorded in [release validation](release-candidate-12.md).
 
 The explicit trusted-toolchain policy has these obligations.
 

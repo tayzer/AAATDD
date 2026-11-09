@@ -1,6 +1,6 @@
 # Alpha.12 release candidate
 
-Status is **EXPERIENCE ACCEPTED; PUBLICATION CLOSEOUT PENDING**. The target is the first public alpha on 2026-11-09, Windows x64 with SDK 10.0.403 and local advisory L1 scope.
+Status is **PUBLIC ALPHA RELEASED AND VERIFIED**. The first public alpha was published on 2026-11-09, Windows x64 with SDK 10.0.403 and local advisory L1 scope.
 
 ## Accepted experience
 
@@ -34,8 +34,14 @@ Download-install review then found that the standalone plugin ZIP omitted the ma
 
 Implementation/packaging commit `892a2aac05d3ef5dd223a841a7e1132c0d918091` passed both hosted Windows runs, [push 42698714310](https://github.com/tayzer/AAATDD/actions/runs/42698714310) and [proposed merge 42698723504](https://github.com/tayzer/AAATDD/actions/runs/42698723504). The exact local package also passed 139 focused/replay tests, 46 Orders controls, full onboarding and task-environment controls, extracted plugin/bundle installation and artifact correspondence. Actual native CLI controls confirmed installation and disabled/re-enabled configuration states in an isolated home. Local logs and machine-readable control reports remain in the delivery checkout's `.artifacts/`.
 
-## Remaining validation and publication
+## Publication verified on 2026-11-09
 
-The remaining source changes record the accepted experience and approval closeout. The selected final checkpoint requires hosted Windows validation and an audit of its exact package, notices, plugin and bundle. The release manifest will identify that selected source and the actual assets. The [release notes](../releases/0.1.0-alpha.12.md) describe the proposed distribution.
+Publication source `a5b4570e27e46cb334546b10ce8bb2fc7b71ae7b` passed [push 42701848029](https://github.com/tayzer/AAATDD/actions/runs/42701848029) and [proposed merge 42701857412](https://github.com/tayzer/AAATDD/actions/runs/42701857412). The downloaded push artifact, ID `13712801737`, passed exact-byte correspondence checks across 23 runs, 13 baseline inventories and 3,675 file digests. Its package and embedded plugin/bundle copies match. The bundled licence matches Git's exact Windows checkout expansion of the selected source. Oracle and evidence hashes use exact bytes.
 
-Publication needs the requester's explicit approval of the concrete validated candidate. The candidate's source commit and artifact hashes will be presented together with the CI evidence. Downloaded release assets and installation must be checked after publication. No approval is inferred from tests or automated control fixtures.
+The requester explicitly approved merging PR #2 and publishing the pinned candidate. PR #2 merged as `0aa2f25be57736f9a8e17b0b389bfea376b129d4`. Its source tree matches the selected release source. [GitHub prerelease `v0.1.0-alpha.12`](https://github.com/tayzer/AAATDD/releases/tag/v0.1.0-alpha.12), release ID `439694450`, was published at `2026-11-09T21:57:14Z` with that tag targeting the approved source.
+
+All five release assets were downloaded again. The manifest SHA-256 is `78e227abd25f542aee94d1d7dc8934bcfb3b355fadf772e231b2a7044877e242`. Asset hashes and GitHub's uploaded digest receipts match approval. Fresh-cache installation from the downloaded CLI and plugin ZIPs passed, as did native Codex installation and activation-state controls in an isolated home.
+
+The actual downloaded package SHA-256 is `798727249d09c8e49135b9ab1d8f1be9ce52e69f352b64e0fa4497e50d495426`. The TODO project's normal wrapper ran approved baseline `sha256:8cf369cb654fa08290a76d309032a7831037042cbc1e1464c566712ccb55f15c` with that package. Run `2dcf562d45b542fa922fd46a42ec9b99` and retained verification passed all 14 cases. Captured observer/logger bytes match the downloaded package. Manifest bytes, previous caches and earlier approvals/runs remain preserved.
+
+The delivery checkout retains publication approval, release/API receipts, checksum verification, installation reports, failed diagnostics and recovered cache paths under `.artifacts/`. This documentation closeout records the published source and assets. The release manifest and tag identify the immutable publication checkpoint.
