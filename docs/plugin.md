@@ -10,7 +10,7 @@ From the source checkout, build the verifier and package the plugin.
 
 ```powershell
 dotnet pack src/Tada.Cli/Tada.Cli.csproj -o .artifacts/packages
-$plugin = & ./scripts/New-TadaPlugin.ps1 -Package .artifacts/packages/Tada.Cli.0.1.0-alpha.9.nupkg
+$plugin = & ./scripts/New-TadaPlugin.ps1 -Package .artifacts/packages/Tada.Cli.0.1.0-alpha.10.nupkg
 pwsh -File scripts/Test-TadaPlugin.ps1 -PluginRoot $plugin.pluginRoot
 ```
 
@@ -25,6 +25,8 @@ codex plugin marketplace add $plugin.marketplaceRoot
 ```
 
 Open the host's Plugins browser, select the `tada-development` marketplace and install TADA. Use its normal plugin controls to enable or disable it. In Codex CLI, `/plugins` opens the browser and Space toggles an installed plugin. Start a fresh session after changing activation so the trial observes the selected skill set. [Official plugin controls](https://learn.chatgpt.com/docs/plugins)
+
+Installation requires no application folder or project setup. Alpha.10 omits the optional `onboardingSkill` hook that launched the development skill during alpha.9 installation. Open the application you want to work on and describe the task normally. The enabled skill discovers requirements and prepares the local verifier in that project's workspace when business verification needs it. It asks for a folder only if the target is then ambiguous. [Official onboarding hook documentation](https://developers.openai.com/plugins/build/plugins#add-an-onboarding-skill)
 
 The host can also apply project-scoped configuration in a trusted application repository.
 

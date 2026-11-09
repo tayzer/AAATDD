@@ -25,7 +25,7 @@ cd MyApi
 dotnet new tool-manifest
 $feedPath = [Security.SecurityElement]::Escape("$tadaSource/.artifacts/packages")
 "<configuration><packageSources><clear/><add key='local' value='$feedPath'/></packageSources></configuration>" | Set-Content NuGet.Local.Config
-dotnet tool install Tada.Cli --version 0.1.0-alpha.9 --configfile NuGet.Local.Config
+dotnet tool install Tada.Cli --version 0.1.0-alpha.10 --configfile NuGet.Local.Config
 dotnet tool run tada --version
 dotnet tool run tada init
 ```
@@ -43,6 +43,8 @@ New projects preserve file bytes through Git checkouts with `* -text`; `.tada/.g
 ## Work with Codex or another agent
 
 Enable the installed TADA plugin, start a fresh Codex chat in the application directory and ask for the project normally.
+
+Plugin installation does not ask for an application folder or install the verifier. The enabled skill prepares verification in the active application repository when the work needs it. The source-build commands above are an explicit manual CLI setup alternative.
 
 > Build me a simple API for tracking my reading list.
 

@@ -4,7 +4,7 @@ Status: **REAL AGENT ADOPTION UNVERIFIED**. The requester corrected the earlier 
 
 ## Setup and request
 
-Install the [local TADA plugin](../plugin.md), enable it through the host and prepare a fresh application repository. Its setup helper installs the matching verifier and initialises project files when needed. Keep SDK/feed details in setup and context. The host's plugin state controls automatic workflow selection.
+Install the [local TADA plugin](../plugin.md) and enable it through the host. Installation must not request an application folder or run project preparation. Open a fresh application directory without manually invoking the setup helper. The enabled skill should discover requirements and install the matching verifier in that workspace when business verification needs it. Keep SDK/feed details in agent setup and context. The host's plugin state controls automatic workflow selection.
 
 Open that application repository in a genuinely fresh Codex chat. Describe a useful project in your own words, as you would without this trial. For example, a reading-list API is a possible project, not an approved specification. Do not name TADA, tell the agent which files to read, prescribe Gherkin/tests or paste a workflow prompt. Record the exact request and the session's initial actions.
 
@@ -17,6 +17,7 @@ The agent should recover enabled-project guidance itself, discover the business 
 - Request a behaviour-preserving refactor and a small chore normally. Appropriate existing checks should run without invented business scenarios or repeated process instructions.
 - Start another genuinely fresh chat and request useful continuation normally. The agent must find Git-native context and authoritative features itself, check the referenced evidence and recover unresolved work. Do not tell it to read a handoff or supply baseline/run IDs in the request.
 - Record concrete friction and your verdict on whether the workflow was useful and intuitive. Keep initial failures visible. If you must remind the agent to use TADA, record that initial attempt as an adoption failure; a coached retry is diagnostic evidence only.
+- Check that installation completes without a project-folder question. During project work, setup should use the active repository without asking you to paste its known path. A genuinely ambiguous target can require clarification when verification setup becomes necessary.
 - Disable TADA in the host's plugin controls and start a fresh session. Check that its skill is absent and automatic TADA orchestration has stopped. Re-enable it, start another fresh session and request useful continuation normally. Check recovery of the accepted project behaviour and evidence.
 
 Automated file/CLI tests establish activation wiring, byte preservation and repeatability. Scripted Echo/Orders controls establish bounded verifier behaviour. Neither substitutes for this ordinary-request trial. Other agents must use their normal repository-instruction discovery; custom discovery settings, conflicting/nested instructions and truncated instruction chains require investigation. Keep local advisory L1 limitations explicit. Merge and release publication remain separate gates.

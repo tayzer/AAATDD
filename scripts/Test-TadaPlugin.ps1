@@ -7,6 +7,9 @@ $ErrorActionPreference = 'Stop'
 $plugin = (Resolve-Path -LiteralPath $PluginRoot).Path
 $manifest = Get-Content -LiteralPath (Join-Path $plugin 'plugin.json') -Raw | ConvertFrom-Json
 if ($manifest.'$schema' -ne 'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json' -or $manifest.name -ne 'tada') { throw 'Unsupported plugin identity.' }
+if ($manifest.extensions.'com.openai'.PSObject.Properties.Name -contains 'onboardingSkill') {
+    throw 'Installing TADA must not launch project setup through an onboarding skill.'
+}
 $entry = Join-Path $plugin 'skills/tada/SKILL.md'
 if (!(Test-Path -LiteralPath $entry) -or !(Test-Path -LiteralPath (Join-Path $plugin 'skills/tada/agents/openai.yaml'))) { throw 'Plugin skill or invocation metadata is missing.' }
 $repository = Split-Path $PSScriptRoot -Parent
@@ -36,6 +39,7 @@ try {
         application = $application
         setupRepeatedSuccessfully = $true
         originalInstructionsByteExact = $true
+        installationOnboardingSkillAbsent = $true
         nativeHostToggleTrial = 'pending'
         ordinaryRequestAgentTrial = 'pending'
     }
