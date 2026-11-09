@@ -1,16 +1,16 @@
 # Alpha.12 release candidate
 
-Status is **IN VALIDATION; PUBLICATION PENDING**. The target is the first public alpha on 2026-11-09, Windows x64 with SDK 10.0.403 and local advisory L1 scope.
+Status is **EXPERIENCE ACCEPTED; PUBLICATION CLOSEOUT PENDING**. The target is the first public alpha on 2026-11-09, Windows x64 with SDK 10.0.403 and local advisory L1 scope.
 
 ## Accepted experience
 
-The requester confirmed ordinary-use acceptance passed on 2026-11-09, including installation and automatic workflow use for API development. Disabled-plugin and re-enabled fresh-session recovery checks are pending the requester's result. The trial procedure remains in [ordinary-request acceptance](default-workflow-trial.md).
+The requester confirmed ordinary-use acceptance passed on 2026-11-09, including installation and automatic workflow use for API development. The requester then confirmed both disabled-plugin and re-enabled fresh-chat continuation tests passed. The trial procedure remains in [ordinary-request acceptance](default-workflow-trial.md).
 
 The TODO migration gate was already completed in the application repository, `D:\Dev\TADATestDelete`. Its context records human approval of native-compatible review `4f7b60dc0cb44b04af7e760bfdab8155`, approval `3f0182d4c16a4592b4f9bb5e93035010`, and the later missing-DELETE amendment. The current alpha.12 tool-version review `fd88ab1f52704e83881a6a1ad7e89e1c` has approval `b63a3d76140042d3b728000143eb53fc` by Protayne. Current baseline is `sha256:2cf2e970fa38b7d77d0567e634cdfa0ba53cb91505c75d6f727298ad4fb8f685`.
 
 Run `86ab495683274aadb5bae6b4f3170c7c` passed all 14 cases. This candidate reverified the retained evidence as PASS with 14 cases and no reasons. Earlier approvals, failed runs and business changes remain retained in the application repository. This closes the previously stale request for migration approval.
 
-The acknowledgement-reader repair below changes captured helper code. Comparative review `1be09e4807dc4afdb31d6d9a4127f4ce` proposes baseline `sha256:8cf369cb654fa08290a76d309032a7831037042cbc1e1464c566712ccb55f15c` against the current approved baseline. Only `tests/Acceptance/TadaRuntimeCheckpoint.cs` changes. A byte-exact helper backup is retained in the delivery checkout. Human approval of this new helper-only revision is pending.
+The acknowledgement-reader repair below changes captured helper code. Comparative review `1be09e4807dc4afdb31d6d9a4127f4ce` proposes baseline `sha256:8cf369cb654fa08290a76d309032a7831037042cbc1e1464c566712ccb55f15c` against the previously approved baseline. Only `tests/Acceptance/TadaRuntimeCheckpoint.cs` changes. Byte-exact backups are retained in the delivery checkout and application `.local/` directory. The requester explicitly approved this helper-only revision. Approval `d43f7299e2154b0580309c55b1e1cc1d`, by Protayne, records that decision and replaces the prior baseline. Run `fa6adcc5f7534ca5a626438e03a9fb83` and retained verification passed all 14 cases using candidate code `892a2aa`.
 
 ## Checkpoint race and repair
 
@@ -32,10 +32,10 @@ Both hosted Windows runs at that code commit passed, [push 42695961110](https://
 
 Download-install review then found that the standalone plugin ZIP omitted the marketplace catalog required by its installation instructions. A control against the old archive failed on the missing catalog. Packaging now includes a root-resolving `.agents/plugins/marketplace.json` and README. Validation extracts the ZIP before installing its feed. Actual Codex CLI marketplace registration and plugin installation from that extracted ZIP passed in an isolated child-process Codex home. These controls grant no fresh-agent or requester acceptance.
 
-The final packaging-only commit requires its own exact-source hosted validation and artifact correspondence audit. Local logs and machine-readable control reports remain in the delivery checkout's `.artifacts/`.
+Implementation/packaging commit `892a2aac05d3ef5dd223a841a7e1132c0d918091` passed both hosted Windows runs, [push 42698714310](https://github.com/tayzer/AAATDD/actions/runs/42698714310) and [proposed merge 42698723504](https://github.com/tayzer/AAATDD/actions/runs/42698723504). The exact local package also passed 139 focused/replay tests, 46 Orders controls, full onboarding and task-environment controls, extracted plugin/bundle installation and artifact correspondence. Actual native CLI controls confirmed installation and disabled/re-enabled configuration states in an isolated home. Local logs and machine-readable control reports remain in the delivery checkout's `.artifacts/`.
 
 ## Remaining validation and publication
 
-The candidate is prepared in an isolated checkout. Local Orders, installed-package onboarding, task-environment identity, plugin and bundle controls must finish. The committed source then requires hosted Windows validation and an audit of its exact package, notices, plugin and bundle. The [release notes](../releases/0.1.0-alpha.12.md) describe the proposed assets.
+The remaining source changes record the accepted experience and approval closeout. The selected final checkpoint requires hosted Windows validation and an audit of its exact package, notices, plugin and bundle. The release manifest will identify that selected source and the actual assets. The [release notes](../releases/0.1.0-alpha.12.md) describe the proposed distribution.
 
 Publication needs the requester's explicit approval of the concrete validated candidate. The candidate's source commit and artifact hashes will be presented together with the CI evidence. Downloaded release assets and installation must be checked after publication. No approval is inferred from tests or automated control fixtures.

@@ -1,6 +1,6 @@
 # First release checklist
 
-Status: **IMPLEMENTATION AUTHORISED; RELEASE INCOMPLETE**. The active goal supersedes the earlier design-only workflow under [ADR 0041](decisions/0041-authorise-autonomous-release-implementation.md).
+Status is **EXPERIENCE ACCEPTED; PUBLICATION PENDING**. The active goal supersedes the earlier design-only workflow under [ADR 0041](decisions/0041-authorise-autonomous-release-implementation.md). Final publication requires the exact-source and artifact closeout below.
 
 ## User experience and evidence
 
@@ -8,7 +8,7 @@ Status: **IMPLEMENTATION AUTHORISED; RELEASE INCOMPLETE**. The active goal super
 - [x] Prepare a development download bundle with install guidance, licences, notices and checksums; validate extracted-feed installation and corruption rejection.
 - [x] Initialise a new repository without overwriting existing instructions or work.
 - [x] After project enablement, an ordinary project/change request automatically follows the TADA workflow: collaborative discovery, human-approved Gherkin where appropriate, meaningful RED/GREEN and regression verification. No workflow-specific user prompt or reminder is supplied. Requester reported this experience passed on 2026-11-09.
-- [ ] Native plugin enable, disable and re-enable controls govern automatic workflow selection in fresh sessions, including projects migrated from earlier generated instruction blocks.
+- [x] Native plugin enable, disable and re-enable controls govern automatic workflow selection in fresh sessions, including projects migrated from earlier generated instruction blocks. The requester confirmed both activation trials passed on 2026-11-09. Migration controls and isolated native CLI state controls also pass.
 - [x] Prepare/review/approve an immutable exact-byte oracle baseline with explicit scope and preserved history.
 - [x] Build and run the actual Reqnroll/MSTest/MTP harness against a separate API; retain identities, native Messages and command evidence.
 - [x] Verify retained evidence without re-execution, detecting missing/skipped/stale/truncated evidence and altered oracle inputs.
@@ -21,7 +21,7 @@ Status: **IMPLEMENTATION AUTHORISED; RELEASE INCOMPLETE**. The active goal super
 - [x] Retain ordinary Windows loader notifications for transient DLLs, validate continuous event counts and reject queue loss/overflow; package the native observer without an end-user C compiler or additional C runtime library.
 - [x] Record actual restore/rebuild task code and supported file parameters; reject unselected file inputs and require reviewed declarations for opaque custom tasks/evaluation.
 - [x] Validate the complete execution/import/loaded-runtime input boundary against reviewed files or explicit trusted-toolchain policy. The [alpha.12 supported-boundary review](validation/provenance-audit.md) records the explicit policy and control coverage. Exhaustive automatic observation remains unproven.
-- [ ] Context survives a new agent session using concise Git-native records with provenance and supersession, recovered from an ordinary continuation request without handoff-reading instructions.
+- [x] Context survives a new agent session using concise Git-native records with provenance and supersession, recovered from an ordinary continuation request without handoff-reading instructions. The requester confirmed the fresh-chat continuation trial passed on 2026-11-09.
 - [x] Quickstart reproduces a useful install-to-API workflow, including quality checks and failure recovery. The requester accepted ordinary use. Fresh-package onboarding covers API development, native tests, maintenance and retained failure recovery. Candidate bundle installation and corruption rejection also pass, as recorded in [candidate validation](validation/release-candidate-12.md).
 - [x] The same acceptance scenarios run through native `dotnet test` in Debug/Release and Visual Studio Test Explorer Run/Debug, with scenario-owned resources and no wrapper or manual TADA run variables.
 - [x] Test path handling, canonicalisation, approval races, process failure, cancellation, timeouts, teardown and evidence integrity.
@@ -51,21 +51,27 @@ The [local source/distribution checkpoint](validation/release-packaging.md) adds
 
 The [hosted checkpoint](validation/hosted-ci.md) records successful push and proposed-merge validation for public head `13c71f1`. Its downloaded package identifies that exact source commit. The correspondence audit checks 23 retained run inventories and 3,159 file digests, the redistributed DLL set, notices and bundle checksums. Hosted Windows installation is automated supported-environment evidence; it does not establish requester experience or a genuinely fresh Codex session. Historical local packaging reports retain their original source/package identities.
 
-Requester update on 2026-11-09: the ordinary-use acceptance trial, including installation, automatic discovery, agreed business acceptance, API implementation and ordinary maintenance/failure recovery, passed. This records the requester's verdict. Plugin disable/re-enable and genuinely fresh-session recovery remain separate open checks.
+Requester updates on 2026-11-09 confirm that ordinary-use acceptance, plugin disable/re-enable and genuinely fresh-chat continuation all passed. The experience gates are accepted by the requester.
 
 PR #1 merged on 2026-11-09. Its head `673d6f733922d0eb12466dc7af04f7777a65ae11` passed both recorded Windows validation runs. The merged `main` commit is `f3ccef8aa40a4f2f0c8656fd9daedec3b3389ab4`. Final publication must identify and validate its selected commit and artifacts separately. The CI workflow includes the pinned native-toolchain cache, unchanged-rerun/real-history controls, task-byte environment control and download-bundle installation.
 
-Git round-trip validation now passes, including generated attributes and exact-byte approval checks after clone. Actual new-agent context use remains an open experience gate.
+Git round-trip validation passes, including generated attributes and exact-byte approval checks after clone. The requester also accepted actual new-agent context recovery.
 
 ## Release plan for 2026-11-09
 
 The user activated a release goal for `0.1.0-alpha.12`, Windows x64, SDK 10.0.403 and local advisory L1 scope. The target is a first public alpha today, subject to the remaining checks and approval of the concrete publication candidate. See [candidate validation](validation/release-candidate-12.md) and [release notes](releases/0.1.0-alpha.12.md).
 
-1. The requester tests disabled and re-enabled plugin states in genuinely fresh chats. The disabled chat must lack the TADA skill. The re-enabled chat must recover the accepted project and evidence from an ordinary continuation request. Retain the observed result and any friction.
-2. The prior TODO migration is approved, and this candidate reverified run `86ab495683274aadb5bae6b4f3170c7c` as PASS with all 14 cases. Local validation then required a checkpoint acknowledgement-reader repair. Its helper-only baseline review is prepared for human approval, as detailed in candidate validation. Verify the new revision after that approval.
-3. Review completed against implementation, existing controls and the explicit trusted-toolchain policy. Final candidate controls remain required. Unsupported observation cases and the unproven complete automatic execution-boundary claim remain documented.
-4. Prepare a clean candidate from current remote source while preserving unrelated local work. Reconcile the acceptance record, release checklist, quickstart, package guidance and release notes. Run locked restores, the Release focused/replay suite, Orders controls, fresh-cache onboarding, plugin setup controls and bundle installation/integrity checks. Fix failures and rerun affected checks.
+1. Completed by requester verdict. Disabled-plugin and re-enabled fresh-chat continuation tests both passed.
+2. Completed. The requester explicitly approved the new checkpoint helper review. Approval `d43f7299e2154b0580309c55b1e1cc1d` records that decision. New run `fa6adcc5f7534ca5a626438e03a9fb83` and retained verification passed all 14 cases.
+3. Review completed against implementation, existing controls and the explicit trusted-toolchain policy. Unsupported observation cases and the unproven complete automatic execution-boundary claim remain documented.
+4. Completed at implementation/packaging commit `892a2aa`. The isolated checkout passes locked restores, 139 focused/replay tests, 46 Orders controls, fresh-cache onboarding, task-byte environment identity, plugin setup, actual native CLI installation/state controls, bundle installation and corruption rejection. Both hosted Windows runs pass. Failed attempts and unrelated local work remain preserved.
 5. Validate the selected candidate commit in hosted Windows CI. Audit the exact downloadable package and plugin against that commit, notices and checksums. Exercise the published installation instructions against the candidate artifacts, including a documented failure-recovery path.
 6. Present the concrete candidate, evidence, remaining limitations and downloadable artifacts for publication approval. The proposed first distribution is a GitHub prerelease containing the CLI package, download bundle, matching plugin ZIP and checksums. Confirm any NuGet publication target, package access and authority separately. Publish only the approved validated artifacts, then check their downloaded bytes and installation path.
 
 Release blockers are failed experience controls, unresolved supported-boundary defects, missing required human approval, failing candidate validation or artifact correspondence, and missing publication authority. Proposed application-repository approval adapters remain separately scoped work in the CI guide.
+
+## Publication closeout
+
+- [ ] Validate the selected final documentation/source checkpoint in hosted Windows CI and audit its exact downloadable assets. The release manifest identifies the selected SHA, runs and asset hashes.
+- [ ] Obtain explicit approval for the concrete merge and GitHub prerelease candidate.
+- [ ] Publish the approved source tag and audited artifacts, then verify downloaded bytes and installation.

@@ -1,6 +1,6 @@
 # Ordinary-request acceptance trial
 
-Status: **ORDINARY-USE ACCEPTANCE PASSED BY REQUESTER REPORT; ACTIVATION AND FRESH-SESSION RECOVERY OPEN**. On 2026-11-09 the requester confirmed that the ordinary-use acceptance gate passed, including installation, automatic discovery, human-approved Gherkin, verified API development and ordinary maintenance/failure recovery. Plugin disable/re-enable and genuinely fresh-session context recovery remain open.
+Status is **REQUESTER ACCEPTANCE PASSED**. On 2026-11-09 the requester confirmed that ordinary use passed, including installation, automatic discovery, human-approved Gherkin, verified API development and ordinary maintenance/failure recovery. The requester subsequently confirmed both the disabled-plugin test and re-enabled fresh-chat continuation test passed. This records the requester's experience verdict. The procedure below remains available for repeat trials.
 
 The requester corrected the earlier coached trial on 2026-11-07: install and enable TADA, then ask for the project as normal. The enabled project must supply the workflow. A prompt that tells the agent to read workflow files, use Gherkin or follow RED/GREEN supplies the very behaviour being tested.
 

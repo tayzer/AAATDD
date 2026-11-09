@@ -2,7 +2,7 @@
 
 The download bundle lets an application developer try the packaged tool without building TADA or downloading a C compiler. It contains a local NuGet feed, installation/agent-start guidance, TADA's MIT licence, the package's third-party notices, a file manifest and SHA-256 checksums.
 
-This alpha uses versioned downloadable artifacts. The [historical hosted checkpoint](validation/hosted-ci.md) records automated Windows installation and API controls for an exact source commit. Requester ordinary-use acceptance passed on 2026-11-09. See [candidate validation](validation/release-candidate-12.md) for outstanding activation, recovery and publication gates. Package metadata can record a parent Git commit when built from a dirty working tree. That commit alone does not identify the uncommitted implementation. Final release artifacts must come from the validated final source commit.
+This alpha uses versioned downloadable artifacts. The [historical hosted checkpoint](validation/hosted-ci.md) records automated Windows installation and API controls for an exact source commit. Requester ordinary-use, activation and fresh-chat recovery acceptance passed on 2026-11-09. See [candidate validation](validation/release-candidate-12.md) for publication closeout. Package metadata can record a parent Git commit when built from a dirty working tree. That commit alone does not identify the uncommitted implementation. Final release artifacts must come from the validated final source commit.
 
 ## Prepare and check a bundle
 
