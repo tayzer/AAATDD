@@ -44,7 +44,8 @@ try
         tada run --baseline sha256:... [--dotnet PATH]
         tada verify --run ID
 
-        --repo defaults to the current directory. --json prints structured output.
+        --repo defaults to the current directory. --json prints structured output and suppresses progress.
+        run/verify report phases and elapsed time to stderr every 10 seconds while busy.
         prepare/review never approve. Only a human may declare baseline approval.
         Verification exits: PASS=0, FAIL=1, INDETERMINATE=2. Command errors=3.
         Read .tada/WORKFLOW.md for discovery, maintenance and session handoff.
@@ -95,13 +96,23 @@ try
             return 0;
         case "baseline approve": Print(store.Approve(Need("review"), Need("by"), Maybe("replaces"))); return 0;
         case "run":
-            var run = await new RunEngine(store, Maybe("dotnet") ?? "dotnet").Run(Need("baseline"), cancellation.Token);
+        {
+            string selectedBaseline = Need("baseline");
+            Verification run;
+            await using (var progress = options.ContainsKey("json") ? null : new CliProgress(Console.Error))
+                run = await new RunEngine(store, Maybe("dotnet") ?? "dotnet", progress == null ? null : progress.Report).Run(selectedBaseline, cancellation.Token);
             Print(run);
             return run.ExitCode;
+        }
         case "verify":
-            var verified = new RunEngine(store).Verify(Need("run"));
+        {
+            string id = Need("run");
+            Verification verified;
+            await using (var progress = options.ContainsKey("json") ? null : new CliProgress(Console.Error))
+                verified = new RunEngine(store, progress: progress == null ? null : progress.Report).Verify(id);
             Print(verified);
             return verified.ExitCode;
+        }
         default: throw new TadaException("Unknown command. Use tada --help.");
     }
 }

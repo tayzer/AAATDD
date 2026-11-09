@@ -8,6 +8,50 @@ namespace Tada.Tests;
 public sealed class CliTests
 {
     [TestMethod]
+    public async Task RunReportsProgressWhileMachineOutputRemainsOneJsonDocument()
+    {
+        using var project = new CoreTests.Project();
+        string baseline = project.Store.Prepare();
+        project.Store.Approve(project.Store.Review(baseline).Id, "automated progress control; not human acceptance");
+        File.AppendAllText(project.Feature, "\n# unapproved progress control\n");
+        var readable = await Invoke(project.Root, "run", "--baseline", baseline);
+        Assert.AreEqual(2, readable.ExitCode);
+        StringAssert.Contains(readable.Stderr, "Validating baseline approval and current inputs.");
+        StringAssert.Contains(readable.Stderr, "Saving retained run evidence.");
+        StringAssert.Contains(readable.Stdout, "INDETERMINATE");
+        var machine = await Invoke(project.Root, "run", "--baseline", baseline, "--json");
+        Assert.AreEqual(2, machine.ExitCode);
+        Assert.AreEqual("", machine.Stderr);
+        using var json = JsonDocument.Parse(machine.Stdout);
+        Assert.AreEqual("INDETERMINATE", json.RootElement.GetProperty("outcome").GetString());
+    }
+
+    [TestMethod]
+    public async Task ProgressRepeatsTheActivePhaseAndStopsBeforeFinalOutput()
+    {
+        using var writer = new ProgressWriter();
+        await using (var progress = new CliProgress(writer, TimeSpan.FromMilliseconds(20)))
+        {
+            progress.Report("Restoring dependencies.\u001b[2J");
+            await writer.Heartbeat.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        }
+        string finished = writer.ToString();
+        StringAssert.Contains(finished, "Restoring dependencies.\\u001b[2J Still running.");
+        await Task.Delay(60);
+        Assert.AreEqual(finished, writer.ToString(), "Progress continued after disposal.");
+    }
+
+    private sealed class ProgressWriter : StringWriter
+    {
+        public TaskCompletionSource Heartbeat { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public override void WriteLine(string? value)
+        {
+            base.WriteLine(value);
+            if (value?.Contains("Still running.", StringComparison.Ordinal) == true) Heartbeat.TrySetResult();
+        }
+    }
+
+    [TestMethod]
     public async Task InitPreparesTheProjectAndLeavesActivationToThePlugin()
     {
         using var project = new CoreTests.Project();

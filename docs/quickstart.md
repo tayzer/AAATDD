@@ -25,7 +25,7 @@ cd MyApi
 dotnet new tool-manifest
 $feedPath = [Security.SecurityElement]::Escape("$tadaSource/.artifacts/packages")
 "<configuration><packageSources><clear/><add key='local' value='$feedPath'/></packageSources></configuration>" | Set-Content NuGet.Local.Config
-dotnet tool install Tada.Cli --version 0.1.0-alpha.11 --configfile NuGet.Local.Config
+dotnet tool install Tada.Cli --version 0.1.0-alpha.12 --configfile NuGet.Local.Config
 dotnet tool run tada --version
 dotnet tool run tada init
 ```
@@ -113,7 +113,9 @@ dotnet tool run tada verify --run <printed-run-id>
 
 Replace placeholders with actual IDs; do not type angle brackets literally. `run` performs locked restore, rebuilds fresh output, checks input drift, executes once and retains commands, binaries and native Messages. `verify` does not rerun the application. An intended outcome assertion establishes meaningful behavioural RED; a broken build or pending binding is INDETERMINATE. Already-satisfied behaviour needs no artificial RED.
 
-Default output is readable terminal text, including the captured Gherkin during review. Add `--json` for scripting. Review is not approval; the printed next command is for the human, not permission for the agent to approve on their behalf.
+Default output is readable terminal text, including the captured Gherkin during review. Alpha.12 reports run and verification phases with elapsed time on stderr. While a phase continues, an update appears every ten seconds. Full subprocess diagnostics remain in retained command evidence. Add `--json` for scripting to suppress progress and receive the structured result on stdout. Review is not approval; the printed next command is for the human, not permission for the agent to approve on their behalf.
+
+For application pull requests, see [CI and PR workflows](ci-pr-workflows.md) for the available CLI checks and the proposed trusted approval integration.
 
 Passing reruns recheck earlier native evidence for the same baseline, implementation and environment. Missing cached summaries cannot erase a failure. Interrupted earlier attempts or damaged history block PASS until the history is investigated and restored; complete earlier setup/evidence gaps can be resolved by valid fresh evidence. Do not delete run directories to make an assessment pass.
 
