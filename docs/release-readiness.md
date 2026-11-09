@@ -25,7 +25,7 @@ Status is **PUBLIC ALPHA RELEASED; DOWNLOAD AND INSTALLATION VERIFIED**. Version
 - [x] Quickstart reproduces a useful install-to-API workflow, including quality checks and failure recovery. The requester accepted ordinary use. Fresh-package onboarding covers API development, native tests, maintenance and retained failure recovery. Candidate bundle installation and corruption rejection also pass, as recorded in [candidate validation](validation/release-candidate-12.md).
 - [x] The same acceptance scenarios run through native `dotnet test` in Debug/Release and Visual Studio Test Explorer Run/Debug, with scenario-owned resources and no wrapper or manual TADA run variables.
 - [x] Test path handling, canonicalisation, approval races, process failure, cancellation, timeouts, teardown and evidence integrity.
-- [x] Hosted CI validates the recorded source/package checkpoint; licence and dependency notices match redistributed content. Revalidate the selected publication SHA before release.
+- [x] Hosted CI validates the publication source/package checkpoint. Licence and dependency notices match redistributed content. The selected source SHA and downloaded asset hashes are recorded in publication closeout.
 - [x] Document local advisory L1 limitations and actual supported runner/protocol/platform versions.
 - [x] User acceptance: requester installs TADA and uses it with Codex to build a simple API from scratch. Requester reported this experience passed on 2026-11-09.
 
@@ -39,7 +39,7 @@ Alpha.8 corrects the activation/trial approach: `init` supplies default workflow
 
 Alpha.9 moves workflow activation to the [TADA plugin](plugin.md). The CLI prepares project scaffolding and migrates recognised generated instructions from earlier alphas. Package/setup checks and native host enable/disable trials are tracked separately.
 
-The requester reported alpha.9 asking for a project folder during installation. Alpha.10 removes its optional installation onboarding hook and defers verifier preparation until ordinary project work requires business verification. The skill uses the active workspace and asks for a folder only when the target is genuinely ambiguous. Packaging checks enforce the absence of the hook. The corrected native installation and uncoached project workflow still need requester acceptance.
+The requester reported alpha.9 asking for a project folder during installation. Alpha.10 removed its optional installation onboarding hook and deferred verifier preparation until ordinary project work required business verification. The skill uses the active workspace and asks for a folder only when the target is genuinely ambiguous. Packaging checks enforce the absence of the hook. Requester acceptance was pending at that checkpoint and later passed for alpha.12 on 2026-11-09.
 
 Alpha.11 supports native acceptance execution through the generated fixture context and build-only API dependency. The [native execution checkpoint](validation/increment-11.md) records the actual TODO project's 14 passing scenarios in Debug, Release and Visual Studio Test Explorer, including a successful debugger breakpoint in `DeleteAMissingTodo`. New recorded builds retain dependency roles under `evaluated-dotnet-build-v4`; historical v3 evidence remains verifiable. Migrated harnesses require renewed human baseline approval.
 
@@ -59,7 +59,7 @@ Git round-trip validation passes, including generated attributes and exact-byte 
 
 ## Release plan for 2026-11-09
 
-The user activated a release goal for `0.1.0-alpha.12`, Windows x64, SDK 10.0.403 and local advisory L1 scope. The target is a first public alpha today, subject to the remaining checks and approval of the concrete publication candidate. See [candidate validation](validation/release-candidate-12.md) and [release notes](releases/0.1.0-alpha.12.md).
+The user activated a release goal for `0.1.0-alpha.12`, Windows x64, SDK 10.0.403 and local advisory L1 scope. The plan below completed with the first public alpha on 2026-11-09. See [publication validation](validation/release-candidate-12.md) and [release notes](releases/0.1.0-alpha.12.md).
 
 1. Completed by requester verdict. Disabled-plugin and re-enabled fresh-chat continuation tests both passed.
 2. Completed. The requester explicitly approved the new checkpoint helper review. Approval `d43f7299e2154b0580309c55b1e1cc1d` records that decision. New run `fa6adcc5f7534ca5a626438e03a9fb83` and retained verification passed all 14 cases.

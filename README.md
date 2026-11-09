@@ -2,7 +2,7 @@
 
 **Test-Assured Development Assistance**: human-approved Gherkin business specifications, protected acceptance criteria, and independent verification in small increments. Git is the intended authority for project knowledge. Formerly AAATDD; the current alpha is explicitly L1/advisory.
 
-**Alpha `0.1.0-alpha.12`, Windows x64, local advisory L1.** The CLI supports onboarding, exact-byte baseline capture, review/approval, real Reqnroll/MSTest/MTP execution and retained-evidence verification. The Orders example runs a separate ASP.NET Core API with disposable scenario databases. See the [release notes](docs/releases/0.1.0-alpha.12.md) and [candidate validation](docs/validation/release-candidate-12.md) for current scope and publication gates.
+**Alpha `0.1.0-alpha.12`, Windows x64, local advisory L1.** The CLI supports onboarding, exact-byte baseline capture, review/approval, real Reqnroll/MSTest/MTP execution and retained-evidence verification. The Orders example runs a separate ASP.NET Core API with disposable scenario databases. See the [release notes](docs/releases/0.1.0-alpha.12.md) and [publication validation](docs/validation/release-candidate-12.md) for supported scope and verified publication.
 
 Download the [first public alpha](https://github.com/tayzer/AAATDD/releases/tag/v0.1.0-alpha.12) for the CLI package, install bundle, matching plugin and checksums. Follow the [quickstart](docs/quickstart.md) to build from source and use the workflow with Codex or another agent. The [release checklist](docs/release-readiness.md) records acceptance, validation and publication closeout.
 
