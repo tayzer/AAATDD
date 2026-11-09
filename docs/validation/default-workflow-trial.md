@@ -1,6 +1,8 @@
 # Ordinary-request acceptance trial
 
-Status: **REAL AGENT ADOPTION UNVERIFIED**. The requester corrected the earlier coached trial on 2026-11-07: install and enable TADA, then ask for the project as normal. The enabled project must supply the workflow. A prompt that tells the agent to read workflow files, use Gherkin or follow RED/GREEN supplies the very behaviour being tested.
+Status: **ORDINARY-USE ACCEPTANCE PASSED BY REQUESTER REPORT; ACTIVATION AND FRESH-SESSION RECOVERY OPEN**. On 2026-11-09 the requester confirmed that the ordinary-use acceptance gate passed, including installation, automatic discovery, human-approved Gherkin, verified API development and ordinary maintenance/failure recovery. Plugin disable/re-enable and genuinely fresh-session context recovery remain open.
+
+The requester corrected the earlier coached trial on 2026-11-07: install and enable TADA, then ask for the project as normal. The enabled project must supply the workflow. A prompt that tells the agent to read workflow files, use Gherkin or follow RED/GREEN supplies the very behaviour being tested.
 
 ## Setup and request
 

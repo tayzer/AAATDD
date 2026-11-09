@@ -30,9 +30,9 @@ Copy-Item -LiteralPath $packagePath -Destination (Join-Path $payload "feed/$pack
 Copy-Item -LiteralPath (Join-Path $repository 'LICENSE') -Destination (Join-Path $payload 'LICENSE')
 [IO.File]::WriteAllText((Join-Path $payload 'THIRD_PARTY_NOTICES.md'), $notices, [Text.UTF8Encoding]::new($false))
 $guide = @'
-# Try the TADA development alpha
+# Try TADA
 
-This is a development preview, not a completed public release. Results are local advisory L1.
+This alpha provides local advisory L1 acceptance verification.
 Prerequisites: Windows x64, .NET SDK 10.0.403 and Git for Windows. No C compiler or model API is required.
 Workspace paths may contain spaces; commas and semicolons are unsupported in this alpha.
 
@@ -72,12 +72,12 @@ Complete automatic I/O/child-process observation and protected independent assur
 
 The manifest and SHA256SUMS identify this bundle's files. Checksums establish correspondence, not publisher authentication.
 Repository and full development quickstart: https://github.com/tayzer/AAATDD
-Plugin installation and activation: https://github.com/tayzer/AAATDD/blob/codex/alpha-release-validation/docs/plugin.md
+Plugin installation and activation: https://github.com/tayzer/AAATDD/blob/main/docs/plugin.md
 '@
 [IO.File]::WriteAllText((Join-Path $payload 'README.md'), $guide.Replace('VERSION_PLACEHOLDER', $version), [Text.UTF8Encoding]::new($false))
 $assets = @('LICENSE','README.md','THIRD_PARTY_NOTICES.md',"feed/$packageName")
 $files = @($assets | Sort-Object | ForEach-Object { [pscustomobject]@{path=$_;sha256=(Get-FileHash -LiteralPath (Join-Path $payload $_) -Algorithm SHA256).Hash.ToLowerInvariant()} })
-$manifest = [ordered]@{schemaVersion=1;status='Development preview; release acceptance remains incomplete';name='TADA';version=$version;package="feed/$packageName";supportedPlatform='Windows x64';dotnetSdk='10.0.403';assurance='L1-advisory';files=$files}
+$manifest = [ordered]@{schemaVersion=1;status='Alpha; local advisory L1';name='TADA';version=$version;package="feed/$packageName";supportedPlatform='Windows x64';dotnetSdk='10.0.403';assurance='L1-advisory';files=$files}
 [IO.File]::WriteAllText((Join-Path $payload 'manifest.json'), ($manifest | ConvertTo-Json -Depth 8), [Text.UTF8Encoding]::new($false))
 $checksums = @($files | ForEach-Object { "$($_.sha256)  $($_.path)" }) + @((Get-FileHash -LiteralPath (Join-Path $payload 'manifest.json')).Hash.ToLowerInvariant() + '  manifest.json')
 [IO.File]::WriteAllLines((Join-Path $payload 'SHA256SUMS'), $checksums, [Text.UTF8Encoding]::new($false))
