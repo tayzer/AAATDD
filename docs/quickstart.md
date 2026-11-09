@@ -1,6 +1,6 @@
 # Build and try the development alpha
 
-This is a working development increment, not a published or release-ready v1. Initial support: Windows x64 with .NET SDK **10.0.403**. Public feed availability of `Tada.Cli` is not assumed.
+This guide covers alpha `0.1.0-alpha.12`. Initial support is Windows x64 with .NET SDK **10.0.403**. See [release notes](releases/0.1.0-alpha.12.md) for scope and distribution. Public feed availability of `Tada.Cli` is not assumed.
 
 Building TADA from source also requires PowerShell 7. The build downloads a checksum-pinned Zig 0.15.2 compiler into `.artifacts/` for its small native observer (about 93 MB compressed). Nothing is installed system-wide. The packaged tool includes the observer DLL; application developers need no C compiler. See [native observation](research/native-loader-observation.md) for the build pin and boundary.
 
@@ -11,9 +11,11 @@ The demonstrated stack uses Reqnroll **3.3.4**, MSTest SDK/framework **4.5.2**, 
 From the TADA source directory:
 
 ```powershell
-dotnet build tests/Tada.Core.Tests/Tada.Core.Tests.csproj
-dotnet tests/Tada.Core.Tests/bin/Debug/net10.0/Tada.Core.Tests.dll --progress off
-dotnet pack src/Tada.Cli/Tada.Cli.csproj -o .artifacts/packages
+dotnet restore tests/Tada.Core.Tests/Tada.Core.Tests.csproj --locked-mode
+dotnet restore src/Tada.Cli/Tada.Cli.csproj --locked-mode
+dotnet build tests/Tada.Core.Tests/Tada.Core.Tests.csproj --no-restore -c Release
+dotnet tests/Tada.Core.Tests/bin/Release/net10.0/Tada.Core.Tests.dll --progress off
+dotnet pack src/Tada.Cli/Tada.Cli.csproj --no-restore -o .artifacts/packages
 $tadaSource = (Get-Location).Path
 ```
 

@@ -36,6 +36,10 @@ $catalog = [ordered]@{
     })
 }
 $catalog | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $catalogDirectory 'marketplace.json') -Encoding utf8
+$standaloneCatalogDirectory = Join-Path $plugin '.agents/plugins'
+New-Item -ItemType Directory -Path $standaloneCatalogDirectory -Force | Out-Null
+$catalog.plugins[0].source.path = './'
+$catalog | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $standaloneCatalogDirectory 'marketplace.json') -Encoding utf8
 $archive = Join-Path $output "TADA-plugin-$($manifest.version).zip"
 [IO.Compression.ZipFile]::CreateFromDirectory($plugin, $archive)
 $result = [pscustomobject]@{

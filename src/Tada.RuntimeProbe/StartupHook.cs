@@ -108,7 +108,12 @@ namespace Tada.RuntimeProbe
                 string request = Path.Combine(directory, $"{pid}.checkpoint-request");
                 if (File.Exists(request))
                 {
-                    if (File.ReadAllText(request) != runId) throw new InvalidOperationException("Runtime checkpoint request identity mismatch.");
+                    string requestedRun;
+                    try { requestedRun = File.ReadAllText(request); }
+                    // Older checkpoint helpers publish the path before closing the write handle.
+                    // Keep observing and read the completed request on the next timer tick.
+                    catch (IOException error) when ((error.HResult & 65535) is 32 or 33) { return; }
+                    if (requestedRun != runId) throw new InvalidOperationException("Runtime checkpoint request identity mismatch.");
                     Finish("checkpoint");
                 }
             }

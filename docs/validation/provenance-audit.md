@@ -1,6 +1,22 @@
 # Supported provenance audit
 
-Status: **OBSERVED IDENTITY GAPS FIXED; FULL RELEASE GATE OPEN**. This audit reviews the implementation and retained alpha.6/alpha.7 evidence. It does not claim exhaustive I/O observation, clean-machine validation or requester acceptance. See the [release checklist](../release-readiness.md).
+Status is **SUPPORTED TRUSTED-TOOLCHAIN BOUNDARY REVIEWED; FINAL CANDIDATE VALIDATION OPEN**. The 2026-11-09 review covers the alpha.12 v4/v2/v2 policies below and the existing controls. Historical alpha.6/alpha.7 findings remain preserved. Exhaustive automatic I/O observation and protected assurance remain outside the supported claim. See the [release checklist](../release-readiness.md).
+
+## Alpha.12 supported-boundary review
+
+The release profile uses inventory schema 6, `evaluated-dotnet-build-v4`, `msbuild-tasks-and-declared-inputs-v2` and `dotnet-loader-observation-v2`. Review covered `BuildInputs.Capture/Verify/CheckCurrent`, `TaskJournal.CheckEvaluation/Audit/Verify`, `ExecutionEnvironment.Capture/Tools`, `RunEngine.Run/Verify`, `RuntimeInputs.CapturePlatform/Verify` and the managed/native observer. The 139-test local suite passed after the checkpoint request/acknowledgement repairs. Full Orders and installed-package controls remain required for the selected candidate.
+
+The explicit trusted-toolchain policy has these obligations.
+
+- The user trusts the local host, verifier and SDK 10.0.403 installation. Capture records observed SDK, reference-pack and package tool files, their hashes and their contribution to environment identity. Exact package versions come from reviewed lock files, project SDK declarations or `global.json`. NuGet content-hash enforcement during locked restore remains a trusted NuGet responsibility.
+- Repository-controlled harness code, imports, compiler inputs, fixture resources, dependency declarations and custom-task contracts belong to the approved oracle. Selected application source belongs to the implementation identity. Before/after capture and final checks reject drift. Generated inputs use fresh run-owned intermediates and output directories.
+- SDK/package tasks remain trusted executable tools. Repository custom tasks and detected opaque evaluation require exact origin/target/task contracts and complete reviewed read roots. Those declarations include indirect file reads and invoked helper inputs. Standard structured file parameters are audited independently of a declaration. Arbitrary custom I/O and every descendant executable are outside automatic tracing.
+- Runtime observation covers the configured managed harness and separate managed application, their located assemblies, ordinary Windows loader events and final snapshots. Loaded files must match captured output or the platform policy. The pre-run platform inventory covers the selected host, .NET 10 shared frameworks and core Windows DLLs. Other observed native modules beneath Windows System32 or WinSxS are explicitly trusted operating-system components with their observed hashes retained. CLR dynamic methods use the documented generated-code exception.
+- Local files must remain stable through execution. Manual image mapping, mutable mapped-memory attacks, external network/service state, arbitrary business-data reads and non-.NET child execution require reviewed fixture/trust assumptions. The supported policy provides no independent protection against an actor controlling local records or tools.
+
+Relevant executable controls cover unselected linked source/imports, unlocked packages, stale intermediates, changed tool bytes, undeclared file-reading/opaque tasks, missing task lifecycle/input records, dependency-role tampering, unlocated/unidentified managed loads, transient native loads, dropped loader events, missing terminal snapshots and damaged retained reports. `BuildInputTests`, `TaskJournalTests`, `EnvironmentTests`, `RuntimeInputTests`, `NativeLoaderTests` and the Orders workflow exercise these cases. The checkpoint regression additionally covers a real request-writer sharing conflict.
+
+The supported-boundary review found no additional defect within these declared assumptions. Complete automatic execution-input discovery remains unproven. Final candidate controls and exact-artifact correspondence remain publication gates. This review grants no business approval and changes no accepted feature or original ADR.
 
 ## What the evidence establishes
 

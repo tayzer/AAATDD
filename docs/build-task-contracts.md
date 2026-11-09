@@ -31,7 +31,7 @@ These contracts trust reviewed code to honour its declarations. They are not an 
 
 ## Retained evidence and migration
 
-New baselines use inventory schema 6, build policy `evaluated-dotnet-build-v3` and task policy `msbuild-tasks-and-declared-inputs-v2`. Observed SDK/package task assemblies and file parameters join the environment identity, including files absent from evaluated compiler inputs. Runs retain `task-inputs.json`, the packaged logger and raw `build/*.tasks.ndjson` reports. Offline verification checks their hashes, task lifecycle, required scalar inputs and command linkage without rebuilding the application. MSBuild legitimately omits empty item-array parameters, such as an empty static-web-assets copy list.
+New baselines use inventory schema 6, build policy `evaluated-dotnet-build-v4` and task policy `msbuild-tasks-and-declared-inputs-v2`. Historical v3 evidence retains its original policy. Observed SDK/package task assemblies and file parameters join the environment identity, including files absent from evaluated compiler inputs. Runs retain `task-inputs.json`, the packaged logger and raw `build/*.tasks.ndjson` reports. Offline verification checks their hashes, task lifecycle, required scalar inputs and command linkage without rebuilding the application. MSBuild legitimately omits empty item-array parameters, such as an empty static-web-assets copy list.
 
 Older baselines remain readable historical records. They cannot acquire task-input evidence or approval for the new policy by default. Prepare, review and approve a new baseline; retain old evidence and use its matching historical tool when inspecting its original execution.
 

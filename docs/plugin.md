@@ -11,10 +11,10 @@ From the source checkout, build the verifier and package the plugin.
 ```powershell
 dotnet pack src/Tada.Cli/Tada.Cli.csproj -o .artifacts/packages
 $plugin = & ./scripts/New-TadaPlugin.ps1 -Package .artifacts/packages/Tada.Cli.0.1.0-alpha.12.nupkg
-pwsh -File scripts/Test-TadaPlugin.ps1 -PluginRoot $plugin.pluginRoot
+pwsh -File scripts/Test-TadaPlugin.ps1 -PluginRoot $plugin.pluginRoot -Archive $plugin.archive
 ```
 
-The output contains a standalone plugin ZIP and a local marketplace directory. The marketplace directory includes `.agents/plugins/marketplace.json` and the packaged `tada` folder. The plugin ZIP contains one plugin at its root, including the skill, setup helper, verifier feed and licence notices.
+The output contains a standalone plugin ZIP and a local marketplace directory. The marketplace directory includes `.agents/plugins/marketplace.json` and the packaged `tada` folder. The plugin ZIP contains one plugin at its root, including its own marketplace catalog, installation README, skill, setup helper, verifier feed and licence notices. Validation extracts that exact ZIP and prepares a disposable application from the extracted plugin.
 
 ## Install and toggle
 
@@ -22,6 +22,14 @@ Register the generated marketplace directory with the installed Codex CLI.
 
 ```powershell
 codex plugin marketplace add $plugin.marketplaceRoot
+```
+
+For a downloaded `TADA-plugin-0.1.0-alpha.12.zip`, extract it to a persistent directory. Register that extracted directory directly. The bundled catalog resolves the plugin at its own root.
+
+```powershell
+Expand-Archive -LiteralPath ./TADA-plugin-0.1.0-alpha.12.zip -DestinationPath ./TADA-plugin
+codex plugin marketplace add (Resolve-Path ./TADA-plugin).Path
+codex plugin add tada@tada-development
 ```
 
 Open the host's Plugins browser, select the `tada-development` marketplace and install TADA. Use its normal plugin controls to enable or disable it. In Codex CLI, `/plugins` opens the browser and Space toggles an installed plugin. Start a fresh session after changing activation so the trial observes the selected skill set. [Official plugin controls](https://learn.chatgpt.com/docs/plugins)

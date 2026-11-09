@@ -46,7 +46,7 @@ jobs:
           [xml]$properties = Get-Content Directory.Build.props -Raw
           $version = [string]$properties.Project.PropertyGroup.Version
           $plugin = & ./scripts/New-TadaPlugin.ps1 -Package ".artifacts/packages/Tada.Cli.$version.nupkg"
-          pwsh -File scripts/Test-TadaPlugin.ps1 -PluginRoot $plugin.pluginRoot
+          pwsh -File scripts/Test-TadaPlugin.ps1 -PluginRoot $plugin.pluginRoot -Archive $plugin.archive
       - name: Installed-package onboarding and second API
         run: pwsh -File scripts/Test-Onboarding.ps1
       - name: Observed task-only tool environment identity
