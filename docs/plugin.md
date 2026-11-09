@@ -10,7 +10,7 @@ From the source checkout, build the verifier and package the plugin.
 
 ```powershell
 dotnet pack src/Tada.Cli/Tada.Cli.csproj -o .artifacts/packages
-$plugin = & ./scripts/New-TadaPlugin.ps1 -Package .artifacts/packages/Tada.Cli.0.1.0-alpha.10.nupkg
+$plugin = & ./scripts/New-TadaPlugin.ps1 -Package .artifacts/packages/Tada.Cli.0.1.0-alpha.11.nupkg
 pwsh -File scripts/Test-TadaPlugin.ps1 -PluginRoot $plugin.pluginRoot
 ```
 
@@ -44,6 +44,8 @@ While the plugin is enabled, its skill handles discovery and proportionate work 
 Alpha.9 moves activation into the plugin. `tada init` removes recognised generated guidance from alpha.7 and alpha.8 agent entry points. It preserves every byte outside that generated text, including file encoding and BOM. Edited legacy sections produce a reconciliation error so activation can be checked before further work. Tool-manifest changes can require a fresh baseline review under exact-byte integrity checks.
 
 ## Acceptance
+
+Alpha.11's skill uses the generated fixture context and build-only API dependency to support [native MSTest/MTP execution](native-testing.md), including Visual Studio Test Explorer and `dotnet test`. Existing harness files require a reviewable migration and renewed baseline approval when their bytes change.
 
 Enable TADA and make a normal project request in a fresh session. Observe automatic discovery, human-agreed executable acceptance and verified implementation. Then disable TADA through the same host and open another fresh session. Observe that the plugin skill is absent and automatic TADA orchestration has stopped. Re-enable it and recover the project's accepted behaviour and evidence from another ordinary request.
 

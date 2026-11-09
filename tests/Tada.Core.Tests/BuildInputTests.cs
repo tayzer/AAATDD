@@ -7,6 +7,48 @@ namespace Tada.Tests;
 public sealed class BuildInputTests
 {
     [TestMethod]
+    public void NativeBuildEvaluationCannotStandInForRecordedExecution()
+    {
+        using var fixture = new Fixture();
+        var evaluation = System.Text.Json.Nodes.JsonNode.Parse(File.ReadAllText(fixture.Evaluation))!;
+        evaluation["Properties"]!["TadaVerifiedBuild"] = "false";
+        File.WriteAllText(fixture.Evaluation, evaluation.ToJsonString());
+        StringAssert.Contains(Assert.ThrowsExactly<TadaException>(() => fixture.Capture()).Message, "TadaVerifiedBuild=true");
+    }
+
+    [TestMethod]
+    [DataRow("false", "false", "Api.csproj", "sut")]
+    [DataRow("true", "false", "Api.csproj", "reject")]
+    [DataRow("false", "true", "Api.csproj", "reject")]
+    [DataRow("false", "false", "Other.csproj", "reject")]
+    public void OnlyTheConfiguredBuildOnlyApiMayCrossBuildRoles(string referenceOutput, string copyLocal, string target, string expected)
+    {
+        using var fixture = new Fixture();
+        string api = Path.Combine(fixture.Root, "Api.csproj");
+        string evaluation = fixture.File(".tada/reference.json", JsonSerializer.Serialize(new
+        {
+            Items = new { ProjectReference = new[] { new { FullPath = Path.Combine(fixture.Root, target), ReferenceOutputAssembly = referenceOutput, Private = copyLocal, OutputItemType = "TadaSutOutput" } } }
+        }));
+        if (expected == "reject") Assert.ThrowsExactly<TadaException>(() => BuildInputs.ReadDependencies(evaluation, "harness", api));
+        else Assert.AreEqual(new ProjectDependency(api, "sut", true), BuildInputs.ReadDependencies(evaluation, "harness", api).Single());
+    }
+
+    [TestMethod]
+    public void LegacyBuildEvidenceStillUsesItsOriginalPolicy()
+    {
+        using var fixture = new Fixture();
+        var inventory = fixture.Inventory with { Policy = fixture.Inventory.Policy with { BuildInputs = BuildInputs.LegacyPolicy } };
+        string run = Path.GetDirectoryName(fixture.Generated)!;
+        var inputs = fixture.Capture();
+        var reports = new[] { fixture.Evaluation, fixture.Preprocessed, fixture.File(".tada/audit/other.json", "{}"), fixture.File(".tada/audit/other.xml", "<Project/>") }
+            .ToDictionary(path => Path.GetRelativePath(run, path).Replace('\\', '/'), CanonicalJson.FileDigest);
+        string evidence = Path.Combine(run, BuildInputs.FileName);
+        Data.WriteNew(evidence, new BuildInputEvidence(1, BuildInputs.LegacyPolicy, fixture.Sdk,
+            [new ProjectBuildInputs("acceptance/Acceptance.csproj", "harness", inputs, inputs, reports)]));
+        BuildInputs.Verify(run, inventory, CanonicalJson.FileDigest(evidence));
+    }
+
+    [TestMethod]
     public void LinkedSourceOutsideSelectedOracleBlocksBuild()
     {
         using var fixture = new Fixture();
@@ -117,14 +159,43 @@ public sealed class BuildInputTests
         string evidenceFile = Path.Combine(run, BuildInputs.FileName);
         Assert.ThrowsExactly<TadaException>(() => BuildInputs.Verify(run, fixture.Inventory, null));
         var inputs = fixture.Capture();
-        var reports = new[] { fixture.Evaluation, fixture.Preprocessed, fixture.File(".tada/audit/other.json", "{}"), fixture.File(".tada/audit/other.xml", "<Project/>") }
+        var reports = new[] { fixture.Evaluation, fixture.Preprocessed, fixture.File(".tada/audit/other.json", File.ReadAllText(fixture.Evaluation)), fixture.File(".tada/audit/other.xml", "<Project/>") }
             .ToDictionary(path => Path.GetRelativePath(run, path).Replace('\\', '/'), CanonicalJson.FileDigest);
-        Data.WriteNew(evidenceFile, new BuildInputEvidence(1, BuildInputs.Policy, fixture.Sdk,
-            [new ProjectBuildInputs("acceptance/Acceptance.csproj", "harness", inputs, inputs, reports)]));
+        Data.WriteNew(evidenceFile, new BuildInputEvidence(2, BuildInputs.Policy, fixture.Sdk,
+            [new ProjectBuildInputs("acceptance/Acceptance.csproj", "harness", inputs, inputs, reports, [])]));
         string digest = CanonicalJson.FileDigest(evidenceFile);
         BuildInputs.Verify(run, fixture.Inventory, digest);
         File.AppendAllText(fixture.Evaluation, " ");
         Assert.ThrowsExactly<TadaException>(() => BuildInputs.Verify(run, fixture.Inventory, digest));
+    }
+
+    [TestMethod]
+    [DataRow("missing")]
+    [DataRow("changed")]
+    [DataRow("native")]
+    public void OfflineVerificationChecksDependencyMetadataAgainstRawReports(string mutation)
+    {
+        using var fixture = new Fixture();
+        string run = Path.GetDirectoryName(fixture.Generated)!;
+        var inputs = fixture.Capture();
+        if (mutation == "native")
+        {
+            var evaluation = System.Text.Json.Nodes.JsonNode.Parse(File.ReadAllText(fixture.Evaluation))!;
+            evaluation["Properties"]!["TadaVerifiedBuild"] = "false";
+            File.WriteAllText(fixture.Evaluation, evaluation.ToJsonString());
+        }
+        var reports = new[] { fixture.Evaluation, fixture.Preprocessed, fixture.File(".tada/audit/other.json", File.ReadAllText(fixture.Evaluation)), fixture.File(".tada/audit/other.xml", "<Project/>") }
+            .ToDictionary(path => Path.GetRelativePath(run, path).Replace('\\', '/'), CanonicalJson.FileDigest);
+        ProjectDependency[]? dependencies = mutation switch
+        {
+            "missing" => null,
+            "changed" => [new ProjectDependency(Path.Combine(fixture.Root, "Other.csproj"), "sut", true)],
+            _ => []
+        };
+        string evidence = Path.Combine(run, BuildInputs.FileName);
+        Data.WriteNew(evidence, new BuildInputEvidence(2, BuildInputs.Policy, fixture.Sdk,
+            [new ProjectBuildInputs("acceptance/Acceptance.csproj", "harness", inputs, inputs, reports, dependencies)]));
+        Assert.ThrowsExactly<TadaException>(() => BuildInputs.Verify(run, fixture.Inventory, CanonicalJson.FileDigest(evidence)));
     }
 
     [TestMethod]
@@ -192,6 +263,7 @@ public sealed class BuildInputTests
             var properties = new Dictionary<string, string>
             {
                 ["MSBuildProjectFullPath"] = Path.Combine(Root, "acceptance", "Acceptance.csproj"),
+                ["TadaVerifiedBuild"] = "true",
                 ["BaseIntermediateOutputPath"] = intermediate ?? Generated + Path.DirectorySeparatorChar,
                 ["IntermediateOutputPath"] = Generated + Path.DirectorySeparatorChar,
                 ["MSBuildProjectExtensionsPath"] = Generated + Path.DirectorySeparatorChar,

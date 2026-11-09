@@ -6,7 +6,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <Deterministic>true</Deterministic>
-    <Version>0.1.0-alpha.10</Version>
+    <Version>0.1.0-alpha.11</Version>
     <UseSharedCompilation>false</UseSharedCompilation>
   </PropertyGroup>
 </Project>

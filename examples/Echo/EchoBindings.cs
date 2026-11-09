@@ -11,6 +11,7 @@ using Reqnroll;
 [Binding]
 public sealed class EchoBindings
 {
+    private TadaAcceptance? context;
     private Process? api;
     private HttpClient? client;
     private HttpResponseMessage? response;
@@ -20,14 +21,15 @@ public sealed class EchoBindings
     [Given("an isolated echo API")]
     public void Start()
     {
+        context = TadaAcceptance.Create();
         using var listener = new TcpListener(IPAddress.Loopback, 0);
         listener.Start();
         int port = ((IPEndPoint)listener.LocalEndpoint).Port;
         listener.Stop();
         string address = "http://127.0.0.1:" + port;
-        string assembly = Environment.GetEnvironmentVariable("TADA_SUT_ASSEMBLY") ?? throw new InvalidOperationException("Missing built SUT.");
-        string dotnet = Environment.GetEnvironmentVariable("TADA_DOTNET_HOST") ?? Environment.GetEnvironmentVariable("DOTNET_HOST_PATH") ?? "dotnet";
-        var start = new ProcessStartInfo(dotnet) { UseShellExecute = false, CreateNoWindow = true, RedirectStandardOutput = true, RedirectStandardError = true };
+        string assembly = context.SutAssembly;
+        string dotnet = context.DotnetHost;
+        var start = new ProcessStartInfo(dotnet) { UseShellExecute = false, CreateNoWindow = true, RedirectStandardOutput = true, RedirectStandardError = true, WorkingDirectory = context.WorkingDirectory };
         start.ArgumentList.Add(assembly);
         start.ArgumentList.Add("--urls");
         start.ArgumentList.Add(address);

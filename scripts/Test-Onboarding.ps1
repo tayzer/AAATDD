@@ -58,6 +58,9 @@ try {
     [IO.File]::WriteAllText((Join-Path $workspace 'Domain/EchoText.cs'), 'public static class EchoText { public static string Keep(string text) => text; }')
     $apiProject = [IO.File]::ReadAllText((Join-Path $workspace 'Api/Echo.Api.csproj')).Replace('</Project>', '<ItemGroup><ProjectReference Include="../Domain/Echo.Domain.csproj" /></ItemGroup></Project>')
     [IO.File]::WriteAllText((Join-Path $workspace 'Api/Echo.Api.csproj'), $apiProject)
+    $acceptancePath = Join-Path $workspace 'tests/Acceptance/Acceptance.csproj'
+    $acceptanceProject = [IO.File]::ReadAllText($acceptancePath).Replace('</Project>', '<ItemGroup><ProjectReference Include="../../Api/Echo.Api.csproj" ReferenceOutputAssembly="false" Private="false" OutputItemType="TadaSutOutput" /></ItemGroup></Project>')
+    [IO.File]::WriteAllText($acceptancePath, $acceptanceProject)
     $tadaConfig = Get-Content -Raw tada.json | ConvertFrom-Json
     $tadaConfig.execution | Add-Member -NotePropertyName sutProject -NotePropertyValue 'Api/Echo.Api.csproj' -Force
     $tadaConfig.execution | Add-Member -NotePropertyName sutAssembly -NotePropertyValue 'Echo.Api.dll' -Force
@@ -78,6 +81,11 @@ try {
     $run = Tada @('run','--baseline',$baseline,'--dotnet',$Dotnet)
     $verified = Tada @('verify','--run',$run.runId)
     if ($verified.outcome -ne 'PASS' -or $verified.passedCases.Count -ne 2) { throw 'Second project did not establish both cases.' }
+    # Native entry points build the separate API and use the same scenarios without TADA run variables.
+    foreach ($configuration in @('Debug','Release')) {
+        & $Dotnet test --project tests/Acceptance/Acceptance.csproj -c $configuration --no-restore --no-ansi | Out-Host
+        if ($LASTEXITCODE) { throw "Native $configuration acceptance execution failed." }
+    }
     # Behaviour-preserving refactor: extract the response function, keeping the oracle unchanged.
     $refactoredProgram = @'
 var builder = WebApplication.CreateBuilder(args);

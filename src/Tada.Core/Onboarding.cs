@@ -37,6 +37,7 @@ public static class Onboarding
                     <None Update="reqnroll.json" CopyToOutputDirectory="PreserveNewest"/>
                     <ReqnrollFeatureFile Include="../../features/**/*.feature" Link="Features/%(RecursiveDir)%(Filename)%(Extension)"/>
                   </ItemGroup>
+                  <Import Project="Tada.Acceptance.targets" />
                 </Project>
                 """,
             ["tests/Acceptance/reqnroll.json"] = "{\"formatters\":{\"message\":{\"outputFilePath\":\"tada-messages.ndjson\"}}}\n",
@@ -56,6 +57,8 @@ public static class Onboarding
                 }
                 """,
             ["tests/Acceptance/TadaRuntimeCheckpoint.cs"] = RuntimeCheckpoint,
+            ["tests/Acceptance/TadaAcceptance.cs"] = Template("TadaAcceptance.cs.txt"),
+            ["tests/Acceptance/Tada.Acceptance.targets"] = Template("Tada.Acceptance.targets"),
             ["features/README.md"] = "# Business acceptance\n\nWrite human-agreed `.feature` scenarios here. Tag requirements `@REQ_NAME` and ordinary scenarios `@AC_NAME`. TADA deliberately creates no invented business requirements. The tool rejects missing cases rather than treating an empty suite as success.\n"
         };
         var created = new List<string>();
@@ -160,6 +163,14 @@ public static class Onboarding
         <!-- TADA:END -->
         """;
 
+    private static string Template(string name)
+    {
+        using var stream = typeof(Onboarding).Assembly.GetManifestResourceStream("Tada.Templates." + name)
+            ?? throw new InvalidOperationException("Missing acceptance template: " + name);
+        using var reader = new StreamReader(stream);
+        return reader.ReadToEnd();
+    }
+
     public const string RuntimeCheckpoint = """
         using System.Diagnostics;
 
@@ -203,6 +214,10 @@ public static class Onboarding
         3. Build scenario-scoped bindings, setup, public observations and meaningful assertions. Keep the harness independent of application implementation assemblies. Review privileged observations explicitly. Each scenario owns its resources and attempts cleanup after failure.
 
         Keep generated databases, state and logs under the supplied `TADA_RUN_DIRECTORY`, outside immutable build outputs. Static application/harness outputs, including non-code resources, are integrity checked. The configured native Messages file and MTP's reserved `TestResults` diagnostics directory are runtime-evidence exceptions, not locations for expected assertion data.
+
+        Acceptance bindings should use the generated `TadaAcceptance.Create()` context. Its `WorkingDirectory`, `SutAssembly` and `DotnetHost` support both ordinary MSTest/MTP execution and recorded TADA runs. Native invocation creates isolated temporary storage and uses the staged API. Add a build-only API `ProjectReference` with `ReferenceOutputAssembly="false"`, `Private="false"` and `OutputItemType="TadaSutOutput"`; match it to `execution.sutProject`. Import the generated `Tada.Acceptance.targets`. The SDK builds the API dependency, and the target stages its complete runtime output under `sut/` beside the harness. Visual Studio Test Explorer and `dotnet test --project tests/Acceptance/Acceptance.csproj` can then run the same scenarios without a wrapper or manual run variables. Broken or partial TADA run context remains a setup error.
+
+        Native results appear in the normal test runner. Native Messages and scenario logs use an isolated temporary directory printed in test output. Business fixtures own API termination and database cleanup, retaining useful diagnostics. TADA assessment additionally requires the approved baseline, captured execution and `tada verify`.
         4. Run `dotnet restore tests/Acceptance/Acceptance.csproj` to create a dependency lock. Pin and review build inputs before baseline preparation. Configure the harness and optional SUT build project in `tada.json`.
 
         Include linked source, shared project references and custom imports in the appropriate selected oracle or implementation roots. Each project needs its own dependency lock. TADA uses fresh build intermediates and rejects observed inputs outside those selections or the supported installed SDK/pinned-package policy. This local policy trusts reviewed build targets and installed toolchain/cache contents; it is not an execution sandbox.

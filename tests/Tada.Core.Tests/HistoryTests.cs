@@ -182,12 +182,13 @@ public sealed class HistoryTests
             foreach (string name in new[] { "before.json", "before.xml", "after.json", "after.xml" })
             {
                 string report = Path.Combine(directory, name);
-                File.WriteAllText(report, "synthetic history producer control");
+                File.WriteAllText(report, name.EndsWith(".json", StringComparison.Ordinal)
+                    ? "{\"Properties\":{\"TadaVerifiedBuild\":\"true\"},\"Items\":{\"ProjectReference\":[]}}" : "synthetic history producer control");
                 reports.Add(name, CanonicalJson.FileDigest(report));
             }
             string evidence = Path.Combine(directory, BuildInputs.FileName);
-            Data.WriteNew(evidence, new BuildInputEvidence(1, BuildInputs.Policy, "synthetic-sdk",
-                [new ProjectBuildInputs("acceptance/Acceptance.csproj", "harness", inputs, inputs, reports)]));
+            Data.WriteNew(evidence, new BuildInputEvidence(2, BuildInputs.Policy, "synthetic-sdk",
+                [new ProjectBuildInputs("acceptance/Acceptance.csproj", "harness", inputs, inputs, reports, [])]));
             record = record with { BuildInputsDigest = CanonicalJson.FileDigest(evidence) };
             string observer = Path.Combine(directory, RuntimeInputs.ProbePath);
             System.IO.Directory.CreateDirectory(Path.GetDirectoryName(observer)!);

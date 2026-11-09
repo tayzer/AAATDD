@@ -23,6 +23,7 @@ Status: **IMPLEMENTATION AUTHORISED; RELEASE INCOMPLETE**. The active goal super
 - [ ] Validate the complete execution/import/loaded-runtime input boundary against reviewed files or explicit trusted-toolchain policy.
 - [ ] Context survives a new agent session using concise Git-native records with provenance and supersession, recovered from an ordinary continuation request without handoff-reading instructions.
 - [ ] Quickstart reproduces a useful install-to-API workflow, including quality checks and failure recovery.
+- [x] The same acceptance scenarios run through native `dotnet test` in Debug/Release and Visual Studio Test Explorer Run/Debug, with scenario-owned resources and no wrapper or manual TADA run variables.
 - [x] Test path handling, canonicalisation, approval races, process failure, cancellation, timeouts, teardown and evidence integrity.
 - [x] Hosted CI validates the recorded source/package checkpoint; licence and dependency notices match redistributed content. Revalidate the selected publication SHA before release.
 - [x] Document local advisory L1 limitations and actual supported runner/protocol/platform versions.
@@ -39,6 +40,8 @@ Alpha.8 corrects the activation/trial approach: `init` supplies default workflow
 Alpha.9 moves workflow activation to the [TADA plugin](plugin.md). The CLI prepares project scaffolding and migrates recognised generated instructions from earlier alphas. Package/setup checks and native host enable/disable trials are tracked separately.
 
 The requester reported alpha.9 asking for a project folder during installation. Alpha.10 removes its optional installation onboarding hook and defers verifier preparation until ordinary project work requires business verification. The skill uses the active workspace and asks for a folder only when the target is genuinely ambiguous. Packaging checks enforce the absence of the hook. The corrected native installation and uncoached project workflow still need requester acceptance.
+
+Alpha.11 supports native acceptance execution through the generated fixture context and build-only API dependency. The [native execution checkpoint](validation/increment-11.md) records the actual TODO project's 14 passing scenarios in Debug, Release and Visual Studio Test Explorer, including a successful debugger breakpoint in `DeleteAMissingTodo`. New recorded builds retain dependency roles under `evaluated-dotnet-build-v4`; historical v3 evidence remains verifiable. Migrated harnesses require renewed human baseline approval.
 
 Alpha.7 uses schema-6 baselines with `evaluated-dotnet-build-v3`, `msbuild-tasks-and-declared-inputs-v2` and `dotnet-loader-observation-v2`. Implementation source identity and exact per-run artifact identities remain separate; observed task-only tools join environment identity. The [provenance audit](validation/provenance-audit.md) records the corrected gaps and remaining observation limits. [Contracts](build-task-contracts.md) trust reviewed opaque code to honour complete declarations; they do not trace arbitrary I/O or every possible child/helper execution. Complete automatic execution-boundary coverage remains unproven. Alpha.5's ordinary transient-DLL observation and compiler reproducibility evidence remain applicable historical controls.
 

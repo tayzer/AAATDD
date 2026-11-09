@@ -56,7 +56,8 @@ public static class TaskJournal
         }
     }
 
-    public static BuildInput[] Audit(Repository repository, Inventory inventory, Config config, string sdk, string run, TaskReport report)
+    public static BuildInput[] Audit(Repository repository, Inventory inventory, Config config, string sdk, string run, TaskReport report,
+        IEnumerable<ProjectBuildInputs>? builds = null)
     {
         var oracle = inventory.Files.ToDictionary(file => Path.GetFullPath(repository.Resolve(file.Path)), file => file.Digest, StringComparer.OrdinalIgnoreCase);
         var implementation = repository.CapturePaths(config with { OracleRoots = config.ImplementationRoots ?? [] }).ToHashSet(StringComparer.OrdinalIgnoreCase);
@@ -68,12 +69,15 @@ public static class TaskJournal
                 if (File.Exists(assets)) foreach (string directory in BuildInputs.PackageDirectories(repository, project, assets)) packageDirectories.Add(directory);
             }
         var result = new List<BuildInput>();
+        var sutProjects = inventory.Policy.BuildInputs == BuildInputs.Policy
+            ? (builds ?? []).Where(build => build.Role == "sut").Select(build => repository.Resolve(build.Project)).ToHashSet(StringComparer.OrdinalIgnoreCase) : [];
         foreach (var item in Read(report, run))
         {
+            string role = sutProjects.Contains(item.Project) ? "sut" : report.Role;
             if (item.Kind == "task-start")
             {
-                var origin = Capture(item.Origin, "task-origin", null, report.Role);
-                var assembly = Capture(item.Assembly, "task-assembly", item.AssemblyDigest, report.Role);
+                var origin = Capture(item.Origin, "task-origin", null, role);
+                var assembly = Capture(item.Assembly, "task-assembly", item.AssemblyDigest, role);
                 bool toolchain = Trusted(origin) && Trusted(assembly);
                 bool standard = assembly.Category == "sdk" && new[] { "Microsoft.Build.Tasks.Core.dll", "Microsoft.Build.dll", "Microsoft.Build.Tasks.CodeAnalysis.dll" }
                     .Contains(Path.GetFileName(item.Assembly), StringComparer.OrdinalIgnoreCase) && TaskRules.Standard(item.Name);
@@ -84,7 +88,7 @@ public static class TaskJournal
             else if (item.Kind == "task-input" && TaskRules.Reads(item.Name, item.Parameter))
                 foreach (var value in item.Values)
                 {
-                    if (value.Path != null && value.Digest != null) Capture(value.Path, $"task-input:{item.Name}:{item.Parameter}", value.Digest, report.Role);
+                    if (value.Path != null && value.Digest != null) Capture(value.Path, $"task-input:{item.Name}:{item.Parameter}", value.Digest, role);
                     else if (value.Path != null && !BuildInputs.Within(value.Path, Path.Combine(run, "build")))
                         throw new TadaException($"File input {item.Name}.{item.Parameter} has no pre-task identity: {value.Value}");
                 }
@@ -101,6 +105,7 @@ public static class TaskJournal
             else if (packageDirectories.Any(root => BuildInputs.Within(path, root))) category = "locked-package";
             else if (oracle.ContainsKey(path)) category = "oracle";
             else if (role == "sut" && implementation.Contains(repository.Relative(path))) category = "implementation";
+            else if (sutProjects.Contains(path)) category = "sut-reference";
             else throw new TadaException($"Unreviewed {role} task input ({use}): {path}. Select the input roots and obtain approval for a new baseline.");
             string digest = observed ?? CanonicalJson.FileDigest(path);
             if (category == "oracle" && digest != oracle[path]) throw new TadaException($"Reviewed task input changed before consumption: {repository.Relative(path)}");
@@ -210,6 +215,13 @@ public static class TaskJournal
             }
             if (input.Category == "sdk" && !(BuildInputs.Within(path, evidence.SdkDirectory) || BuildInputs.Within(path, Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(evidence.SdkDirectory))!, "packs"))))
                 throw new TadaException("Task input claims an unrelated SDK root.");
+            if (input.Category == "sut-reference")
+            {
+                var builds = Data.Read<BuildInputEvidence>(new Repository(run).Resolve(BuildInputs.FileName));
+                if (builds.Policy != BuildInputs.Policy || !builds.Projects.Where(build => build.Role == "sut").SelectMany(build => build.After)
+                    .Any(captured => captured.Path == path && captured.Digest == input.Digest && captured.Uses.Contains("project")))
+                    throw new TadaException("Task SUT reference has no matching captured application project.");
+            }
             return input;
         }
     }

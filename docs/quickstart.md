@@ -25,7 +25,7 @@ cd MyApi
 dotnet new tool-manifest
 $feedPath = [Security.SecurityElement]::Escape("$tadaSource/.artifacts/packages")
 "<configuration><packageSources><clear/><add key='local' value='$feedPath'/></packageSources></configuration>" | Set-Content NuGet.Local.Config
-dotnet tool install Tada.Cli --version 0.1.0-alpha.10 --configfile NuGet.Local.Config
+dotnet tool install Tada.Cli --version 0.1.0-alpha.11 --configfile NuGet.Local.Config
 dotnet tool run tada --version
 dotnet tool run tada init
 ```
@@ -53,6 +53,8 @@ Use your own project and wording. Do not supply TADA instructions, Gherkin mecha
 The host discovers the enabled plugin's skill for ordinary software requests. Its plugin controls also provide the disabled state for the acceptance trial. Other coding agents can use the CLI through their own workflow integrations. Actual fresh-session adoption remains an experience gate. [Official plugin documentation](https://developers.openai.com/plugins/build/plugins)
 
 The core requires no model API or agent SDK. Gherkin is business authority; context Markdown indexes it and records reasoning without duplicating the functional specification.
+
+Use the generated `TadaAcceptance.Create()` fixture context and build-only API reference so the same scenarios run in Visual Studio Test Explorer and through `dotnet test --project tests/Acceptance/Acceptance.csproj`. The [native testing guide](native-testing.md) covers configuration, debugging, isolated storage and migration. Recorded TADA runs supply their own captured execution context. Alpha.11 records build-only dependencies under `evaluated-dotnet-build-v4`, while retaining verification of historical v3 evidence.
 
 Implement meaningful bindings with scenario-owned setup and cleanup. Observe public application outcomes; privileged observation needs its applicable scoped agreement. Do not share application business-rule assemblies with assertions. In `tada.json`:
 

@@ -1,0 +1,28 @@
+<Project>
+  <!-- The reference remains present during every restore, preserving one locked graph.
+       Recorded TADA runs build and capture the API separately and supply its actual path. -->
+  <Target Name="TadaStageNativeSut" AfterTargets="Build"
+          Condition="'$(TadaVerifiedBuild)' != 'true' and '$(DesignTimeBuild)' != 'true'">
+    <ItemGroup>
+      <_TadaSutReference Include="@(ProjectReference)" Condition="'%(ProjectReference.OutputItemType)' == 'TadaSutOutput'" />
+    </ItemGroup>
+    <Error Condition="'@(_TadaSutReference->Count())' &gt; '1'" Text="Native acceptance supports one build-only API reference." />
+    <Error Condition="'@(_TadaSutReference)' != '' and '%(_TadaSutReference.ReferenceOutputAssembly)' != 'false'"
+           Text="The API reference must use ReferenceOutputAssembly=false to keep business assemblies out of acceptance assertions." />
+    <Error Condition="'@(_TadaSutReference)' != '' and '%(_TadaSutReference.Private)' != 'false'"
+           Text="The API reference must use Private=false because Tada.Acceptance.targets stages its complete runtime output separately." />
+    <Error Condition="'@(_TadaSutReference)' != '' and '@(TadaSutOutput->Count())' != '1'"
+           Text="The build-only API reference did not produce exactly one target assembly. Build project dependencies before running acceptance tests." />
+    <Delete Files="$(TargetDir)tada-sut.txt" />
+    <RemoveDir Directories="$(TargetDir)sut" />
+    <PropertyGroup>
+      <_TadaSutDirectory>@(TadaSutOutput->'%(RootDir)%(Directory)')</_TadaSutDirectory>
+    </PropertyGroup>
+    <ItemGroup Condition="'@(TadaSutOutput)' != ''">
+      <_TadaSutFiles Include="$(_TadaSutDirectory)**/*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_TadaSutFiles)" DestinationFiles="@(_TadaSutFiles->'$(TargetDir)sut/%(RecursiveDir)%(Filename)%(Extension)')" />
+    <WriteLinesToFile Condition="'@(TadaSutOutput)' != ''" File="$(TargetDir)tada-sut.txt"
+                      Lines="@(TadaSutOutput->'sut/%(Filename)%(Extension)')" Overwrite="true" Encoding="UTF-8" />
+  </Target>
+</Project>

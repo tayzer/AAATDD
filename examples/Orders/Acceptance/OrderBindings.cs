@@ -34,8 +34,8 @@ public sealed class OrderBindings
     [Given("product {string} has {int} units available")]
     public void Product(string sku, int stock)
     {
-        string run = Environment.GetEnvironmentVariable("TADA_RUN_DIRECTORY") ?? throw new InvalidOperationException("Run directory required.");
-        database = Path.Combine(run, "orders-" + Guid.NewGuid().ToString("N") + ".sqlite");
+        var context = TadaAcceptance.Create();
+        database = Path.Combine(context.WorkingDirectory, "orders.sqlite");
         using (var connection = Open(database, SqliteOpenMode.ReadWriteCreate))
         {
             using var command = connection.CreateCommand();
@@ -49,9 +49,9 @@ public sealed class OrderBindings
         int port = ((IPEndPoint)listener.LocalEndpoint).Port;
         listener.Stop();
         string address = "http://127.0.0.1:" + port;
-        string assembly = Environment.GetEnvironmentVariable("TADA_SUT_ASSEMBLY") ?? throw new InvalidOperationException("SUT assembly required.");
-        string dotnet = Environment.GetEnvironmentVariable("TADA_DOTNET_HOST") ?? Environment.GetEnvironmentVariable("DOTNET_HOST_PATH") ?? "dotnet";
-        var start = new ProcessStartInfo(dotnet) { UseShellExecute = false, CreateNoWindow = true, RedirectStandardOutput = true, RedirectStandardError = true };
+        string assembly = context.SutAssembly;
+        string dotnet = context.DotnetHost;
+        var start = new ProcessStartInfo(dotnet) { UseShellExecute = false, CreateNoWindow = true, RedirectStandardOutput = true, RedirectStandardError = true, WorkingDirectory = context.WorkingDirectory };
         start.ArgumentList.Add(assembly);
         start.ArgumentList.Add("--urls");
         start.ArgumentList.Add(address);

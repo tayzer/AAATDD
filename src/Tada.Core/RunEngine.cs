@@ -34,7 +34,7 @@ public sealed class RunEngine(BaselineStore store, string dotnet = "dotnet")
         try
         {
             inventory = store.Read(baseline);
-            if (inventory.SchemaVersion != 6 || inventory.Policy.BuildInputs != BuildInputs.Policy || inventory.Policy.RuntimeInputs != RuntimeInputs.Policy || inventory.Policy.BuildTasks != TaskJournal.Policy)
+            if (inventory.SchemaVersion != 6 || !BuildInputs.Supported(inventory.Policy.BuildInputs) || inventory.Policy.RuntimeInputs != RuntimeInputs.Policy || inventory.Policy.BuildTasks != TaskJournal.Policy)
                 throw new TadaException("Baseline predates the evaluated-build-input policy. Prepare, review and approve a new revision.");
             if (!OperatingSystem.IsWindows() || System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture != System.Runtime.InteropServices.Architecture.X64)
                 throw new TadaException("This development profile supports Windows x64 only.");
@@ -67,13 +67,13 @@ public sealed class RunEngine(BaselineStore store, string dotnet = "dotnet")
                 await Build(execution.SutProject, "sut");
             }
             await Build(execution.Project, "harness");
-            var taskInputs = taskReports.SelectMany(report => TaskJournal.Audit(store.Repository, inventory, config, sdk, run, report)).ToArray();
+            var taskInputs = taskReports.SelectMany(report => TaskJournal.Audit(store.Repository, inventory, config, sdk, run, report, builds)).ToArray();
             string taskFile = Path.Combine(run, TaskJournal.FileName);
             Data.WriteNew(taskFile, new TaskInputEvidence(1, TaskJournal.Policy, store.Repository.Root, sdk, taskReports.ToArray(), taskInputs));
             taskInputsDigest = CanonicalJson.FileDigest(taskFile);
             BuildInputs.CheckCurrent(taskInputs.Where(input => input.Category != "generated"));
             string buildInputsFile = Path.Combine(run, BuildInputs.FileName);
-            Data.WriteNew(buildInputsFile, new BuildInputEvidence(1, BuildInputs.Policy, sdk, builds.ToArray()));
+            Data.WriteNew(buildInputsFile, new BuildInputEvidence(inventory.Policy.BuildInputs == BuildInputs.Policy ? 2 : 1, inventory.Policy.BuildInputs!, sdk, builds.ToArray()));
             buildInputsDigest = CanonicalJson.FileDigest(buildInputsFile);
             BuildInputs.Verify(run, inventory, buildInputsDigest);
             BuildInputs.CheckCurrent(builds.SelectMany(build => build.After));
@@ -174,6 +174,7 @@ public sealed class RunEngine(BaselineStore store, string dotnet = "dotnet")
             string output = Path.Combine(run, subdirectory);
             Directory.CreateDirectory(generated);
             string[] properties = ["-p:UseArtifactsOutput=true", "-p:ArtifactsPath=" + generated, "-p:Configuration=Release",
+                "-p:TadaVerifiedBuild=true",
                 "-p:OutputPath=" + output + Path.DirectorySeparatorChar, "-p:UseSharedCompilation=false",
                 "-p:PathMap=" + run + "=/_tada_run"];
             var restore = await TaskCommand(["restore", project, "--locked-mode", "--configfile", "NuGet.Config", "-p:NuGetAudit=false", "--disable-build-servers", "-m:1", "-noAutoResponse", .. properties], subdirectory, "restore");
@@ -196,18 +197,32 @@ public sealed class RunEngine(BaselineStore store, string dotnet = "dotnet")
                 await Msbuild(["-preprocess:" + beforeXml]);
                 var config = Data.Read<Config>(store.Repository.Resolve("tada.json"));
                 var before = BuildInputs.Capture(store.Repository, inventory!, config, sdk, generated, output, subdirectory, selected, beforeJson, beforeXml);
+                ProjectDependency[]? dependencies = inventory!.Policy.BuildInputs == BuildInputs.Policy
+                    ? BuildInputs.ReadDependencies(beforeJson, subdirectory, config.Execution.SutProject == null ? null : store.Repository.Resolve(config.Execution.SutProject)) : null;
                 using (var evaluation = JsonDocument.Parse(File.ReadAllBytes(beforeJson)))
                     foreach (var reference in evaluation.RootElement.GetProperty("Items").GetProperty("ProjectReference").EnumerateArray())
-                        await BuildProject(store.Repository.Relative(reference.GetProperty("FullPath").GetString()!));
+                    {
+                        string path = reference.GetProperty("FullPath").GetString()!;
+                        if (dependencies?.Any(item => item.BuildOnlySut && string.Equals(item.Path, path, StringComparison.OrdinalIgnoreCase)) == true)
+                        {
+                            if (!builds.Any(build => build.Role == "sut" && build.Project == store.Repository.Relative(path)))
+                                throw new TadaException("Build-only API dependency has no prior captured SUT build.");
+                            continue;
+                        }
+                        await BuildProject(store.Repository.Relative(path));
+                    }
                 // Each project is rebuilt once, in dependency order, with its own fresh SDK obj directory.
                 await Msbuild(["-t:Rebuild", "-p:BuildProjectReferences=false", "-getItem:" + BuildInputs.Items,
                     "-getProperty:" + BuildInputs.Properties, "-getResultOutputFile:" + afterJson]);
                 await Msbuild(["-preprocess:" + afterXml]);
                 var after = BuildInputs.Capture(store.Repository, inventory!, config, sdk, generated, output, subdirectory, selected, afterJson, afterXml);
                 BuildInputs.CheckStable(before, after);
+                if (dependencies != null && !BuildInputs.ReadDependencies(afterJson, subdirectory,
+                    config.Execution.SutProject == null ? null : store.Repository.Resolve(config.Execution.SutProject)).SequenceEqual(dependencies))
+                    throw new TadaException("Project reference metadata changed during build.");
                 var reports = new[] { beforeJson, beforeXml, afterJson, afterXml }.ToDictionary(
                     path => Path.GetRelativePath(run, path).Replace('\\', '/'), CanonicalJson.FileDigest);
-                builds.Add(new ProjectBuildInputs(selected, subdirectory, before, after, reports));
+                builds.Add(new ProjectBuildInputs(selected, subdirectory, before, after, reports, dependencies));
                 visiting.Remove(full);
                 finished.Add(full);
 
