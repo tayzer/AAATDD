@@ -17,8 +17,8 @@ The main-branch protection configuration requires an up-to-date PR with the GitH
 Apply the reviewed configuration using an authenticated repository administrator, then read back the resulting policy.
 
 ```powershell
-gh api --method PUT repos/tayzer/AAATDD/branches/main/protection --input .github/main-branch-protection.json
-gh api repos/tayzer/AAATDD/branches/main/protection
+gh api --method PUT repos/tayzer/TADA/branches/main/protection --input .github/main-branch-protection.json
+gh api repos/tayzer/TADA/branches/main/protection
 ```
 
 Repository administrators can change this configuration. Review workflow and policy changes as executable infrastructure. The source CI trusts the required human review of those changes, and its automated fixture approvals remain isolated controls. The independent business-approval adapter for application repositories remains proposed below.
