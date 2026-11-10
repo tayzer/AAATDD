@@ -2,6 +2,34 @@
 
 The existing CLI can run an explicitly selected approved baseline in Windows CI and verify its retained evidence. TADA's own source PR already exercises package installation, Orders and Echo scenarios, failure controls and evidence verification. Application repositories need their own workflow, baseline selection and approval policy. The trusted approval integration described below is proposed work.
 
+## TADA source repository
+
+The `PR validation` workflow in `.github/workflows/ci.yml` validates pull requests targeting `main`, pushes to `main`, merge-group candidates and manual dispatches. Pull requests use GitHub's proposed merge checkout. There are no path filters or draft exclusions. A newer run for the same ref cancels the older run.
+
+`Windows validation` uses Windows Server 2025, the pinned .NET SDK 10.0.403 and locked dependency restores. It builds and runs focused/replay tests, packages the CLI and plugin, executes Orders business/integrity controls, installs the package into a fresh cache for the second API, checks task-only environment identity and installs the download bundle. Actions are pinned to commit SHAs, checkout credentials are removed and the workflow token has read-only repository contents permission. Validation does not need repository secrets.
+
+The stable required check is `PR checks`. It runs after Windows validation even when that job fails or is skipped, and succeeds only when Windows validation succeeds. Keep its name in sync with `.github/main-branch-protection.json`. Add future mandatory jobs to its dependencies and result checks before relying on them as merge gates.
+
+Every attempt retains its available packages and evidence for 14 days, including failed attempts. The CI identity artifact and job summary record the repository, event, tested commit, PR head/base commits, run ID and attempt. Download evidence before expiry when longer retention is required.
+
+The main-branch protection configuration requires an up-to-date PR with the GitHub Actions `PR checks` result and resolved conversations. Administrators follow this policy. Force pushes and branch deletion are blocked.
+
+The separate `Main code-owner review` ruleset requires one approving code-owner review for other contributors. New commits dismiss stale approvals, and someone other than the latest reviewable pusher must approve the latest push. Repository administrators may bypass this review ruleset when merging a PR. The separate branch protection continues to enforce the PR, CI and conversation requirements for administrators.
+
+`.github/CODEOWNERS` names `@tayzer` as the repository-wide code owner. At setup, `tayzer` is the sole repository administrator. GitHub prevents authors from approving their own PRs, so owner self-service merging uses the review-only administrator bypass. GitHub's ruleset bypass follows the administrator role. Adding names to CODEOWNERS does not grant that bypass, and adding administrators extends it.
+
+Apply the reviewed configuration using an authenticated repository administrator, then read back the resulting policy.
+
+```powershell
+gh api --method PUT repos/tayzer/TADA/branches/main/protection --input .github/main-branch-protection.json
+gh api repos/tayzer/TADA/branches/main/protection
+# Create the review ruleset once. For updates, use PUT with its returned ID.
+gh api --method POST repos/tayzer/TADA/rulesets --input .github/main-review-ruleset.json
+gh api repos/tayzer/TADA/rulesets
+```
+
+Repository administrators can change this configuration. Review workflow and policy changes as executable infrastructure. The source CI trusts code-owner review or the owner's review bypass for those changes, and its automated fixture approvals remain isolated controls. The independent business-approval adapter for application repositories remains proposed below.
+
 ## Pull request execution
 
 Run on the proposed merge of the PR head and current target branch. Pin .NET SDK 10.0.403 and a trusted TADA package version. Obtain the verifier and required workflow from repository-controlled sources so PR changes to a wrapper, tool manifest or workflow cannot substitute a successful result for verification.

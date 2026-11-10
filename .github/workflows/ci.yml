@@ -1,28 +1,55 @@
-name: Release validation
+name: PR validation
 on:
   push:
+    branches: [main]
   pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review, edited]
+  merge_group:
+    types: [checks_requested]
+  workflow_dispatch:
 permissions:
   contents: read
+defaults:
+  run:
+    shell: pwsh
 concurrency:
   group: tada-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   windows:
-    runs-on: windows-latest
-    timeout-minutes: 20
+    name: Windows validation
+    runs-on: windows-2025
+    timeout-minutes: 30
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: '1'
       DOTNET_GENERATE_ASPNET_CERTIFICATE: 'false'
       DOTNET_ADD_GLOBAL_TOOLS_TO_PATH: 'false'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
-      - uses: actions/setup-dotnet@v4
+      - name: Record validation identity
+        env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          New-Item -ItemType Directory -Path .artifacts -Force | Out-Null
+          $identity = [ordered]@{
+            repository = $env:GITHUB_REPOSITORY
+            event = $env:GITHUB_EVENT_NAME
+            commit = $env:GITHUB_SHA
+            prHead = $env:PR_HEAD_SHA
+            prBase = $env:PR_BASE_SHA
+            run = $env:GITHUB_RUN_ID
+            attempt = $env:GITHUB_RUN_ATTEMPT
+          }
+          $identity | ConvertTo-Json | Set-Content .artifacts/ci-identity.json
+          $identity.GetEnumerator() | ForEach-Object { "- $($_.Key) = $($_.Value)" } | Add-Content $env:GITHUB_STEP_SUMMARY
+      - uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
         with:
           dotnet-version: 10.0.403
-      - uses: actions/cache@v4
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: .artifacts/native-toolchain
           key: zig-windows-x64-0.15.2-3a0ed1e8799a2f8ce2a6e6290a9ff22e6906f8227865911fb7ddedc3cc14cb0c
@@ -64,13 +91,14 @@ jobs:
           pwsh -File scripts/Test-ReleaseBundle.ps1 -Archive $bundle.archive
       - name: Retain package and validation evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: windows-validation-${{ github.sha }}
           if-no-files-found: error
           include-hidden-files: true
           retention-days: 14
           path: |
+            .artifacts/ci-identity.json
             .artifacts/packages/*.nupkg
             .artifacts/core-tests.log
             .artifacts/release-bundles/**/*.zip
@@ -86,3 +114,17 @@ jobs:
             .artifacts/orders-workflow/*/.tada/**
             .artifacts/onboarding/*/.tada/**
             !.artifacts/**/.tada/scratch/**
+  required:
+    name: PR checks
+    if: always()
+    needs: [windows]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - name: Require successful validation
+        env:
+          WINDOWS_RESULT: ${{ needs.windows.result }}
+        run: |
+          if ($env:WINDOWS_RESULT -ne 'success') {
+            throw "Windows validation ended with $env:WINDOWS_RESULT."
+          }
