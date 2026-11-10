@@ -1,5 +1,7 @@
 # First release checklist
 
+The next development increment is alpha.13, described in [change-aware multi-level verification](multi-level-verification.md). It adds optional verification plans, supporting MSTest evidence and named local services. Its source/package controls and requester acceptance are separate from the published alpha.12 record below.
+
 Status is **PUBLIC ALPHA RELEASED; DOWNLOAD AND INSTALLATION VERIFIED**. Version `0.1.0-alpha.12` was published on 2026-11-09 at 21:57 UTC. The active goal supersedes the earlier design-only workflow under [ADR 0041](decisions/0041-authorise-autonomous-release-implementation.md). The [release page](https://github.com/tayzer/AAATDD/releases/tag/v0.1.0-alpha.12) contains the approved assets and manifest.
 
 ## User experience and evidence
