@@ -39,7 +39,7 @@ public static class TaskJournal
 
     public static void CheckEvaluation(Repository repository, Config config, IEnumerable<string> paths)
     {
-        string[] pure = ["System.String", "System.Math", "System.MathF", "System.Version", "System.Convert", "System.Guid", "System.DateTime", "System.DateTimeOffset",
+        string[] pure = ["System.String", "System.Text.RegularExpressions.Regex", "System.Math", "System.MathF", "System.Version", "System.Convert", "System.Guid", "System.DateTime", "System.DateTimeOffset",
             "System.TimeSpan", "System.Int32", "System.Int64", "System.UInt32", "System.UInt64", "System.Boolean", "System.Char", "System.IO.Path", "System.Environment"];
         string[] pureMsbuild = ["EnsureTrailingSlash", "NormalizePath", "NormalizeDirectory", "MakeRelative", "Escape", "Unescape", "ValueOrDefault", "IsOSPlatform", "IsOsUnixLike",
             "GetTargetFrameworkIdentifier", "GetTargetFrameworkVersion", "GetTargetPlatformIdentifier", "GetTargetPlatformVersion", "VersionEquals", "VersionNotEquals", "VersionGreaterThan", "VersionGreaterThanOrEquals", "VersionLessThan", "VersionLessThanOrEquals"];
@@ -63,10 +63,12 @@ public static class TaskJournal
         var implementation = repository.CapturePaths(config with { OracleRoots = config.ImplementationRoots ?? [] }).ToHashSet(StringComparer.OrdinalIgnoreCase);
         var packageDirectories = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         foreach (string role in new[] { "harness", "sut" })
+            if (Directory.Exists(Path.Combine(run, "build", role)))
             foreach (string project in inventory.Files.Select(file => file.Path).Concat(implementation).Where(path => path.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase)).Distinct())
             {
-                string assets = Path.Combine(run, "build", role, "obj", Path.GetFileNameWithoutExtension(project), "project.assets.json");
-                if (File.Exists(assets)) foreach (string directory in BuildInputs.PackageDirectories(repository, project, assets)) packageDirectories.Add(directory);
+                foreach (string assets in Directory.EnumerateFiles(Path.Combine(run, "build", role), "project.assets.json", SearchOption.AllDirectories)
+                    .Where(path => Path.GetFileName(Path.GetDirectoryName(path)) == Path.GetFileNameWithoutExtension(project)))
+                    foreach (string directory in BuildInputs.PackageDirectories(repository, project, assets)) packageDirectories.Add(directory);
             }
         var result = new List<BuildInput>();
         var sutProjects = inventory.Policy.BuildInputs == BuildInputs.Policy
@@ -104,7 +106,7 @@ public static class TaskJournal
             else if (BuildInputs.Within(path, sdk) || BuildInputs.Within(path, Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(sdk))!, "packs"))) category = "sdk";
             else if (packageDirectories.Any(root => BuildInputs.Within(path, root))) category = "locked-package";
             else if (oracle.ContainsKey(path)) category = "oracle";
-            else if (role == "sut" && implementation.Contains(repository.Relative(path))) category = "implementation";
+            else if ((role == "sut" || inventory.Engineering != null) && implementation.Contains(repository.Relative(path))) category = "implementation";
             else if (sutProjects.Contains(path)) category = "sut-reference";
             else throw new TadaException($"Unreviewed {role} task input ({use}): {path}. Select the input roots and obtain approval for a new baseline.");
             string digest = observed ?? CanonicalJson.FileDigest(path);

@@ -27,7 +27,7 @@ cd MyApi
 dotnet new tool-manifest
 $feedPath = [Security.SecurityElement]::Escape("$tadaSource/.artifacts/packages")
 "<configuration><packageSources><clear/><add key='local' value='$feedPath'/></packageSources></configuration>" | Set-Content NuGet.Local.Config
-dotnet tool install Tada.Cli --version 0.1.0-alpha.12 --configfile NuGet.Local.Config
+dotnet tool install Tada.Cli --version 0.1.0-alpha.13 --configfile NuGet.Local.Config
 dotnet tool run tada --version
 dotnet tool run tada init
 ```
@@ -43,6 +43,8 @@ The CLI records its .NET host in newly generated context so the plugin can reuse
 New projects preserve file bytes through Git checkouts with `* -text`; `.tada/.gitattributes` independently protects captured records. Existing root attributes are not overwritten. Review equivalent rules for your oracle paths if adopting TADA in an existing repository. Exact-byte checks intentionally reject approval carry-forward after actual file changes.
 
 ## Work with Codex or another agent
+
+Alpha.13 selects verification levels during discovery and supports [coordinated checks and several local services](multi-level-verification.md). Existing single-baseline commands remain available. Chores and refactors retain proportionate existing checks and can justify no new tests.
 
 Enable the installed TADA plugin, start a fresh Codex chat in the application directory and ask for the project normally.
 

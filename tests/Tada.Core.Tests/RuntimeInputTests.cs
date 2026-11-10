@@ -8,6 +8,22 @@ namespace Tada.Tests;
 public sealed class RuntimeInputTests
 {
     [TestMethod]
+    public void EveryNamedServiceNeedsItsOwnRuntimeObservation()
+    {
+        using var fixture = new HistoryTests.HistoryFixture();
+        string id = fixture.Run(0);
+        string run = fixture.Directory(id);
+        var record = Data.Read<RunRecord>(Path.Combine(run, "run.json"));
+        var inventory = Data.Read<Inventory>(Path.GetFullPath(Path.Combine(run, "..", "..", "baselines", fixture.Baseline[7..] + ".json")));
+        inventory = inventory with
+        {
+            SchemaVersion = 7,
+            Execution = inventory.Execution with { Services = [new Service("orders", "Orders.csproj", "Orders.dll"), new Service("payments", "Payments.csproj", "Payments.dll")] }
+        };
+        StringAssert.Contains(Assert.ThrowsExactly<TadaException>(() => RuntimeInputs.Verify(run, inventory, record)).Message, "every required service");
+    }
+
+    [TestMethod]
     public void MissingFinalRuntimeSnapshotCannotPassEvenWithConsistentHashes()
     {
         using var fixture = new HistoryTests.HistoryFixture();

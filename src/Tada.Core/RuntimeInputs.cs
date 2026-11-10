@@ -67,7 +67,7 @@ public static class RuntimeInputs
 
     public static LoadedInput[] Verify(string run, Inventory inventory, RunRecord record, bool checkCurrent = false)
     {
-        if (inventory.SchemaVersion != 6 || inventory.Policy.RuntimeInputs != Policy)
+        if (inventory.SchemaVersion is not (6 or 7) || inventory.Policy.RuntimeInputs != Policy)
             throw new TadaException("Baseline has no supported runtime-observation policy. Prepare, review and approve a new revision.");
         var repository = new Repository(run);
         string evidenceFile = repository.Resolve(FileName);
@@ -87,10 +87,12 @@ public static class RuntimeInputs
         if (!actualReports.SequenceEqual(evidence.Reports.Keys.Order(StringComparer.Ordinal)))
             throw new TadaException("Runtime observation report set changed.");
         string harness = Path.GetFullPath(Path.Combine(run, "harness", inventory.Execution.Assembly));
-        string? sut = inventory.Execution.SutAssembly == null ? null : Path.GetFullPath(Path.Combine(run, "sut", inventory.Execution.SutAssembly));
+        var services = inventory.Execution.Applications().Select(service => Path.GetFullPath(Path.Combine(run, inventory.Execution.Output(service), service.Assembly)))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var observedServices = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var result = new List<LoadedInput>();
         var pids = new HashSet<int>();
-        bool sawHarness = false, sawSut = sut == null;
+        bool sawHarness = false;
         foreach (var report in evidence.Reports)
         {
             string path = repository.Resolve(report.Key);
@@ -114,7 +116,7 @@ public static class RuntimeInputs
                         throw new TadaException("Runtime process has no unique supported startup record.");
                     first = item;
                     if (Same(item.Path, harness)) sawHarness = true;
-                    else if (sut != null && Same(item.Path, sut)) sawSut = true;
+                    else if (services.Contains(item.Path)) observedServices.Add(item.Path);
                     else throw new TadaException($"Unconfigured managed child process: {item.Path}");
                 }
                 else if (item.ProcessId != first.ProcessId || item.ProcessStartedTicks != first.ProcessStartedTicks ||
@@ -159,7 +161,7 @@ public static class RuntimeInputs
                 (Same(first.Path, harness) && last.Kind != "exit"))
                 throw new TadaException("Runtime observation lacks entry/observer identities or a complete final snapshot. Checkpoint owned APIs before termination.");
         }
-        if (!sawHarness || !sawSut) throw new TadaException("Runtime observation does not cover the configured harness and SUT.");
+        if (!sawHarness || !services.SetEquals(observedServices)) throw new TadaException("Runtime observation does not cover the configured harness and every required service.");
         if (checkCurrent)
             foreach (var platform in evidence.PlatformInputs)
             {
@@ -175,7 +177,7 @@ public static class RuntimeInputs
                 string relative = Path.GetRelativePath(directory, item.Path).Replace('\\', '/');
                 if (!artifacts.TryGetValue(relative, out string? expected) || expected != item.Digest)
                     throw new TadaException($"Loaded module was not captured in build outputs: {relative}");
-                if (Same(process.Path, harness) && relative.StartsWith("sut/", StringComparison.OrdinalIgnoreCase))
+                if (inventory.Engineering == null && Same(process.Path, harness) && relative.StartsWith("sut/", StringComparison.OrdinalIgnoreCase))
                     throw new TadaException("Acceptance harness loaded an implementation assembly into its own process.");
                 if (!Same(process.Path, harness) && relative.StartsWith("harness/", StringComparison.OrdinalIgnoreCase))
                     throw new TadaException("SUT loaded an acceptance harness assembly into its own process.");

@@ -11,11 +11,15 @@ Read relevant `.tada/context.md`, authoritative features and current verificatio
 
 ## Choose proportionate work
 
+During initial discovery, classify the actual effects as `feat`, `fix`, `refactor`, `chore` or a mixture. Branch names are hints. Record the objective, affected services/interfaces/storage/journeys, adequate existing coverage, coverage gaps, selected checks and reasons for omitted levels before implementation. Select unit, service, producer/consumer contract and end-to-end journey checks according to impact and risk. Each level answers its own questions. Do not require every level for every change or waive obligations through a label.
+
 For a new project or feature, discover intended behaviour with the user. Agree observable success and failure examples and express them in Gherkin before implementing business behaviour. Resolve consequential ambiguities with the user. Routine engineering choices are delegated within the request.
 
 For a bug fix, reuse adequate agreed scenarios or agree the missing expectation. Demonstrate the intended failing assertion, repair the implementation and verify existing obligations.
 
 For a chore or behaviour-preserving refactor, use proportionate existing regression, build, format or fitness checks. New business scenarios belong to changes in agreed behaviour.
+
+For refactors, establish passing preservation checks before restructuring and add characterisation tests when coverage is inadequate. For chores, no new tests or no test execution can be justified by the actual effects. Record the evaluation and rationale. Use existing tools directly when coordinated execution adds no value. Human approval governs business intent and executable acceptance. Routine supporting engineering-test selection and implementation are delegated.
 
 ## Prepare the verifier when needed
 
@@ -36,6 +40,10 @@ Read `.tada/WORKFLOW.md` for runner setup, supported input contracts, execution 
 Make the harness runnable through Visual Studio Test Explorer and `dotnet test --project tests/Acceptance/Acceptance.csproj`. Use the generated `TadaAcceptance.Create()` context for its working directory, API assembly and .NET host. Add a build-only API `ProjectReference` with `ReferenceOutputAssembly="false"`, `Private="false"` and `OutputItemType="TadaSutOutput"`, and import `Tada.Acceptance.targets`. Match that reference to `execution.sutProject` in `tada.json`. Native builds stage the complete separate API under the test output's `sut` directory. Keep the same business bindings for both execution modes. Check native Debug and Release execution as well as recorded TADA execution. Native results are ordinary runner results. TADA assessment additionally requires approved baseline and retained-evidence verification.
 
 Prepare and review the immutable baseline with `tada baseline prepare` and `tada baseline review`. Present the captured expectations, assertions, fixture setup and relevant trust declarations to the human. The human declares approval. An agent may prepare the approval command but must never grant business approval on the human's behalf.
+
+For several owned local .NET services, use schema-2 `execution.services` with a unique ID, project and assembly for each service. Match each native build-only reference with `TadaServiceId`. Fixtures use `TadaAcceptance.Create().Services[id]`, own service readiness and isolated state, and checkpoint every service before termination. Agree business deadlines explicitly and distinguish failed outcomes from unavailable observations.
+
+When coordinated execution is useful, capture `.tada/verification-plan.json` using `tada plan prepare --file .tada/verification-plan.json`, then use `tada run --plan <digest>` and `tada verify --run <id>`. Acceptance checks reference human-approved baselines. Supporting MSTest/MTP checks capture their engineering configuration and required unique native discovery names, with TRX reporting enabled. Contract checks exercise both the real producer and consumer against captured contract expectations. Plan preparation never approves acceptance. Revisions identify `previous` and explain `changeReason`. An empty justified selection reports NO_CHECKS and makes no passing-test claim. Read the project workflow for the plan contract.
 
 Use the selected SDK host for tool/build commands and pass it through `--dotnet` to `tada run` when required. Observe meaningful behavioural RED for missing behaviour and GREEN after small implementation changes. Already-satisfied behaviour can pass directly. Broken setup or missing evidence is INDETERMINATE. Preserve approved oracle bytes and failure history throughout implementation.
 

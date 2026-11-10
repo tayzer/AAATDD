@@ -18,6 +18,8 @@ Install the [TADA plugin](docs/plugin.md) and use the host's normal plugin contr
 
 ## Design documents
 
+Alpha.13 adds [change-aware multi-level verification](docs/multi-level-verification.md), optional captured plans, supporting MSTest/MTP evidence and several owned local .NET services. Discovery selects unit, service, contract and journey checks according to actual change effects. Human business approval remains separate from delegated engineering checks. The isolated multi-service controls retain requester acceptance as pending.
+
 - [Project charter](docs/vision.md)
 - [Comparative research](docs/research/initial-landscape.md)
 - [Proposed AI change lifecycle](docs/architecture/change-lifecycle.md)

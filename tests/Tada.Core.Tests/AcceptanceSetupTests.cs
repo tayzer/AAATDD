@@ -6,6 +6,22 @@ namespace Tada.Tests;
 public sealed class AcceptanceSetupTests
 {
     [TestMethod]
+    public void NativeNamedServiceMetadataSupportsOneService()
+    {
+        using var fixture = new Fixture();
+        File.WriteAllText(Path.Combine(fixture.Root, "tada-services.txt"), "inventory|sut/Api.dll\n");
+        Assert.AreEqual(fixture.Assembly, fixture.Create().Services["inventory"]);
+    }
+
+    [TestMethod]
+    public void NativeDuplicateServiceIdsCannotSelectArbitraryAssemblies()
+    {
+        using var fixture = new Fixture();
+        File.WriteAllText(Path.Combine(fixture.Root, "tada-services.txt"), "inventory|sut/Api.dll\ninventory|sut/Other.dll\n");
+        Assert.ThrowsExactly<InvalidOperationException>(() => fixture.Create());
+    }
+
+    [TestMethod]
     public void NativeSetupUsesStagedApiAndIsolatesScenarioStorage()
     {
         using var fixture = new Fixture();
