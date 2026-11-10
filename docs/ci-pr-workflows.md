@@ -12,16 +12,23 @@ The stable required check is `PR checks`. It runs after Windows validation even 
 
 Every attempt retains its available packages and evidence for 14 days, including failed attempts. The CI identity artifact and job summary record the repository, event, tested commit, PR head/base commits, run ID and attempt. Download evidence before expiry when longer retention is required.
 
-The main-branch protection configuration requires an up-to-date PR with the GitHub Actions `PR checks` result, one approving reviewer and resolved conversations. New commits dismiss stale approvals, and someone other than the latest reviewable pusher must approve the latest push. Administrators follow the same policy. Force pushes and branch deletion are blocked. The PR author cannot supply their own required approval.
+The main-branch protection configuration requires an up-to-date PR with the GitHub Actions `PR checks` result and resolved conversations. Administrators follow this policy. Force pushes and branch deletion are blocked.
+
+The separate `Main code-owner review` ruleset requires one approving code-owner review for other contributors. New commits dismiss stale approvals, and someone other than the latest reviewable pusher must approve the latest push. Repository administrators may bypass this review ruleset when merging a PR. The separate branch protection continues to enforce the PR, CI and conversation requirements for administrators.
+
+`.github/CODEOWNERS` names `@tayzer` as the repository-wide code owner. At setup, `tayzer` is the sole repository administrator. GitHub prevents authors from approving their own PRs, so owner self-service merging uses the review-only administrator bypass. GitHub's ruleset bypass follows the administrator role. Adding names to CODEOWNERS does not grant that bypass, and adding administrators extends it.
 
 Apply the reviewed configuration using an authenticated repository administrator, then read back the resulting policy.
 
 ```powershell
 gh api --method PUT repos/tayzer/TADA/branches/main/protection --input .github/main-branch-protection.json
 gh api repos/tayzer/TADA/branches/main/protection
+# Create the review ruleset once. For updates, use PUT with its returned ID.
+gh api --method POST repos/tayzer/TADA/rulesets --input .github/main-review-ruleset.json
+gh api repos/tayzer/TADA/rulesets
 ```
 
-Repository administrators can change this configuration. Review workflow and policy changes as executable infrastructure. The source CI trusts the required human review of those changes, and its automated fixture approvals remain isolated controls. The independent business-approval adapter for application repositories remains proposed below.
+Repository administrators can change this configuration. Review workflow and policy changes as executable infrastructure. The source CI trusts code-owner review or the owner's review bypass for those changes, and its automated fixture approvals remain isolated controls. The independent business-approval adapter for application repositories remains proposed below.
 
 ## Pull request execution
 
