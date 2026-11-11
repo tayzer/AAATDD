@@ -173,11 +173,16 @@ public static partial class Knowledge
         if (present.Length > 0)
         {
             string changed = (await git.Output(["diff", "--name-only", "--relative", state.Checked!, "--", .. present])).Trim();
-            string untracked = (await git.Output(["ls-files", "--others", "--exclude-standard", "--", .. present])).Trim();
-            var paths = (changed + "\n" + untracked).Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).Distinct().ToArray();
-            if (paths.Length > 0)
+            // Ignored files are included: Git cannot show how an untracked source differs from the checked commit.
+            string untracked = (await git.Output(["ls-files", "--others", "--", .. present])).Trim();
+            string[] untrackedPaths = Lines(untracked);
+            string[] changedPaths = Lines(changed).Except(untrackedPaths, StringComparer.Ordinal).ToArray();
+            if (changedPaths.Length > 0 || untrackedPaths.Length > 0)
             {
-                findings.Add(new("source-changed", "review", path, $"Sources changed since {state.Checked}: {string.Join(", ", paths)}"));
+                var detail = new List<string>();
+                if (changedPaths.Length > 0) detail.Add($"Sources changed since {state.Checked}: {string.Join(", ", changedPaths)}.");
+                if (untrackedPaths.Length > 0) detail.Add($"Sources not tracked by Git, so their currency since {state.Checked} cannot be established: {string.Join(", ", untrackedPaths)}.");
+                findings.Add(new("source-changed", "review", path, string.Join(" ", detail)));
                 result = "stale";
             }
         }
@@ -188,7 +193,8 @@ public static partial class Knowledge
     private static async Task<string[]> NewRecords(GitProbe git, string? baseRevision)
     {
         bool hasHead = await git.Succeeds(["rev-parse", "--verify", "--quiet", "HEAD"]);
-        string untracked = await git.Output(["ls-files", "--others", "--exclude-standard", "--", RecordsPath]);
+        // Ignored records count too: a repository that ignores .tada/knowledge/ can still hold new local records.
+        string untracked = await git.Output(["ls-files", "--others", "--", RecordsPath]);
         string added = baseRevision != null || hasHead
             ? await git.Output(["diff", "--name-only", "--relative", "--diff-filter=A", baseRevision ?? "HEAD", "--", RecordsPath])
             : await git.Output(["ls-files", "--", RecordsPath]);
@@ -196,6 +202,9 @@ public static partial class Knowledge
             .Where(x => x.EndsWith(".md", StringComparison.Ordinal) && !x[(RecordsPath.Length + 1)..].Contains('/'))
             .Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).ToArray();
     }
+
+    private static string[] Lines(string text) =>
+        text.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).Distinct(StringComparer.Ordinal).ToArray();
 
     /// <summary>Parses the small front-matter subset used by knowledge records: one <c>key: value</c> per line.</summary>
     public static (Dictionary<string, string> Fields, string? Error) FrontMatter(string text)

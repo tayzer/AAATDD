@@ -145,6 +145,33 @@ public sealed class KnowledgeTests
     }
 
     [TestMethod]
+    public async Task IgnoredUntrackedSourceIsNotReportedAsCurrent()
+    {
+        using var repo = await GitRepository.Create();
+        repo.Write(".gitignore", ".git-test-hooks/\nlocal/\n");
+        repo.Write(".tada/knowledge.json", "{\"schemaVersion\":1,\"mode\":\"augment\"}");
+        await repo.Commit("chore: ignore local notes");
+        repo.Write("local/notes.md", "Retries stop after ten attempts.\n");
+        repo.Write(".tada/knowledge/local-notes.md", string.Format(Record, repo.Head).Replace("sources: Services/Payments.cs, docs/architecture.md#delivery", "sources: local/notes.md", StringComparison.Ordinal));
+        var report = await Knowledge.Check(new Repository(repo.Root));
+        Assert.AreEqual("REVIEW", report.Status, Describe(report));
+        StringAssert.Contains(report.Findings.Single(f => f.Code == "source-changed").Detail, "not tracked by Git");
+        Assert.AreEqual("stale", report.Records.Single().State);
+    }
+
+    [TestMethod]
+    public async Task ReferenceModeBlocksANewRecordEvenWhenGitIgnoresIt()
+    {
+        using var repo = await GitRepository.Create();
+        repo.Write(".gitignore", ".git-test-hooks/\n.tada/knowledge/\n");
+        await repo.Commit("chore: ignore knowledge records");
+        repo.Write(".tada/knowledge/duplicate-outcomes.md", string.Format(Record, repo.Head));
+        var report = await Knowledge.Check(new Repository(repo.Root));
+        Assert.AreEqual("BLOCKED", report.Status, Describe(report));
+        Assert.AreEqual(".tada/knowledge/duplicate-outcomes.md", report.Findings.Single(f => f.Code == "reference-mode-record").Path);
+    }
+
+    [TestMethod]
     public async Task EditingAReviewedRecordWithoutReturningToProposedNeedsReview()
     {
         using var repo = await GitRepository.Create();

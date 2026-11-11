@@ -109,8 +109,8 @@ dotnet tool run tada knowledge check --base origin/main --json
 The report shows the mode and where it came from, the index, the context handoff's last change and the number of later commits, each record's state, and findings:
 
 - `invalid-record` (blocking): front matter is missing status, kind, checked commit or repository sources, or contains an unsupported field.
-- `reference-mode-record` (blocking): a record was added in reference mode, either uncommitted or since `--base`.
-- `source-changed`: a record's sources changed after its `checked` commit. Revalidate before relying on it.
+- `reference-mode-record` (blocking): a record was added in reference mode, either uncommitted (including ignored files) or since `--base`.
+- `source-changed`: a record's sources changed after its `checked` commit, or Git does not track them, including ignored files, so their currency cannot be established. Revalidate before relying on it.
 - `reviewed-record-edited`: a `reviewed` record changed since `HEAD` or `--base` without returning to `proposed`. Confirm a human reviewed the edit.
 - `source-missing`, `unknown-checkpoint`, `broken-link`, `superseded-target-missing`: references no longer resolve.
 - `git-unavailable`: currency could not be checked outside a Git work tree.

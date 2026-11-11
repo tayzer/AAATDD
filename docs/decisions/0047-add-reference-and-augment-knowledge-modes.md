@@ -47,13 +47,20 @@ A record is a Markdown file in `.tada/knowledge/` with a minimal front matter:
 
 ```markdown
 ---
-status: proposed            # proposed | reviewed | superseded
-kind: defect                # discovery | defect | invariant | pitfall | constraint | trade-off
-checked: 3f2a1bc            # commit at which the claims were last validated
+status: proposed
+kind: defect
+checked: 3f2a1bc
 sources: Services/ServiceHost.cs, features/order-journey.feature
-supersededBy: ...           # required when superseded
 ---
 ```
+
+- `status` is `proposed`, `reviewed` or `superseded`.
+- `kind` is `discovery`, `defect`, `invariant`, `pitfall`, `constraint` or `trade-off`.
+- `checked` is the real commit at which the claims were last validated. The example value is illustrative.
+- `sources` lists the repository paths that support the claims.
+- `supersededBy` names the replacing record or document, and is required when `status` is `superseded`.
+
+Each field holds a plain value. Comments inside the block are not supported.
 
 The body separates Verified, Inferred and Unknown claims and links its evidence. Agents write `status: proposed`. A human reviewer may set `reviewed`. The format needs no YAML library and no TADA-specific tooling to read.
 
@@ -68,8 +75,8 @@ The body separates Verified, Inferred and Unknown claims and links its evidence.
 | Finding | Severity | Meaning |
 | --- | --- | --- |
 | `invalid-record` | blocking | A record lacks valid status, kind, checked commit or repository sources, or claims an unsupported field |
-| `reference-mode-record` | blocking | A record was added in reference mode, uncommitted or since `--base` |
-| `source-changed` | review | A record's sources changed after its `checked` commit |
+| `reference-mode-record` | blocking | A record was added in reference mode, uncommitted (including ignored files) or since `--base` |
+| `source-changed` | review | A record's sources changed after its `checked` commit, or are not tracked by Git |
 | `reviewed-record-edited` | review | A `reviewed` record changed since `HEAD` or `--base` without returning to `proposed` |
 | `source-missing`, `unknown-checkpoint`, `broken-link`, `superseded-target-missing` | review | References no longer resolve |
 | `git-unavailable` | review | Currency could not be checked |
