@@ -70,6 +70,8 @@ jobs:
         run: pwsh -File scripts/Test-OrdersWorkflow.ps1
       - name: Multi-level and multi-service installed-package controls
         run: pwsh -File scripts/Test-MultiServiceWorkflow.ps1
+      - name: Enforcement lifecycle controls
+        run: pwsh -File scripts/Test-EnforcementWorkflow.ps1
       - name: Package the TADA plugin and check project setup
         run: |
           [xml]$properties = Get-Content Directory.Build.props -Raw
@@ -110,6 +112,7 @@ jobs:
             .artifacts/native/*.build.json
             .artifacts/native/tests/*.build.json
             .artifacts/**/validation.json
+            .artifacts/**/enforcement-workflow.json
             .artifacts/**/run.json
             .artifacts/**/result.json
             .artifacts/**/tada-messages.ndjson

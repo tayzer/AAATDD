@@ -331,9 +331,34 @@ public sealed class RunEngine(BaselineStore store, string dotnet = "dotnet", Act
         { return new Verification("INDETERMINATE", "L1-advisory", record?.Baseline ?? "unestablished", id, [], [new Reason("integrity", error.Message)]); }
     }
 
+    /// <summary>
+    /// Re-verifies a run and returns earlier failures for the same baseline, implementation and environment.
+    /// Used by enforcement assessment, which applies failure history to each mandatory obligation.
+    /// </summary>
+    public (Verification Current, string[] EarlierFailedCases, Reason[] HistoryGaps) Evidence(string id)
+    {
+        progress?.Invoke($"Verifying retained evidence for run {id}.");
+        var current = VerifySingle(id, out var record);
+        if (record == null) return (current, [], []);
+        var (failed, gaps) = History(record);
+        return (current, failed.SelectMany(run => run.Result.Reasons)
+            .Where(reason => reason.Code == "requirement-failure" && reason.CaseId != null)
+            .Select(reason => reason.CaseId!).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).ToArray(), gaps.ToArray());
+    }
+
     private Verification PreserveHistory(Verification current, RunRecord record)
     {
-        var failures = new List<Reason>();
+        var (failed, gaps) = History(record);
+        var failures = failed.SelectMany(run => run.Result.Reasons.Prepend(
+            new Reason("unresolved-earlier-failure", $"Passing rerun cannot discard failure from run {run.Id}."))).ToList();
+        if (failures.Count > 0) return current with { Outcome = "FAIL", Reasons = failures.Concat(gaps).ToArray() };
+        if (gaps.Count > 0) return current with { Outcome = "INDETERMINATE", Reasons = gaps.ToArray() };
+        return current;
+    }
+
+    private (List<(string Id, Verification Result)> Failed, List<Reason> Gaps) History(RunRecord record)
+    {
+        var failed = new List<(string Id, Verification Result)>();
         var gaps = new List<Reason>();
         foreach (string directory in Directory.EnumerateDirectories(Path.Combine(store.Repository.State, "runs")))
         {
@@ -357,11 +382,7 @@ public sealed class RunEngine(BaselineStore store, string dotnet = "dotnet", Act
                     previous.Implementation != record.Implementation || previous.Environment != record.Environment) continue;
                 // Re-evaluate native evidence. Cached result.json is a projection, not the authority.
                 var result = VerifySingle(id, out _);
-                if (result.Outcome == "FAIL")
-                {
-                    failures.Add(new Reason("unresolved-earlier-failure", $"Passing rerun cannot discard failure from run {id}."));
-                    failures.AddRange(result.Reasons);
-                }
+                if (result.Outcome == "FAIL") failed.Add((id, result));
                 else if (result.Reasons.Any(r => r.Code == "integrity"))
                     gaps.Add(new Reason("history-integrity", $"Earlier run {id} no longer has verifiable evidence."));
                 // A complete earlier INDETERMINATE assessment can be resolved by this valid fresh run.
@@ -369,9 +390,7 @@ public sealed class RunEngine(BaselineStore store, string dotnet = "dotnet", Act
             catch (Exception error) when (error is TadaException or IOException or JsonException or ArgumentException)
             { gaps.Add(new Reason("history-gap", $"Run {id}: {error.Message}")); }
         }
-        if (failures.Count > 0) return current with { Outcome = "FAIL", Reasons = failures.Concat(gaps).ToArray() };
-        if (gaps.Count > 0) return current with { Outcome = "INDETERMINATE", Reasons = gaps.ToArray() };
-        return current;
+        return (failed, gaps);
     }
 
     private string Implementation(Config config)

@@ -1,12 +1,12 @@
 # CI and PR workflows
 
-The existing CLI can run an explicitly selected approved baseline in Windows CI and verify its retained evidence. TADA's own source PR already exercises package installation, Orders and Echo scenarios, failure controls and evidence verification. Application repositories need their own workflow, baseline selection and approval policy. The trusted approval integration described below is proposed work.
+The existing CLI can run an explicitly selected approved baseline in Windows CI and verify its retained evidence. TADA's own source PR already exercises package installation, Orders and Echo scenarios, failure controls, the candidate/active enforcement lifecycle and evidence verification. Application repositories need their own workflow, baseline selection and approval policy. The trusted approval integration described below is proposed work.
 
 ## TADA source repository
 
 The `PR validation` workflow in `.github/workflows/ci.yml` validates pull requests targeting `main`, pushes to `main`, merge-group candidates and manual dispatches. Pull requests use GitHub's proposed merge checkout. There are no path filters or draft exclusions. A newer run for the same ref cancels the older run.
 
-`Windows validation` uses Windows Server 2025, the pinned .NET SDK 10.0.403 and locked dependency restores. It builds and runs focused/replay tests, packages the CLI and plugin, executes Orders business/integrity controls, installs the package into a fresh cache for the second API, checks task-only environment identity and installs the download bundle. Actions are pinned to commit SHAs, checkout credentials are removed and the workflow token has read-only repository contents permission. Validation does not need repository secrets.
+`Windows validation` uses Windows Server 2025, the pinned .NET SDK 10.0.403 and locked dependency restores. It builds and runs focused/replay tests, packages the CLI and plugin, executes Orders business/integrity controls and the enforcement lifecycle controls, installs the package into a fresh cache for the second API, checks task-only environment identity and installs the download bundle. Actions are pinned to commit SHAs, checkout credentials are removed and the workflow token has read-only repository contents permission. Validation does not need repository secrets.
 
 The stable required check is `PR checks`. It runs after Windows validation even when that job fails or is skipped, and succeeds only when Windows validation succeeds. Keep its name in sync with `.github/main-branch-protection.json`. Add future mandatory jobs to its dependencies and result checks before relying on them as merge gates.
 
@@ -34,15 +34,33 @@ Repository administrators can change this configuration. Review workflow and pol
 
 Run on the proposed merge of the PR head and current target branch. Pin .NET SDK 10.0.403 and a trusted TADA package version. Obtain the verifier and required workflow from repository-controlled sources so PR changes to a wrapper, tool manifest or workflow cannot substitute a successful result for verification.
 
-Select an explicit baseline digest whose approval is valid under the repository's CI policy. Run `tada run --baseline <digest> --dotnet <host> --json`, retain its run ID and execute `tada verify --run <id> --json`. A required check succeeds only after both commands report PASS and exit 0. FAIL and INDETERMINATE both block the check and retain their distinct reasons. Failed execution must still upload its diagnostics.
+Read the baseline digest from the committed `.tada/enforcement.json`. Run `tada run --baseline <digest> --dotnet <host> --json`, retain its run ID and execute `tada gate --run <id> --base origin/<target-branch> --json`. The required check succeeds only when the gate reports PASS and exits 0. FAIL and INDETERMINATE both block the check and retain their distinct reasons. Failed execution must still upload its diagnostics.
+
+The gate separates approval from enforcement under [ADR 0044](decisions/0044-separate-approval-authority-from-merge-enforcement.md). Active obligations must pass. Approved candidates run in the same execution and are reported as non-blocking diagnostics with their age, so a spec-only PR can merge agreed scenarios before their implementation exists. A candidate that passes must be promoted to active in the same PR. Compared with the target branch, an active obligation cannot be demoted unless an approved amendment changed that scenario, and a new baseline must supersede the target's baseline through approved replacements. See the [enforcement guide](enforcement.md) for every rule.
+
+`tada verify --run <id>` still assesses every scenario in the run. While candidates are pending it reports FAIL or INDETERMINATE for them, so use the gate, not `verify`, as the merge check.
+
+```yaml
+- name: TADA gate
+  shell: pwsh
+  run: |
+    $ledger = Get-Content .tada/enforcement.json -Raw | ConvertFrom-Json
+    $run = dotnet tool run tada run --baseline $ledger.baseline --json | ConvertFrom-Json
+    dotnet tool run tada gate --run $run.runId --base "origin/${{ github.base_ref }}" --json | Tee-Object .artifacts/tada-gate.json
+    exit $LASTEXITCODE
+```
+
+Fetch the target branch before the gate, for example with `fetch-depth: 0` on checkout. Publish the gate JSON with the run evidence. Its `obligations` list shows active and candidate states, and `protectedChanges` lists changed specification, executable-interpretation, contract, fitness, configuration and enforcement items for independent review.
 
 Record the PR head SHA, target SHA, proposed merge SHA, verifier identity, baseline digest, approval identity and run ID in the CI summary and retained artifacts. Every new PR commit needs fresh execution. A target-branch update also requires validation of the new proposed merge.
 
-Implementation-only changes can reuse an approved baseline while its oracle bytes remain current. Changes to features, assertions, fixture support, captured configuration or captured tool metadata require a new comparative review and human approval. Chores and behaviour-preserving refactors retain proportionate checks and applicable existing acceptance.
+Implementation-only changes, refactors and behaviour-neutral chores can reuse an approved baseline and ledger while its oracle bytes remain current. Changes to features, assertions, fixture support, captured configuration or captured tool metadata require a new comparative review and human approval. Chores and behaviour-preserving refactors retain proportionate checks and applicable existing acceptance.
 
 ## Approval authority
 
 Current approval JSON records a declared approver name, and the verifier checks its relationships and captured hashes. Local advisory L1 trusts those records and the surrounding machine. A contributor can edit files in a PR, including approval JSON. CI therefore needs an independent approval source before it treats a new record as authorised.
+
+Until that integration exists, require code-owner review for `.tada/`, feature files, acceptance harness sources and declared contract and fitness roots, and review the gate's `protectedChanges` list before approving the PR. This makes protected changes visible to an independent reviewer. It is still not a binding of approval to a baseline digest.
 
 The proposed integration uses a trusted approval workflow controlled by the target repository. It prepares the candidate baseline comparison and presents its digest, changed oracle files and acceptance text to an authorised human. Approval binds that exact digest to the repository, relevant PR and prior baseline. The trusted workflow produces the approval record or attestation consumed by execution. A changed oracle digest requires another approval. Implementation changes retaining that digest still require fresh CI execution.
 

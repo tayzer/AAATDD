@@ -115,14 +115,7 @@ public sealed partial class BaselineStore(Repository repository)
     public Approval Approved(string baseline)
     {
         if (Read(baseline).Engineering != null) throw new TadaException("Supporting checks are not business acceptance baselines.");
-        string directory = repository.StateDirectory("approvals");
-        var approvals = Directory.EnumerateFiles(directory, "*.json").Select(path =>
-        {
-            Repository.NoLink(path);
-            var item = Data.Read<Approval>(path);
-            if (item.Id != Path.GetFileNameWithoutExtension(path)) throw new TadaException("Stored approval identity does not match its record path.");
-            return item;
-        }).ToArray();
+        var approvals = Approvals();
         if (approvals.Any(a => a.Replaces == baseline)) throw new TadaException("Baseline has been explicitly superseded.");
         var approval = approvals.Where(a => a.Baseline == baseline).OrderBy(a => a.Created).FirstOrDefault()
             ?? throw new TadaException("Baseline is not approved. Tests cannot approve expectations.");
@@ -130,6 +123,44 @@ public sealed partial class BaselineStore(Repository repository)
         if (review.Baseline != baseline || review.Created > approval.Created)
             throw new TadaException("Approval does not identify an earlier review of this revision.");
         return approval;
+    }
+
+    private Approval[] Approvals()
+    {
+        string directory = repository.StateDirectory("approvals");
+        return Directory.EnumerateFiles(directory, "*.json").Select(path =>
+        {
+            Repository.NoLink(path);
+            var item = Data.Read<Approval>(path);
+            if (item.Id != Path.GetFileNameWithoutExtension(path)) throw new TadaException("Stored approval identity does not match its record path.");
+            return item;
+        }).ToArray();
+    }
+
+    /// <summary>
+    /// True when an approved replacement chain leads from <paramref name="baseline"/> back to <paramref name="ancestor"/>.
+    /// Each link must be an approval of a review compared against the revision it replaces.
+    /// </summary>
+    public bool Supersedes(string baseline, string ancestor)
+    {
+        Read(baseline);
+        Read(ancestor);
+        var approvals = Approvals();
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        var pending = new Queue<string>([baseline]);
+        while (pending.TryDequeue(out var current))
+        {
+            if (!seen.Add(current)) continue;
+            foreach (var approval in approvals.Where(a => a.Baseline == current && a.Replaces != null))
+            {
+                var review = Data.Read<Review>(RecordPath("reviews", approval.Review));
+                if (review.Id != approval.Review || review.Baseline != approval.Baseline ||
+                    review.ComparedTo != approval.Replaces || review.Created > approval.Created) continue;
+                if (approval.Replaces == ancestor) return true;
+                pending.Enqueue(approval.Replaces!);
+            }
+        }
+        return false;
     }
 
     public void CheckCurrent(string baseline)

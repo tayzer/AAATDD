@@ -2,6 +2,33 @@
 
 Status: **PARTIALLY DECIDED**. First discussion: 2026-10-23; reconciled 2026-10-26. [ADR 0001](../decisions/0001-separate-intent-and-baseline-approval.md) accepts approval boundaries, [ADR 0002](../decisions/0002-clarify-acceptance-changing-uncertainty.md) the clarification boundary, and [ADR 0003](../decisions/0003-support-change-appropriate-specification-artifacts.md) conditional artifacts. [ADR 0004](../decisions/0004-gherkin-business-specification-authority.md) makes Gherkin authoritative for business behaviour. The update agrees type/risk-adaptive workflow; exact progression, review contents and verification sufficiency remain open or provisional. See the [design reconciliation](2026-10-26-design-reconciliation.md).
 
+Update 2026-11-11: [ADR 0043](../decisions/0043-adopt-the-tada-north-star.md) adopts the North Star lifecycle below as the current workflow. [ADR 0044](../decisions/0044-separate-approval-authority-from-merge-enforcement.md) separates approval from merge enforcement, and [ADR 0045](../decisions/0045-classify-protected-verification-obligations.md) classifies protected obligations. Sections after "Current lifecycle" record the earlier design discussion and remain historical context.
+
+## Current lifecycle
+
+**Understand → Agree → Select verification → Establish evidence → Implement and verify → Complete and preserve.**
+
+These are responsibilities and decision boundaries. They are not six commands, documents or approval meetings. Small changes combine stages. The enabled agent workflow applies them to ordinary requests without the user naming TADA.
+
+| Stage | AI responsibility | Human decision | Mechanical support |
+| --- | --- | --- | --- |
+| Understand | Inspect the request, current behaviour, existing scenarios, active and candidate obligations, affected components, constraints, tests and risks. Ask targeted questions about acceptance-critical unknowns. | Answers that change behaviour, compatibility, security, data integrity or other acceptance-critical outcomes | `.tada/context.md`, features, `.tada/enforcement.json`, `tada gate` without a run for status |
+| Agree | Propose concrete Gherkin examples, edge cases, negative outcomes, NFR thresholds and contract expectations. Record open questions. | Approval of expectations and amendments. Approved but unimplemented scenarios can merge as candidates. | `tada baseline prepare`, `review`, `approve`; candidates in the enforcement ledger |
+| Select verification | Choose functional, contract, fitness and supporting checks by actual change, impact, risk and existing coverage. Record omissions with reasons. | Whether a contract or fitness obligation is protected | `obligations` declarations in `tada.json`; supporting tests stay outside the oracle |
+| Establish evidence | Write bindings, fixtures, assertions, drivers and observers. Show meaningful behavioural RED for new behaviour and defects, or passing preservation evidence for refactors. Never invent RED. | Review of the executable interpretation, which small changes may combine with agreement | `baseline review --against` lists changed obligations by kind; `tada run` distinguishes FAIL from INDETERMINATE |
+| Implement and verify | Implement in small increments. Never weaken protected obligations to reach GREEN. Return genuine requirement conflicts to the humans. | Amendments discovered during implementation | `tada run`, `tada verify`, `tada gate` |
+| Complete and preserve | Promote satisfied candidates. Report satisfied obligations, checks run and omitted, protected changes, gaps and residual risks. Update concise Git-native context. | Proportionate code review, independent review of protected changes, merge | `tada gate --base`; committed baselines, approvals, ledger and context |
+
+### Change-type paths
+
+- **Feature.** Agree Gherkin and relevant NFR and contract expectations. Approve them, optionally merging a spec-only change with candidates. Review the executable interpretation, demonstrate RED, implement in increments, and promote each candidate when it passes.
+- **Defect.** Reproduce the defect with an existing agreed scenario, or agree a missing regression scenario as a candidate. Show meaningful RED, fix it, promote it and keep it.
+- **Behaviour-preserving refactor.** Reuse existing active obligations and supporting checks. Add characterisation where coverage is insufficient. No new business scenario and no new approval are needed when protected inputs are unchanged.
+- **Chore.** Select proportionate build, dependency, configuration or documentation checks. Run the gate when the chore can affect behaviour. A justified absence of tests is recorded as such and is never reported as a behavioural PASS.
+- **Mixed or architectural change.** Determine the actual effects rather than trusting a label. Preserve existing obligations and consider relevant fitness functions. A change labelled chore that alters behaviour returns to the feature or defect path.
+
+Verification cannot be downgraded by declaring a change a chore or refactor. Protected inputs remain approval-bound whatever the label, and active obligations remain enforced.
+
 ## Engineering problem
 
 A vague request is not an executable oracle. Translating it introduces business decisions; implementing its checks introduces further interpretation. Approving a readable example does not automatically approve the code, fixture, or driver that decides whether it passes.

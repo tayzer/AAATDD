@@ -22,7 +22,7 @@ try
         }
         if (!options.TryAdd(key, value)) throw new TadaException($"Duplicate option: --{key}");
     }
-    var known = new[] { "repo", "baseline", "review", "by", "replaces", "against", "run", "dotnet", "json", "help", "version", "plan", "file" };
+    var known = new[] { "repo", "baseline", "review", "by", "replaces", "against", "run", "dotnet", "base", "json", "help", "version", "plan", "file" };
     if (options.Keys.Except(known).Any()) throw new TadaException("Unknown option: " + options.Keys.Except(known).First());
     string Need(string name) => options.GetValueOrDefault(name) ?? throw new TadaException($"Explicit --{name} is required.");
     string? Maybe(string name) => options.GetValueOrDefault(name);
@@ -45,11 +45,14 @@ try
         tada run --plan sha256:... [--dotnet PATH]
         tada run --baseline sha256:... [--dotnet PATH]
         tada verify --run ID
+        tada gate [--run ID] [--base GIT-REVISION]
 
         --repo defaults to the current directory. --json prints structured output and suppresses progress.
         run/verify report phases and elapsed time to stderr every 10 seconds while busy.
         prepare/review never approve. Only a human may declare baseline approval.
-        Verification exits: PASS=0, FAIL=1, INDETERMINATE=2. Command errors=3.
+        gate assesses mandatory (active) obligations from .tada/enforcement.json. Approved candidates
+        are reported but do not block until promoted. --base compares with the target branch's ledger.
+        Verification exits: PASS=0, FAIL=1, INDETERMINATE=2. Command errors=3. Gate NO_CHECKS=0.
         Read .tada/WORKFLOW.md for discovery, maintenance and session handoff.
         """);
         return 0;
@@ -91,6 +94,7 @@ try
                 changedFiles = inventory.Files.Where(f => previous == null || !previous.Files.Any(p => p.Path == f.Path && p.Digest == f.Digest)).Select(f => f.Path),
                 removedFiles = previous?.Files.Where(p => !inventory.Files.Any(f => f.Path == p.Path)).Select(f => f.Path).ToArray() ?? [],
                 removedCaseIds = previous?.ExpectedCases.Where(p => !inventory.ExpectedCases.Any(c => c.CaseId == p.CaseId)).Select(c => c.CaseId).ToArray() ?? [],
+                protectedChanges = Maybe("against") is { } prior ? Obligations.Compare(store, prior, baseline) : [],
                 specifications = inventory.Files.Where(f => f.Roles.Contains("specification")).Select(f => new
                 {
                     path = f.Path,
@@ -134,6 +138,17 @@ try
                 verified = new RunEngine(store, progress: progress == null ? null : progress.Report).Verify(id);
             Print(verified);
             return verified.ExitCode;
+        }
+        case "gate":
+        {
+            EnforcementLedger? baseLedger = null;
+            if (Maybe("base") is { } reference) baseLedger = (await Enforcement.FromGit(root, reference)).Ledger;
+            GateResult gate;
+            await using (var progress = options.ContainsKey("json") ? null : new CliProgress(Console.Error))
+                gate = Enforcement.Assess(store, new RunEngine(store, progress: progress == null ? null : progress.Report), Maybe("run"),
+                    options.ContainsKey("base"), baseLedger, DateOnly.FromDateTime(DateTime.UtcNow));
+            Print(gate);
+            return gate.ExitCode;
         }
         default: throw new TadaException("Unknown command. Use tada --help.");
     }

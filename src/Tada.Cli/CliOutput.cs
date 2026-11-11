@@ -8,7 +8,35 @@ public static class CliOutput
     public static string Render(JsonElement value)
     {
         var text = new StringBuilder();
-        if (value.TryGetProperty("plan", out var plan))
+        if (value.TryGetProperty("obligations", out var obligations) && value.TryGetProperty("outcome", out var gateOutcome))
+        {
+            text.AppendLine($"Gate {gateOutcome.GetString()} — local advisory L1");
+            text.AppendLine($"Baseline: {value.GetProperty("baseline").GetString()}");
+            text.AppendLine($"Run: {(value.GetProperty("runId").GetString() ?? "none")}");
+            text.AppendLine($"Base: {value.GetProperty("baseBaseline").GetString()}");
+            foreach (var item in obligations.EnumerateArray())
+            {
+                string enforcement = item.GetProperty("enforcement").GetString()!;
+                string age = item.TryGetProperty("ageDays", out var days) ? $", pending {days.GetInt32()} days" : "";
+                text.AppendLine($"  {(enforcement == "active" ? "Active" : "Candidate")} {item.GetProperty("scenario").GetString()}: {item.GetProperty("state").GetString()}{age} — {item.GetProperty("detail").GetString()}");
+            }
+            foreach (var change in value.GetProperty("protectedChanges").EnumerateArray())
+                text.AppendLine($"  Protected {change.GetProperty("kind").GetString()} {change.GetProperty("change").GetString()}: {change.GetProperty("subject").GetString()}");
+            foreach (var reason in value.GetProperty("reasons").EnumerateArray())
+            {
+                string? caseId = reason.GetProperty("caseId").GetString();
+                text.AppendLine($"  {reason.GetProperty("code").GetString()}{(caseId == null ? "" : " [" + caseId + "]")}: {reason.GetProperty("detail").GetString()}");
+            }
+            foreach (var item in value.GetProperty("next").EnumerateArray()) text.AppendLine("Next: " + item.GetString());
+            text.AppendLine(gateOutcome.GetString() switch
+            {
+                "PASS" => "Mandatory obligations passed. Pending candidates and protected changes still need the reviews listed above.",
+                "NO_CHECKS" => "No active obligation was executed. This is not a behavioural PASS.",
+                _ => "Merge is blocked. Inspect the reasons and retained run evidence."
+            });
+            text.AppendLine("This checks the selected expectations; it is not protected independent assurance.");
+        }
+        else if (value.TryGetProperty("plan", out var plan))
         {
             text.AppendLine($"Plan: {plan.GetString()}");
             if (value.TryGetProperty("outcome", out var assessment))
@@ -90,6 +118,8 @@ public static class CliOutput
             foreach (var path in value.GetProperty("changedFiles").EnumerateArray()) text.AppendLine("  " + path.GetString());
             foreach (var path in value.GetProperty("removedFiles").EnumerateArray()) text.AppendLine("  Removed: " + path.GetString());
             foreach (var id in value.GetProperty("removedCaseIds").EnumerateArray()) text.AppendLine("  Removed acceptance case: " + id.GetString());
+            foreach (var change in value.GetProperty("protectedChanges").EnumerateArray())
+                text.AppendLine($"  Protected {change.GetProperty("kind").GetString()} {change.GetProperty("change").GetString()}: {change.GetProperty("subject").GetString()}");
             text.AppendLine("Review assertions, setup, observers and configuration in the captured snapshot too.");
             text.AppendLine("This is a review record, not approval. Only the human declares acceptance approval.");
             text.AppendLine($"Next: tada baseline approve --review {review.GetProperty("id").GetString()} --by \"Your name\"");

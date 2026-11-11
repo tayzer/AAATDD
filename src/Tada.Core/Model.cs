@@ -27,7 +27,10 @@ public sealed record Inventory(int SchemaVersion, Scope Scope, FileInput[] Files
     [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] Engineering? Engineering = null);
 public sealed record Config(int SchemaVersion, string[] OracleRoots, Execution Execution,
     string RequirementPrefix = "REQ_", string ScenarioPrefix = "AC_", string[]? ImplementationRoots = null,
-    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] BuildTaskContract[]? BuildTaskContracts = null);
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] BuildTaskContract[]? BuildTaskContracts = null,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] ObligationRoot[]? Obligations = null);
+/// <summary>Declares captured oracle roots that express agreed contract or fitness obligations.</summary>
+public sealed record ObligationRoot(string Kind, string[] Roots);
 public sealed record BuildTaskContract(string Origin, string Target, string Task, string[] InputRoots);
 public sealed record Review(string Id, string Baseline, DateTimeOffset Created, string? ComparedTo);
 public sealed record Approval(string Id, string Review, string Baseline, string By, DateTimeOffset Created,
@@ -68,6 +71,13 @@ public static class Data
         using var document = JsonDocument.Parse(bytes);
         CanonicalJson.Encode(document.RootElement); // Reject duplicate keys before typed deserialisation.
         return JsonSerializer.Deserialize<T>(bytes, Json) ?? throw new TadaException($"Empty document: {path}");
+    }
+
+    public static T Parse<T>(byte[] bytes, string source)
+    {
+        using var document = JsonDocument.Parse(bytes);
+        CanonicalJson.Encode(document.RootElement); // Reject duplicate keys before typed deserialisation.
+        return JsonSerializer.Deserialize<T>(bytes, Json) ?? throw new TadaException($"Empty document: {source}");
     }
 
     public static void WriteNew<T>(string path, T value)

@@ -134,6 +134,7 @@ public sealed partial class Repository
         var inputs = CapturePaths(config).Select(path => new FileInput(path,
             [path.EndsWith(".feature", StringComparison.Ordinal) ? "specification" : "support"], CanonicalJson.FileDigest(Resolve(path)))).ToArray();
         if (!inputs.Any(f => f.Path == config.Execution.Project)) throw new TadaException("Harness project is outside the captured oracle.");
+        if (engineering == null) Obligations.Validate(config, inputs.Select(input => input.Path).ToArray());
         var cases = engineering == null ? Features.Read(this, inputs.Where(x => x.Roles.Contains("specification")), config)
             : engineering.RequiredTests.Select(id => new ExpectedCase(id, id, [], config.Execution.Project)).ToArray();
         if (cases.Length == 0) throw new TadaException("No acceptance cases. For a chore, use the maintenance workflow rather than inventing business scenarios.");
