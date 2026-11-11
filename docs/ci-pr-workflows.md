@@ -10,6 +10,11 @@ The `PR validation` workflow in `.github/workflows/ci.yml` validates pull reques
 
 The stable required check is `PR checks`. It runs after Windows validation even when that job fails or is skipped, and succeeds only when Windows validation succeeds. Keep its name in sync with `.github/main-branch-protection.json`. Add future mandatory jobs to its dependencies and result checks before relying on them as merge gates.
 
+Two advisory review tools run alongside `PR checks`. Their status checks are not required merge gates, but their review threads are ordinary PR conversations: because conversations must be resolved before merging, an unresolved thread blocks the merge. A reviewer may resolve a thread without accepting its suggested change.
+
+- `CodeQL` (`.github/workflows/codeql.yml`) scans C# and the GitHub Actions workflows with the `security-and-quality` queries on PRs, pushes to `main` and a weekly schedule. C# uses build-mode `none`, so it does not depend on the Windows native toolchain. Results appear under the repository's code-scanning alerts. Keep CodeQL default setup disabled because this advanced workflow replaces it.
+- CodeRabbit is a GitHub App configured by `.coderabbit.yaml`. Automatic reviews run only while the app is installed and granted access to this repository. Its comments are advisory. Its reviews do not satisfy the code-owner requirement and never count as business approval of Gherkin.
+
 Every attempt retains its available packages and evidence for 14 days, including failed attempts. The CI identity artifact and job summary record the repository, event, tested commit, PR head/base commits, run ID and attempt. Download evidence before expiry when longer retention is required.
 
 The main-branch protection configuration requires an up-to-date PR with the GitHub Actions `PR checks` result and resolved conversations. Administrators follow this policy. Force pushes and branch deletion are blocked.
