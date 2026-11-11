@@ -10,6 +10,12 @@ The `PR validation` workflow in `.github/workflows/ci.yml` validates pull reques
 
 The stable required check is `PR checks`. It runs after Windows validation even when that job fails or is skipped, and succeeds only when Windows validation succeeds. Keep its name in sync with `.github/main-branch-protection.json`. Add future mandatory jobs to its dependencies and result checks before relying on them as merge gates.
 
+Three advisory review tools run alongside `PR checks` and are not merge gates:
+
+- `CodeQL` (`.github/workflows/codeql.yml`) scans C# and the GitHub Actions workflows with the `security-and-quality` queries on PRs, pushes to `main` and a weekly schedule. C# uses build-mode `none`, so it does not depend on the Windows native toolchain. Results appear under the repository's code-scanning alerts. Keep CodeQL default setup disabled because this advanced workflow replaces it.
+- `SonarCloud` (`.github/workflows/sonarcloud.yml`) builds the core, CLI and tests with the pinned SonarScanner for .NET and reports to SonarCloud. It needs the `SONAR_TOKEN` repository secret and, when they differ from `tayzer` and `tayzer_TADA`, the `SONAR_ORGANIZATION` and `SONAR_PROJECT_KEY` repository variables. Disable SonarCloud automatic analysis for the project because CI-based analysis replaces it. Fork PRs do not receive the secret, so the job records a skip instead of failing.
+- CodeRabbit is a GitHub App configured by `.coderabbit.yaml`. Its comments are advisory. Its reviews do not satisfy the code-owner requirement and never count as business approval of Gherkin.
+
 Every attempt retains its available packages and evidence for 14 days, including failed attempts. The CI identity artifact and job summary record the repository, event, tested commit, PR head/base commits, run ID and attempt. Download evidence before expiry when longer retention is required.
 
 The main-branch protection configuration requires an up-to-date PR with the GitHub Actions `PR checks` result and resolved conversations. Administrators follow this policy. Force pushes and branch deletion are blocked.
