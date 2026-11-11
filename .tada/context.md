@@ -1,23 +1,31 @@
 # TADA development context
 
+Current-work handoff. Finished work lives in Git history, merged pull requests, ADRs and validation records. Confirm the branch and next action against Git before relying on this file.
+
 ## Current change
 
-Implement change-aware multi-level verification as agreed on 2026-11-10. ADR 0042 records the accepted delivery boundaries. `docs/requirements/change-aware-verification.feature` records the new product expectations. `docs/multi-level-verification.md` documents the supported plan and multi-service interfaces.
+Evidence-driven discovery and continuous learning, on branch `feat/evidence-discovery-learning` from `main` at `cf267fa`.
 
-The implementation targets alpha.13. Initial discovery selects proportionate unit, service, contract and journey checks. Captured supporting checks retain delegated engineering scope. Business baselines retain human approval. Local named .NET services share a repository and own scenario resources. Empty justified selections report NO_CHECKS.
+- Decisions: [ADR 0046](../docs/decisions/0046-investigate-before-agreeing-acceptance.md) (risk-proportionate discovery and the change impact brief) and [ADR 0047](../docs/decisions/0047-add-reference-and-augment-knowledge-modes.md) (reference and augment knowledge modes, records, `tada knowledge check`).
+- Guide: [discovery and continuous learning](../docs/knowledge.md). Gap analysis: [North Star assessment](../docs/architecture/north-star-assessment.md).
+- Agent guidance: [plugin skill](../plugins/tada/skills/tada/SKILL.md) and its [reference](../plugins/tada/skills/tada/references/discovery-and-knowledge.md); generated workflow in `src/Tada.Core/Onboarding.cs`.
+- Evaluation: [knowledge workflow evaluation](../docs/validation/knowledge-workflow-evaluation.md), with fixtures from `tests/KnowledgeEvaluation/New-KnowledgeFixture.ps1`.
 
-## Delivery and validation
+This repository uses reference mode (no `.tada/knowledge.json`).
 
-PR #1 was already merged. The repository resolves to `tayzer/TADA`. Work continues on `feat/change-aware-verification`, based on current main `943486f`. The integration retains main's runtime-checkpoint fixes, pinned CI actions and required PR gate.
+## Verification state
 
-Focused/replay checks, legacy Orders controls, installed-package multi-service controls and exact plugin-ZIP setup checks are the validation entry points. Their scripts retain machine-readable records under `.artifacts/`. Automated fixture approvals are isolated controls. Requester acceptance of alpha.13 remains separate from these checks and the earlier accepted alpha.12 release.
+Focused and replay tests pass locally, including the knowledge, onboarding and guidance tests. The plugin packaging and setup control passes with the installed verifier reporting the default reference mode. The Orders, multi-service, enforcement and onboarding scripts were not rerun locally for this change; CI runs them.
 
-The multi-service control exercises native Debug/Release journeys, service and producer/consumer contract checks, retained-evidence tampering, a real compensation defect, restored implementation and a no-test chore revision. Initial implementation findings and failed attempts remain in `.artifacts/multi-service/`.
+## Open questions for the requester
 
-## Local SDK host
-
-Use `E:\Development\git\AAATDD\experiments\compatibility-probe\.tools\dotnet\dotnet.exe`, SDK 10.0.403. Recheck availability before use. Pass the same host through `--dotnet` for recorded runs. PowerShell 7 is available. Process/task-host permissions can be required on this Windows sandbox.
+- Confirm the knowledge-mode design: settings in `.tada/knowledge.json`, no `writePolicy` setting, and `BLOCKED` for new records in reference mode.
+- `AGENTS.md` still names the merged draft PR #1 branch `codex/alpha-release-validation` as the delivery branch. That sentence records the requester's authorisation, so it is left for the requester to update.
 
 ## Next action
 
-Validate the final source/package checkpoint and review the feature PR's required checks. Keep publication and merge under their existing separate authority. The installed plugin cache is separate from source/package delivery.
+Open a draft pull request for review. Merge and release remain separate decisions.
+
+## Local environment
+
+SDK 10.0.403 is installed system-wide on this machine. PowerShell 7 was not on `PATH`; a local copy was installed with `dotnet tool install PowerShell --tool-path .artifacts/pwsh` for script controls, and the native fixture DLLs were copied into `.artifacts/native/` from an earlier build of identical sources. Recheck both before reuse. These are environment notes, not project authority.
