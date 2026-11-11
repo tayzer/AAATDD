@@ -42,6 +42,18 @@ try {
     & $initializer -Repository $application -Dotnet $Dotnet | Out-Host
     if ((Get-FileHash -LiteralPath $instructions).Hash -ne $before) { throw 'Plugin setup altered project instructions.' }
     if (!(Test-Path -LiteralPath (Join-Path $application '.tada/context.md'))) { throw 'Plugin setup did not initialise project context.' }
+    if (!(Test-Path -LiteralPath (Join-Path $plugin 'skills/tada/references/discovery-and-knowledge.md'))) { throw 'Plugin skill omitted its discovery and knowledge reference.' }
+    foreach ($knowledge in @('.tada/knowledge.json', '.tada/knowledge.md', '.tada/knowledge')) {
+        if (Test-Path -LiteralPath (Join-Path $application $knowledge)) { throw "Plugin setup created $knowledge. Reference mode is the default and needs no knowledge files." }
+    }
+    Push-Location -LiteralPath $application
+    try {
+        $knowledgeReport = (& $Dotnet tool run tada knowledge check --json) -join [Environment]::NewLine | ConvertFrom-Json
+        if ($LASTEXITCODE -or $knowledgeReport.knowledgeMode -ne 'reference' -or $knowledgeReport.modeSource -ne 'default') {
+            throw 'The installed verifier did not report the default reference knowledge mode.'
+        }
+    }
+    finally { Pop-Location }
     $report = [ordered]@{
         version = $manifest.version
         pluginRoot = $plugin
@@ -51,6 +63,8 @@ try {
         setupRepeatedSuccessfully = $true
         originalInstructionsByteExact = $true
         installationOnboardingSkillAbsent = $true
+        discoveryAndKnowledgeReferencePackaged = $true
+        defaultKnowledgeMode = $knowledgeReport.knowledgeMode
         nativeHostToggleTrial = 'pending'
         ordinaryRequestAgentTrial = 'pending'
     }
