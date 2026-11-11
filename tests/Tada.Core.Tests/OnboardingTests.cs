@@ -34,7 +34,7 @@ public sealed class OnboardingTests
         Assert.AreEqual("reference", Knowledge.ReadSettings(new Repository(root)).Settings.Mode);
         string workflow = File.ReadAllText(Path.Combine(root, ".tada", "WORKFLOW.md"));
         foreach (string guidance in new[] { "## Understand before agreeing", "change impact brief", "Verified findings", "Stop when you can responsibly propose",
-                     "never creates standalone records", "\"augment\"", "tada knowledge check", "outside the captured oracle" })
+                     "never creates standalone records", "\"augment\"", "tada knowledge check", "outside the captured oracle", "including paused work" })
             StringAssert.Contains(workflow, guidance);
         StringAssert.Contains(File.ReadAllText(Path.Combine(root, ".tada", "context.md")), "Replace finished work instead of appending history");
     }
