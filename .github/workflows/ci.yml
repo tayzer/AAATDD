@@ -20,7 +20,7 @@ jobs:
   windows:
     name: Windows validation
     runs-on: windows-2025
-    timeout-minutes: 30
+    timeout-minutes: 35
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: '1'
       DOTNET_GENERATE_ASPNET_CERTIFICATE: 'false'
@@ -68,6 +68,8 @@ jobs:
         run: dotnet pack src/Tada.Cli/Tada.Cli.csproj --no-restore --disable-build-servers -o .artifacts/packages
       - name: Orders end-to-end and negative controls
         run: pwsh -File scripts/Test-OrdersWorkflow.ps1
+      - name: Multi-level and multi-service installed-package controls
+        run: pwsh -File scripts/Test-MultiServiceWorkflow.ps1
       - name: Package the TADA plugin and check project setup
         run: |
           [xml]$properties = Get-Content Directory.Build.props -Raw
@@ -111,6 +113,9 @@ jobs:
             .artifacts/**/run.json
             .artifacts/**/result.json
             .artifacts/**/tada-messages.ndjson
+            .artifacts/**/supporting.trx
+            .artifacts/alpha13-*.log
+            .artifacts/multi-service/*/.tada/**
             .artifacts/orders-workflow/*/.tada/**
             .artifacts/onboarding/*/.tada/**
             !.artifacts/**/.tada/scratch/**

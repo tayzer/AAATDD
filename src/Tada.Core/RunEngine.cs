@@ -5,6 +5,12 @@ namespace Tada;
 public sealed class RunEngine(BaselineStore store, string dotnet = "dotnet", Action<string>? progress = null)
 {
     public async Task<Verification> Run(string baseline, CancellationToken cancellation = default)
+        => await RunCaptured(baseline, null, cancellation);
+
+    internal Task<Verification> RunSupporting(string baseline, string plan, CancellationToken cancellation)
+        => RunCaptured(baseline, plan, cancellation);
+
+    private async Task<Verification> RunCaptured(string baseline, string? supportingPlan, CancellationToken cancellation)
     {
         string id = Guid.NewGuid().ToString("N");
         string run = RunDirectory(id);
@@ -35,14 +41,14 @@ public sealed class RunEngine(BaselineStore store, string dotnet = "dotnet", Act
         {
             progress?.Invoke($"Run {id}. Validating baseline approval and current inputs.");
             inventory = store.Read(baseline);
-            if (inventory.SchemaVersion != 6 || !BuildInputs.Supported(inventory.Policy.BuildInputs) || inventory.Policy.RuntimeInputs != RuntimeInputs.Policy || inventory.Policy.BuildTasks != TaskJournal.Policy)
+            if (inventory.SchemaVersion is not (6 or 7) || !BuildInputs.Supported(inventory.Policy.BuildInputs) || inventory.Policy.RuntimeInputs != RuntimeInputs.Policy || inventory.Policy.BuildTasks != TaskJournal.Policy)
                 throw new TadaException("Baseline predates the evaluated-build-input policy. Prepare, review and approve a new revision.");
             if (!OperatingSystem.IsWindows() || System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture != System.Runtime.InteropServices.Architecture.X64)
                 throw new TadaException("This development profile supports Windows x64 only.");
-            var approval = store.Approved(baseline);
-            approvalId = approval.Id;
+            if (inventory.Engineering == null) approvalId = store.Approved(baseline).Id;
+            else CheckSupportingPlan(baseline, supportingPlan);
             store.CheckCurrent(baseline);
-            var config = Data.Read<Config>(store.Repository.Resolve("tada.json"));
+            var config = inventory.Engineering?.Configuration ?? Data.Read<Config>(store.Repository.Resolve("tada.json"));
             TaskJournal.CheckEvaluation(store.Repository, config, store.Repository.CapturePaths(config).Concat(
                 store.Repository.CapturePaths(config with { OracleRoots = config.ImplementationRoots ?? [] })));
             var implementationBefore = Implementation(config);
@@ -63,10 +69,9 @@ public sealed class RunEngine(BaselineStore store, string dotnet = "dotnet", Act
             var info = await Command(["--info"]);
             environment = CanonicalJson.Identity(new { sdk = version.Stdout.Trim(), info = info.Stdout, os = System.Runtime.InteropServices.RuntimeInformation.OSDescription });
             var execution = inventory.Execution;
-            if (execution.SutProject != null)
+            foreach (var service in execution.Applications())
             {
-                store.Repository.Resolve(execution.SutProject);
-                await Build(execution.SutProject, "sut");
+                await Build(service.Project, "sut", execution.Services == null ? null : service.Id);
             }
             await Build(execution.Project, "harness");
             progress?.Invoke("Auditing captured build inputs and MSBuild task journals.");
@@ -114,8 +119,24 @@ public sealed class RunEngine(BaselineStore store, string dotnet = "dotnet", Act
                 if (!File.Exists(sut)) throw new TadaException("SUT assembly was not built.");
                 variables["TADA_SUT_ASSEMBLY"] = sut;
             }
+            if (execution.Services != null)
+            {
+                string servicesFile = Path.Combine(run, "services.json");
+                Data.WriteNew(servicesFile, execution.Services.ToDictionary(service => service.Id,
+                    service => Path.GetFullPath(Path.Combine(run, execution.Output(service), service.Assembly))));
+                artifacts.Add("services.json", CanonicalJson.FileDigest(servicesFile));
+                variables["TADA_SERVICES_FILE"] = servicesFile;
+            }
             progress?.Invoke($"Running acceptance scenarios ({inventory.ExpectedCases.Length} required cases).");
-            var result = await Processes.Execute(host, [assembly, "--progress", "off", "--no-ansi"], harness,
+            string[] arguments = [assembly, "--progress", "off", "--no-ansi"];
+            if (inventory.Engineering != null)
+            {
+                var discovery = await Processes.Execute(host, [assembly, "--list-tests", "--no-ansi"], harness,
+                    execution.TimeoutSeconds, variables, cancellation, replaceEnvironment: true);
+                commands.Add(discovery);
+                arguments = [.. arguments, "--report-trx", "--report-trx-filename", execution.MessagesFile, "--results-directory", harness];
+            }
+            var result = await Processes.Execute(host, arguments, harness,
                 execution.TimeoutSeconds, variables, cancellation, replaceEnvironment: true);
             commands.Add(result);
             progress?.Invoke("Checking runtime observations, teardown and input stability.");
@@ -135,7 +156,7 @@ public sealed class RunEngine(BaselineStore store, string dotnet = "dotnet", Act
             Data.WriteNew(runtimeFile, RuntimeInputs.Capture(run, platform));
             runtimeInputsDigest = CanonicalJson.FileDigest(runtimeFile);
             var provisional = new RunRecord(id, baseline, approvalId, began, DateTimeOffset.UtcNow, implementation,
-                environment, messagesDigest, artifacts, commands.ToArray(), gaps.ToArray(), buildInputsDigest, runtimeInputsDigest, executionEnvironmentDigest, taskInputsDigest);
+                environment, messagesDigest, artifacts, commands.ToArray(), gaps.ToArray(), buildInputsDigest, runtimeInputsDigest, executionEnvironmentDigest, taskInputsDigest, supportingPlan);
             RuntimeInputs.Verify(run, inventory, provisional, checkCurrent: true);
         }
         catch (Exception error) when (error is TadaException or IOException or JsonException or InvalidOperationException or
@@ -144,7 +165,7 @@ public sealed class RunEngine(BaselineStore store, string dotnet = "dotnet", Act
             gaps.Add(new Reason("execution-invalid", error.Message));
         }
         var record = new RunRecord(id, baseline, approvalId, began, DateTimeOffset.UtcNow, implementation,
-            environment, messagesDigest, artifacts, commands.ToArray(), gaps.ToArray(), buildInputsDigest, runtimeInputsDigest, executionEnvironmentDigest, taskInputsDigest);
+            environment, messagesDigest, artifacts, commands.ToArray(), gaps.ToArray(), buildInputsDigest, runtimeInputsDigest, executionEnvironmentDigest, taskInputsDigest, supportingPlan);
         progress?.Invoke("Saving retained run evidence.");
         Data.WriteNew(Path.Combine(run, "run.json"), record);
         Verification verification;
@@ -175,10 +196,10 @@ public sealed class RunEngine(BaselineStore store, string dotnet = "dotnet", Act
             }
             return command;
         }
-        async Task Build(string project, string subdirectory)
+        async Task Build(string project, string subdirectory, string? serviceId = null)
         {
-            string generated = Path.Combine(run, "build", subdirectory);
-            string output = Path.Combine(run, subdirectory);
+            string generated = Path.Combine(run, "build", subdirectory, serviceId ?? "");
+            string output = Path.Combine(run, subdirectory, serviceId ?? "");
             Directory.CreateDirectory(generated);
             string[] properties = ["-p:UseArtifactsOutput=true", "-p:ArtifactsPath=" + generated, "-p:Configuration=Release",
                 "-p:TadaVerifiedBuild=true",
@@ -204,10 +225,11 @@ public sealed class RunEngine(BaselineStore store, string dotnet = "dotnet", Act
                 progress?.Invoke($"Evaluating {subdirectory} build inputs for {selected}.");
                 await Msbuild(["-getItem:" + BuildInputs.Items, "-getProperty:" + BuildInputs.Properties, "-getResultOutputFile:" + beforeJson]);
                 await Msbuild(["-preprocess:" + beforeXml]);
-                var config = Data.Read<Config>(store.Repository.Resolve("tada.json"));
+                var config = inventory!.Engineering?.Configuration ?? Data.Read<Config>(store.Repository.Resolve("tada.json"));
                 var before = BuildInputs.Capture(store.Repository, inventory!, config, sdk, generated, output, subdirectory, selected, beforeJson, beforeXml);
                 ProjectDependency[]? dependencies = inventory!.Policy.BuildInputs == BuildInputs.Policy
-                    ? BuildInputs.ReadDependencies(beforeJson, subdirectory, config.Execution.SutProject == null ? null : store.Repository.Resolve(config.Execution.SutProject)) : null;
+                    ? BuildInputs.ReadDependencies(beforeJson, subdirectory, null, config.Execution.Applications().Select(service => store.Repository.Resolve(service.Project)).ToArray(),
+                        config.Execution.Services?.ToDictionary(service => store.Repository.Resolve(service.Project), service => service.Id, StringComparer.OrdinalIgnoreCase)) : null;
                 using (var evaluation = JsonDocument.Parse(File.ReadAllBytes(beforeJson)))
                     foreach (var reference in evaluation.RootElement.GetProperty("Items").GetProperty("ProjectReference").EnumerateArray())
                     {
@@ -228,7 +250,8 @@ public sealed class RunEngine(BaselineStore store, string dotnet = "dotnet", Act
                 var after = BuildInputs.Capture(store.Repository, inventory!, config, sdk, generated, output, subdirectory, selected, afterJson, afterXml);
                 BuildInputs.CheckStable(before, after);
                 if (dependencies != null && !BuildInputs.ReadDependencies(afterJson, subdirectory,
-                    config.Execution.SutProject == null ? null : store.Repository.Resolve(config.Execution.SutProject)).SequenceEqual(dependencies))
+                    null, config.Execution.Applications().Select(service => store.Repository.Resolve(service.Project)).ToArray(),
+                    config.Execution.Services?.ToDictionary(service => store.Repository.Resolve(service.Project), service => service.Id, StringComparer.OrdinalIgnoreCase)).SequenceEqual(dependencies))
                     throw new TadaException("Project reference metadata changed during build.");
                 var reports = new[] { beforeJson, beforeXml, afterJson, afterXml }.ToDictionary(
                     path => Path.GetRelativePath(run, path).Replace('\\', '/'), CanonicalJson.FileDigest);
@@ -265,14 +288,18 @@ public sealed class RunEngine(BaselineStore store, string dotnet = "dotnet", Act
             record = Data.Read<RunRecord>(Path.Combine(directory, "run.json"));
             if (record.Id != id) throw new TadaException("Run record identity mismatch.");
             var inventory = store.Read(record.Baseline);
-            var approval = Data.Read<Approval>(store.RecordPath("approvals", record.Approval));
-            var review = Data.Read<Review>(store.RecordPath("reviews", approval.Review));
-            if (approval.Id != record.Approval || review.Id != approval.Review || approval.Baseline != record.Baseline || review.Baseline != record.Baseline || approval.Created > record.Started || review.Created > approval.Created)
-                throw new TadaException("Run does not reference prior approval and review of the assessed baseline.");
+            if (inventory.Engineering == null)
+            {
+                var approval = Data.Read<Approval>(store.RecordPath("approvals", record.Approval));
+                var review = Data.Read<Review>(store.RecordPath("reviews", approval.Review));
+                if (approval.Id != record.Approval || review.Id != approval.Review || approval.Baseline != record.Baseline || review.Baseline != record.Baseline || approval.Created > record.Started || review.Created > approval.Created)
+                    throw new TadaException("Run does not reference prior approval and review of the assessed baseline.");
+            }
+            else CheckSupportingPlan(record.Baseline, record.SupportingPlan);
             if (record.IntegrityGaps.Length > 0)
                 return new Verification("INDETERMINATE", "L1-advisory", record.Baseline, id, [], record.IntegrityGaps);
             BuildInputs.Verify(directory, inventory, record.BuildInputsDigest);
-            TaskJournal.Verify(directory, inventory, Data.Read<Config>(new Repository(store.Snapshot(record.Baseline)).Resolve("tada.json")), record);
+            TaskJournal.Verify(directory, inventory, inventory.Engineering?.Configuration ?? Data.Read<Config>(new Repository(store.Snapshot(record.Baseline)).Resolve("tada.json")), record);
             RuntimeInputs.Verify(directory, inventory, record);
             if (!record.Artifacts.ContainsKey("harness/" + inventory.Execution.Assembly))
                 throw new TadaException("Run has no identified harness executable.");
@@ -292,6 +319,11 @@ public sealed class RunEngine(BaselineStore store, string dotnet = "dotnet", Act
                 throw new TadaException("Command timestamps do not belong to this run.");
             if (command.Cancelled) throw new TadaException("Harness execution was cancelled.");
             if (command.TimedOut) throw new TadaException("Harness did not finish within its deadline.");
+            if (inventory.Engineering != null)
+            {
+                var discovery = record.Commands.Single(item => item.Arguments.Contains("--list-tests"));
+                return TrxVerifier.Verify(inventory.Engineering.RequiredTests, record.Baseline, id, messages, discovery, command);
+            }
             return MessagesVerifier.Verify(inventory, record.Baseline, id, messages,
                 new Repository(store.Snapshot(record.Baseline)), command);
         }
@@ -353,6 +385,7 @@ public sealed class RunEngine(BaselineStore store, string dotnet = "dotnet", Act
     private static Dictionary<string, string> CollectArtifacts(string run, string messagesFile, bool beforeRun = false)
     {
         var result = new Dictionary<string, string>(StringComparer.Ordinal);
+        if (File.Exists(Path.Combine(run, "services.json"))) result.Add("services.json", CanonicalJson.FileDigest(Path.Combine(run, "services.json")));
         foreach (string name in new[] { "harness", "sut", "observer" })
         {
             string directory = Path.Combine(run, name);
@@ -385,6 +418,12 @@ public sealed class RunEngine(BaselineStore store, string dotnet = "dotnet", Act
                 else result.Add(relative, CanonicalJson.FileDigest(path));
             }
         }
+    }
+
+    private void CheckSupportingPlan(string baseline, string? plan)
+    {
+        if (plan == null || !new PlanStore(store).Read(plan).Checks.Any(check => check.Baseline == baseline && check.Purpose == "supporting"))
+            throw new TadaException("Supporting execution requires a captured verification plan identifying these check inputs.");
     }
 
     private string RunDirectory(string id)

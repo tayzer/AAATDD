@@ -5,9 +5,12 @@ namespace Tada;
 public sealed partial class BaselineStore(Repository repository)
 {
     public Repository Repository => repository;
-    public string Prepare()
+    public string Prepare() => Publish(repository.Capture());
+
+    internal string PrepareEngineering(Engineering engineering) => Publish(repository.Capture(engineering));
+
+    private string Publish(Inventory inventory)
     {
-        var inventory = repository.Capture();
         string id = CanonicalJson.Identity(inventory);
         string path = BaselinePath(id);
         if (!File.Exists(path))
@@ -61,7 +64,7 @@ public sealed partial class BaselineStore(Repository repository)
     {
         var path = BaselinePath(baseline);
         var inventory = Data.Read<Inventory>(path);
-        if (inventory.SchemaVersion is not (1 or 2 or 3 or 4 or 5 or 6) || CanonicalJson.Identity(inventory) != baseline)
+        if (inventory.SchemaVersion is not (1 or 2 or 3 or 4 or 5 or 6 or 7) || CanonicalJson.Identity(inventory) != baseline)
             throw new TadaException("Baseline identity does not match its content.");
         var snapshot = new Repository(Snapshot(baseline));
         foreach (var file in inventory.Files)
@@ -91,6 +94,7 @@ public sealed partial class BaselineStore(Repository repository)
         var review = Data.Read<Review>(RecordPath("reviews", reviewId));
         if (review.Id != reviewId) throw new TadaException("Review identity mismatch.");
         var inventory = Read(review.Baseline);
+        if (inventory.Engineering != null) throw new TadaException("Supporting checks are captured by a verification plan and cannot receive business approval.");
         CheckCurrent(review.Baseline);
         if (replaces != null)
         {
@@ -110,7 +114,7 @@ public sealed partial class BaselineStore(Repository repository)
 
     public Approval Approved(string baseline)
     {
-        Read(baseline);
+        if (Read(baseline).Engineering != null) throw new TadaException("Supporting checks are not business acceptance baselines.");
         string directory = repository.StateDirectory("approvals");
         var approvals = Directory.EnumerateFiles(directory, "*.json").Select(path =>
         {
@@ -130,8 +134,8 @@ public sealed partial class BaselineStore(Repository repository)
 
     public void CheckCurrent(string baseline)
     {
-        Read(baseline);
-        if (CanonicalJson.Identity(repository.Capture()) != baseline)
+        var inventory = Read(baseline);
+        if (CanonicalJson.Identity(repository.Capture(inventory.Engineering)) != baseline)
             throw new TadaException("Oracle inputs changed or the selected file set differs. Prepare, review and approve a new revision.");
     }
 

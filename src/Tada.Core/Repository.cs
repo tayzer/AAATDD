@@ -70,7 +70,7 @@ public sealed partial class Repository
             if (File.Exists(full)) paths.Add(Relative(Resolve(selected)));
             else Visit(Resolve(selected, true));
         }
-        paths.Add("tada.json");
+        if (File.Exists(Path.Combine(Root, "tada.json"))) paths.Add("tada.json");
         foreach (string input in new[] { "global.json", "NuGet.Config", "dotnet-tools.json", ".config/dotnet-tools.json", "Directory.Build.props", "Directory.Build.targets", "Directory.Packages.props" })
             if (File.Exists(Path.Combine(Root, input))) paths.Add(input);
         foreach (var selected in selectedRoots.Append(config.Execution.Project))
@@ -104,10 +104,10 @@ public sealed partial class Repository
         }
     }
 
-    public Inventory Capture()
+    public Inventory Capture(Engineering? engineering = null)
     {
-        var config = Data.Read<Config>(Resolve("tada.json"));
-        if (config.SchemaVersion != 1 || config.OracleRoots.Length == 0) throw new TadaException("Unsupported or empty configuration.");
+        var config = engineering?.Configuration ?? Data.Read<Config>(Resolve("tada.json"));
+        if (config.SchemaVersion is not (1 or 2) || config.OracleRoots.Length == 0) throw new TadaException("Unsupported or empty configuration.");
         TaskJournal.ValidateContracts(this, config);
         if (!config.Execution.Project.EndsWith(".csproj", StringComparison.Ordinal) ||
             !config.Execution.Assembly.EndsWith(".dll", StringComparison.Ordinal) ||
@@ -116,10 +116,26 @@ public sealed partial class Repository
             config.Execution.MessagesFile.Contains('\\') || config.Execution.TimeoutSeconds is < 1 or > 3600)
             throw new TadaException("Invalid execution configuration.");
         Resolve(config.Execution.Project);
+        var execution = config.Execution;
+        if ((execution.SutProject == null) != (execution.SutAssembly == null) ||
+            (execution.Services != null && (config.SchemaVersion != 2 || execution.SutProject != null)))
+            throw new TadaException("Select either a legacy SUT pair or schema-2 named services.");
+        var ids = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var projects = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var service in execution.Applications())
+        {
+            if (service == null || string.IsNullOrWhiteSpace(service.Id) || !Regex.IsMatch(service.Id, @"\A[a-z][a-z0-9_-]*\z") || DeviceName().IsMatch(service.Id) ||
+                !ids.Add(service.Id) || !projects.Add(service.Project) ||
+                !service.Project.EndsWith(".csproj", StringComparison.Ordinal) ||
+                !service.Assembly.EndsWith(".dll", StringComparison.Ordinal) || service.Assembly != Path.GetFileName(service.Assembly))
+                throw new TadaException("Services require unique safe IDs, distinct projects and assembly filenames.");
+            Resolve(service.Project);
+        }
         var inputs = CapturePaths(config).Select(path => new FileInput(path,
             [path.EndsWith(".feature", StringComparison.Ordinal) ? "specification" : "support"], CanonicalJson.FileDigest(Resolve(path)))).ToArray();
         if (!inputs.Any(f => f.Path == config.Execution.Project)) throw new TadaException("Harness project is outside the captured oracle.");
-        var cases = Features.Read(this, inputs.Where(x => x.Roles.Contains("specification")), config);
+        var cases = engineering == null ? Features.Read(this, inputs.Where(x => x.Roles.Contains("specification")), config)
+            : engineering.RequiredTests.Select(id => new ExpectedCase(id, id, [], config.Execution.Project)).ToArray();
         if (cases.Length == 0) throw new TadaException("No acceptance cases. For a chore, use the maintenance workflow rather than inventing business scenarios.");
         var requirements = cases.SelectMany(x => x.RequirementIds).Distinct().Order(StringComparer.Ordinal).ToArray();
         string lockPath = Path.Combine(Path.GetDirectoryName(config.Execution.Project)!, "packages.lock.json").Replace('\\', '/');
@@ -132,8 +148,9 @@ public sealed partial class Repository
             new ExternalInput("dotnet-sdk-policy", inputs.Single(f => f.Path == "global.json").Digest),
             new ExternalInput("nuget-locked-graph", inputs.Single(f => f.Path == lockPath).Digest)
         }.OrderBy(x => x.Id, StringComparer.Ordinal).ToArray();
-        return new Inventory(6, new Scope(requirements, cases.Select(x => x.ScenarioId).ToArray()), inputs, cases,
-            config.Execution, external, new Policy(BuildInputs: BuildInputs.Policy, RuntimeInputs: RuntimeInputs.Policy, BuildTasks: TaskJournal.Policy));
+        return new Inventory(engineering != null || execution.Services != null ? 7 : 6,
+            new Scope(requirements, cases.Select(x => x.ScenarioId).ToArray()), inputs, cases,
+            config.Execution, external, new Policy(BuildInputs: BuildInputs.Policy, RuntimeInputs: RuntimeInputs.Policy, BuildTasks: TaskJournal.Policy), engineering);
     }
 
     [GeneratedRegex(@"^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\.|$)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]

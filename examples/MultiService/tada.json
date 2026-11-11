@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 2,
+  "oracleRoots": ["features", "Acceptance", "Support"],
+  "implementationRoots": ["Services"],
+  "execution": {
+    "project": "Acceptance/Journey.Acceptance.csproj",
+    "assembly": "Journey.Acceptance.dll",
+    "messagesFile": "tada-messages.ndjson",
+    "timeoutSeconds": 180,
+    "services": [
+      {"id": "orders", "project": "Services/Orders/Orders.Service.csproj", "assembly": "Orders.Service.dll"},
+      {"id": "payments", "project": "Services/Payments/Payments.Service.csproj", "assembly": "Payments.Service.dll"},
+      {"id": "inventory", "project": "Services/Inventory/Inventory.Service.csproj", "assembly": "Inventory.Service.dll"}
+    ]
+  }
+}

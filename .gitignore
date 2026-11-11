@@ -2,6 +2,7 @@
 **/obj/
 .artifacts/
 .tada/runs/
+.tada/plan-runs/
 .tada/scratch/
 *.user
 

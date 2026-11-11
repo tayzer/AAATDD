@@ -1,0 +1,5 @@
+{
+  "schemaVersion": 1,
+  "requiredProperties": ["schemaVersion", "orderId", "status"],
+  "statuses": ["approved", "declined"]
+}
