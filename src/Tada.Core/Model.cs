@@ -8,7 +8,14 @@ public sealed record FileInput(string Path, string[] Roles, string Digest);
 public sealed record Scope(string[] RequirementIds, string[] ScenarioIds);
 public sealed record ExpectedCase(string CaseId, string ScenarioId, string[] RequirementIds, string SourcePath);
 public sealed record Execution(string Project, string Assembly, string MessagesFile, int TimeoutSeconds = 120,
-    string? SutProject = null, string? SutAssembly = null);
+    string? SutProject = null, string? SutAssembly = null,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] Service[]? Services = null)
+{
+    public Service[] Applications() => Services ?? (SutProject == null ? [] : [new Service("sut", SutProject, SutAssembly!)]);
+    public string Output(Service service) => Services == null ? "sut" : "sut/" + service.Id;
+}
+public sealed record Service(string Id, string Project, string Assembly);
+public sealed record Engineering(Config Configuration, string[] RequiredTests);
 public sealed record ExternalInput(string Id, string Digest);
 public sealed record Policy(string Assurance = "L1-advisory", bool AutomaticRetries = false,
     string MessagesProtocol = "30.1.0",
@@ -16,7 +23,8 @@ public sealed record Policy(string Assurance = "L1-advisory", bool AutomaticRetr
     [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? RuntimeInputs = null,
     [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? BuildTasks = null);
 public sealed record Inventory(int SchemaVersion, Scope Scope, FileInput[] Files, ExpectedCase[] ExpectedCases,
-    Execution Execution, ExternalInput[] ExternalInputs, Policy Policy);
+    Execution Execution, ExternalInput[] ExternalInputs, Policy Policy,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] Engineering? Engineering = null);
 public sealed record Config(int SchemaVersion, string[] OracleRoots, Execution Execution,
     string RequirementPrefix = "REQ_", string ScenarioPrefix = "AC_", string[]? ImplementationRoots = null,
     [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] BuildTaskContract[]? BuildTaskContracts = null,
@@ -42,7 +50,8 @@ public sealed record RunRecord(string Id, string Baseline, string Approval, Date
     [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? BuildInputsDigest = null,
     [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? RuntimeInputsDigest = null,
     [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? ExecutionEnvironmentDigest = null,
-    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? TaskInputsDigest = null);
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? TaskInputsDigest = null,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? SupportingPlan = null);
 public sealed record RunIntent(string Id, string Baseline, DateTimeOffset Started);
 
 public static class Data

@@ -36,6 +36,44 @@ public static class CliOutput
             });
             text.AppendLine("This checks the selected expectations; it is not protected independent assurance.");
         }
+        else if (value.TryGetProperty("plan", out var plan))
+        {
+            text.AppendLine($"Plan: {plan.GetString()}");
+            if (value.TryGetProperty("outcome", out var assessment))
+            {
+                text.AppendLine($"{assessment.GetString()} — local advisory L1");
+                text.AppendLine($"Run: {value.GetProperty("runId").GetString()}");
+                foreach (var check in value.GetProperty("checks").EnumerateArray())
+                {
+                    var result = check.GetProperty("result");
+                    text.AppendLine($"  {check.GetProperty("id").GetString()} ({check.GetProperty("level").GetString()}, {check.GetProperty("purpose").GetString()}): {result.GetProperty("outcome").GetString()}");
+                    text.AppendLine($"    Evidence run: {result.GetProperty("runId").GetString()}");
+                    foreach (var reason in result.GetProperty("reasons").EnumerateArray())
+                        text.AppendLine($"    {reason.GetProperty("caseId").GetString()}: {reason.GetProperty("detail").GetString()}");
+                }
+                foreach (var reason in value.GetProperty("reasons").EnumerateArray()) text.AppendLine("  " + reason.GetProperty("detail").GetString());
+            }
+            else
+            {
+                var definition = value.GetProperty("inventory").GetProperty("definition");
+                text.AppendLine(definition.GetProperty("objective").GetString());
+                text.AppendLine("Change categories: " + string.Join(", ", definition.GetProperty("categories").EnumerateArray().Select(category => category.GetString())));
+                foreach (var impact in definition.GetProperty("impact").EnumerateArray()) text.AppendLine("  Impact: " + impact.GetString());
+                foreach (var check in definition.GetProperty("checks").EnumerateArray())
+                {
+                    text.AppendLine($"  {check.GetProperty("id").GetString()} ({check.GetProperty("level").GetString()}, {check.GetProperty("purpose").GetString()}): {check.GetProperty("rationale").GetString()}");
+                    foreach (var obligation in check.GetProperty("obligations").EnumerateArray()) text.AppendLine("    Obligation: " + obligation.GetString());
+                }
+                if (definition.GetProperty("previous").ValueKind == JsonValueKind.String)
+                    text.AppendLine($"Previous plan: {definition.GetProperty("previous").GetString()}. {definition.GetProperty("changeReason").GetString()}");
+                foreach (var omission in definition.GetProperty("omissions").EnumerateArray()) text.AppendLine("  Omission rationale: " + omission.GetString());
+                foreach (var check in value.GetProperty("changedChecks").EnumerateArray()) text.AppendLine("  New/changed check: " + check.GetString());
+                foreach (var check in value.GetProperty("removedChecks").EnumerateArray()) text.AppendLine("  Removed check: " + check.GetString());
+                if (definition.GetProperty("noChecksReason").ValueKind == JsonValueKind.String) text.AppendLine(definition.GetProperty("noChecksReason").GetString());
+                text.AppendLine("Plan captured. Human business approval remains separate.");
+                text.AppendLine($"Next: tada run --plan {plan.GetString()}");
+            }
+        }
         else if (value.TryGetProperty("outcome", out var outcome))
         {
             text.AppendLine($"{outcome.GetString()} — local advisory L1");

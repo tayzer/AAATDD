@@ -33,7 +33,7 @@ try {
             & $Dotnet tool install Tada.Cli --version $manifest.version --configfile $configuration | Out-Host
         }
         else {
-            if ($installed[0].version -ne $manifest.version -and $installed[0].version -notmatch '^0\.1\.0-alpha\.(?:[0-9]|1[01])$') {
+            if ($installed[0].version -ne $manifest.version -and $installed[0].version -notmatch '^0\.1\.0-alpha\.(?:[0-9]|1[0-2])$') {
                 throw "This project selects Tada.Cli $($installed[0].version). Select a compatible TADA plugin for that version."
             }
             & $Dotnet tool update Tada.Cli --version $manifest.version --configfile $configuration | Out-Host

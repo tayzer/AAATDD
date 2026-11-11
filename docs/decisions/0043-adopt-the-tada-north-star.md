@@ -1,6 +1,6 @@
 # ADR 0043: Adopt the TADA North Star as the product decision framework
 
-Status: **ACCEPTED — DIRECT USER INSTRUCTION**. Decision date: 2026-11-11. ADR number 0042 is used by the unmerged change-aware verification work in PR #5; this record does not depend on that PR.
+Status: **ACCEPTED — DIRECT USER INSTRUCTION**. Decision date: 2026-11-11. ADR number 0042 records the change-aware multi-level verification work merged from PR #5.
 
 ## Context
 

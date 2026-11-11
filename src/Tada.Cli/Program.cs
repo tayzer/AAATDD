@@ -22,7 +22,7 @@ try
         }
         if (!options.TryAdd(key, value)) throw new TadaException($"Duplicate option: --{key}");
     }
-    var known = new[] { "repo", "baseline", "review", "by", "replaces", "against", "run", "dotnet", "base", "json", "help", "version" };
+    var known = new[] { "repo", "baseline", "review", "by", "replaces", "against", "run", "dotnet", "base", "json", "help", "version", "plan", "file" };
     if (options.Keys.Except(known).Any()) throw new TadaException("Unknown option: " + options.Keys.Except(known).First());
     string Need(string name) => options.GetValueOrDefault(name) ?? throw new TadaException($"Explicit --{name} is required.");
     string? Maybe(string name) => options.GetValueOrDefault(name);
@@ -41,6 +41,8 @@ try
         tada baseline prepare [--repo DIRECTORY]
         tada baseline review --baseline sha256:... [--against sha256:...]
         tada baseline approve --review ID --by NAME [--replaces sha256:...]
+        tada plan prepare --file .tada/verification-plan.json
+        tada run --plan sha256:... [--dotnet PATH]
         tada run --baseline sha256:... [--dotnet PATH]
         tada verify --run ID
         tada gate [--run ID] [--base GIT-REVISION]
@@ -74,6 +76,9 @@ try
     var store = new BaselineStore(repository);
     switch (string.Join(' ', words))
     {
+        case "plan prepare":
+            Print(new PlanStore(store).Prepare(Need("file")));
+            return 0;
         case "baseline prepare":
             Print(new { baseline = store.Prepare(), status = "DRAFT", next = "baseline review --baseline <digest>" });
             return 0;
@@ -101,6 +106,15 @@ try
         case "baseline approve": Print(store.Approve(Need("review"), Need("by"), Maybe("replaces"))); return 0;
         case "run":
         {
+            if (Maybe("plan") is { } plan)
+            {
+                if (Maybe("baseline") != null) throw new TadaException("Select either --plan or --baseline.");
+                PlanVerification assessment;
+                await using (var progress = options.ContainsKey("json") ? null : new CliProgress(Console.Error))
+                    assessment = await new PlanEngine(store, Maybe("dotnet") ?? "dotnet", progress == null ? null : progress.Report).Run(plan, cancellation.Token);
+                Print(assessment);
+                return assessment.ExitCode;
+            }
             string selectedBaseline = Need("baseline");
             Verification run;
             await using (var progress = options.ContainsKey("json") ? null : new CliProgress(Console.Error))
@@ -111,6 +125,14 @@ try
         case "verify":
         {
             string id = Need("run");
+            if (Guid.TryParseExact(id, "N", out _) && Directory.Exists(Path.Combine(repository.State, "plan-runs", id)))
+            {
+                PlanVerification assessment;
+                await using (var progress = options.ContainsKey("json") ? null : new CliProgress(Console.Error))
+                    assessment = new PlanEngine(store, progress: progress == null ? null : progress.Report).Verify(id);
+                Print(assessment);
+                return assessment.ExitCode;
+            }
             Verification verified;
             await using (var progress = options.ContainsKey("json") ? null : new CliProgress(Console.Error))
                 verified = new RunEngine(store, progress: progress == null ? null : progress.Report).Verify(id);

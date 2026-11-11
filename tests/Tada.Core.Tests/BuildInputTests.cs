@@ -7,6 +7,25 @@ namespace Tada.Tests;
 public sealed class BuildInputTests
 {
     [TestMethod]
+    public void SupportingTestsKeepBuildOnlyServiceReferencesInTheServiceRole()
+    {
+        using var fixture = new Fixture();
+        string api = fixture.File("Api/Api.csproj", "<Project/>");
+        var config = Data.Read<Config>(Path.Combine(fixture.Root, "tada.json"));
+        config = config with { ImplementationRoots = ["Api"], Execution = config.Execution with { SutProject = "Api/Api.csproj", SutAssembly = "Api.dll" } };
+        var inventory = fixture.Inventory with { Execution = config.Execution, Engineering = new Engineering(config, ["Check"]) };
+        var evaluation = System.Text.Json.Nodes.JsonNode.Parse(File.ReadAllText(fixture.Evaluation))!;
+        evaluation["Items"]!["ProjectReference"] = System.Text.Json.JsonSerializer.SerializeToNode(new[]
+        {
+            new { FullPath = api, OutputItemType = "TadaSutOutput", ReferenceOutputAssembly = "false", Private = "false" }
+        });
+        File.WriteAllText(fixture.Evaluation, evaluation.ToJsonString());
+        var inputs = BuildInputs.Capture(new Repository(fixture.Root), inventory, config, fixture.Sdk, fixture.Generated,
+            Path.Combine(fixture.Root, ".tada", "audit", "harness"), "harness", config.Execution.Project, fixture.Evaluation, fixture.Preprocessed);
+        Assert.AreEqual("sut-reference", inputs.Single(input => input.Path == api).Category);
+    }
+
+    [TestMethod]
     public void NativeBuildEvaluationCannotStandInForRecordedExecution()
     {
         using var fixture = new Fixture();

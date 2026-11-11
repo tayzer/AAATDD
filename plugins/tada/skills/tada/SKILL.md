@@ -27,7 +27,7 @@ You may propose expectations and amendments. Only an authorised human approves t
 
 ## Select verification
 
-Choose checks by actual effect, impact, risk and existing coverage, not by the change label.
+Classify the actual effects as `feat`, `fix`, `refactor`, `chore` or a mixture; branch names are hints. Before implementing, record the objective, affected services, interfaces, storage and journeys, adequate existing coverage, gaps, selected checks and the reasons for omitted levels. Select unit, service, producer/consumer contract and end-to-end journey checks by impact and risk. Each level answers its own questions. Do not require every level for every change, and never waive an obligation through a label.
 
 - **Feature:** new Gherkin plus relevant contract and fitness obligations.
 - **Bug fix:** reuse an agreed scenario that exposes the defect, or agree a missing regression scenario.
@@ -37,11 +37,15 @@ Choose checks by actual effect, impact, risk and existing coverage, not by the c
 
 Supporting unit and implementation tests are yours to select and maintain; keep them outside the captured oracle. Contract and fitness files that express agreed obligations belong inside the oracle and are declared under `obligations` in `tada.json`. A label never downgrades verification.
 
+When coordinated execution is useful, capture `.tada/verification-plan.json` with `tada plan prepare --file .tada/verification-plan.json`, then use `tada run --plan <digest>` and `tada verify --run <id>`. Acceptance checks reference human-approved baselines. Supporting MSTest/MTP checks capture their engineering configuration and unique native discovery names, with TRX reporting enabled. Contract checks exercise both the real producer and consumer against captured contract expectations. Plan preparation never approves acceptance. Revisions identify `previous` and explain `changeReason`. An empty justified selection reports NO_CHECKS and makes no passing-test claim. Read the project workflow for the plan contract.
+
 ## Establish evidence
 
 Read `.tada/WORKFLOW.md` for runner setup, supported input contracts, execution and retained-evidence details. Configure a separate application and scenario-scoped acceptance harness, use meaningful public observations and release resources after failures.
 
-Make the harness runnable through Visual Studio Test Explorer and `dotnet test --project tests/Acceptance/Acceptance.csproj`. Use the generated `TadaAcceptance.Create()` context for its working directory, API assembly and .NET host. Add a build-only API `ProjectReference` with `ReferenceOutputAssembly="false"`, `Private="false"` and `OutputItemType="TadaSutOutput"`, and import `Tada.Acceptance.targets`. Match that reference to `execution.sutProject` in `tada.json`. Check native Debug and Release execution as well as recorded TADA execution. Native results are ordinary runner results; TADA assessment additionally requires an approved baseline and retained-evidence verification.
+Make the harness runnable through Visual Studio Test Explorer and `dotnet test --project tests/Acceptance/Acceptance.csproj`. Use the generated `TadaAcceptance.Create()` context for its working directory, API assembly and .NET host. Add a build-only API `ProjectReference` with `ReferenceOutputAssembly="false"`, `Private="false"` and `OutputItemType="TadaSutOutput"`, and import `Tada.Acceptance.targets`. Match that reference to `execution.sutProject` in `tada.json`. Native builds stage the complete separate API under the test output's `sut` directory; keep the same business bindings for both execution modes. Check native Debug and Release execution as well as recorded TADA execution. Native results are ordinary runner results; TADA assessment additionally requires an approved baseline and retained-evidence verification.
+
+For several owned local .NET services, use schema-2 `execution.services` with a unique ID, project and assembly for each service. Match each native build-only reference with `TadaServiceId`. Fixtures use `TadaAcceptance.Create().Services[id]`, own service readiness and isolated state, and checkpoint every service before termination. Agree business deadlines explicitly and distinguish failed outcomes from unavailable observations.
 
 Prepare and review the immutable baseline with `tada baseline prepare` and `tada baseline review` (with `--against <previous>` for amendments). Present the captured expectations, assertions, fixture setup, classified protected changes and trust declarations to the human. The human declares approval. You may prepare the approval command but must never grant approval on the human's behalf.
 
@@ -60,6 +64,8 @@ Run `tada gate --run <id>` (with `--base <target-branch>` when one exists). When
 Report which obligations were satisfied, which checks ran and their results, which protected expectations changed and whether they were approved, which checks were omitted and why, pending candidates, verification gaps, residual risks and the human code-review that remains. Explain PASS, FAIL, INDETERMINATE and NO_CHECKS within their actual scope. Results are local advisory L1: approval records are declarations, and team CI needs independent review of the protected changes the gate lists.
 
 Update concise Git-native context in `.tada/context.md`: current goal, feature links, baseline and run IDs, pending candidates, open questions and the next action. Update or supersede stale entries.
+
+For refactors, establish passing preservation checks before restructuring and add characterisation tests when coverage is inadequate. For chores, no new tests or no test execution can be justified by the actual effects. Record the evaluation and rationale. Use existing tools directly when coordinated execution adds no value. Human approval governs business intent and executable acceptance. Routine supporting engineering-test selection and implementation are delegated.
 
 ## Prepare the verifier when needed
 

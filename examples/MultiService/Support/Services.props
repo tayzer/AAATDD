@@ -1,0 +1,9 @@
+<Project>
+  <ItemGroup>
+    <Compile Include="../Support/*.cs" Link="Support/%(Filename)%(Extension)" />
+    <ProjectReference Include="../Services/Orders/Orders.Service.csproj" ReferenceOutputAssembly="false" Private="false" OutputItemType="TadaSutOutput" TadaServiceId="orders" />
+    <ProjectReference Include="../Services/Payments/Payments.Service.csproj" ReferenceOutputAssembly="false" Private="false" OutputItemType="TadaSutOutput" TadaServiceId="payments" />
+    <ProjectReference Include="../Services/Inventory/Inventory.Service.csproj" ReferenceOutputAssembly="false" Private="false" OutputItemType="TadaSutOutput" TadaServiceId="inventory" />
+  </ItemGroup>
+  <Import Project="Tada.Acceptance.targets" />
+</Project>

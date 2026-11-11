@@ -1,6 +1,6 @@
 # North Star architecture assessment
 
-Assessment date: 2026-11-11, against `main` at `943486f` (release `0.1.0-alpha.12`) and the open [PR #5](https://github.com/tayzer/TADA/pull/5) branch at `c7e4683`. The North Star is recorded in [ADR 0043](../decisions/0043-adopt-the-tada-north-star.md).
+Assessment date: 2026-11-11, against `main` at `943486f` (release `0.1.0-alpha.12`) and the [PR #5](https://github.com/tayzer/TADA/pull/5) branch at `c7e4683`. PR #5 merged into `main` during this work (`beace74`) and this change was reconciled with it. The North Star is recorded in [ADR 0043](../decisions/0043-adopt-the-tada-north-star.md).
 
 ## Summary
 
@@ -36,7 +36,7 @@ This change addresses the first three and the CI model. It does not attempt inde
 
 ### Partially implemented, or present in draft work
 
-- **PR #5 (unmerged):** discovery-time verification selection, content-addressed verification plans, supporting MSTest suites with TRX reconciliation, multi-service local systems, and `NO_CHECKS` for justified no-test changes. Its contract checks can have `supporting` purpose, which does not require approval. This change defines obligation kinds that PR #5's plans can adopt for protected contract and fitness checks.
+- **Change-aware verification ([ADR 0042](../decisions/0042-add-change-aware-multi-level-verification.md), merged from PR #5, unreleased alpha.13):** discovery-time verification selection, content-addressed verification plans, supporting MSTest suites with TRX reconciliation, multi-service local systems, and `NO_CHECKS` for justified no-test changes. Its contract checks can have `supporting` purpose, which does not require approval. This change defines obligation kinds that PR #5's plans can adopt for protected contract and fitness checks.
 - Lifecycle states: ADR 0013 accepted `DRAFT`, `APPROVED` and `SUPERSEDED` conceptually. Concrete enforcement of approved-but-unimplemented scope was open.
 
 ### Missing and necessary (addressed by this change)
@@ -53,7 +53,7 @@ This change addresses the first three and the CI model. It does not attempt inde
 ### Longer-term capabilities that remain deferred
 
 - Independent approval authority for team CI (L2), such as a trusted approval workflow or GitHub review integration that binds approval to a baseline digest.
-- Protected contract and fitness suites executed outside the acceptance harness. This depends on PR #5's plans or a successor.
+- Protected contract and fitness suites executed outside the acceptance harness. This builds on ADR 0042's verification plans.
 - Other DSLs, runners, languages and operating systems.
 - Stronger runtime provenance beyond the current observer.
 
@@ -61,7 +61,7 @@ This change addresses the first three and the CI model. It does not attempt inde
 
 | Priority | Item | Depends on | Acceptance criteria |
 | --- | --- | --- | --- |
-| 1 | Decide and merge PR #5, or split it into reviewable increments | Maintainer review | Plans can reference obligation kinds. Supporting checks stay delegated. |
+| 1 | Reconcile verification plans with enforcement | ADR 0042, ADR 0044 | Done for coexistence: plans and the gate run side by side. Next, the gate can consume plan runs so supporting checks stay delegated while active obligations stay mandatory. |
 | 2 | Protected plan checks | 1, ADR 0045 | A plan check with `contract` or `fitness` purpose must reference approved captured inputs. Changing them is reported by `gate --base`. Supporting checks remain unapproved. |
 | 3 | Independent approval adapter for CI | ADR 0044 | In CI, a baseline approval introduced by a pull request counts only when it is bound to a review by an authorised human outside the pull request's content, such as a required code-owner review of the exact digest. The gate reports which approvals are independently authorised. |
 | 4 | Scoped amendment and withdrawal of scenarios | ADR 0013, ADR 0044 | A human-approved amendment can retire a scenario identity with retained history. The gate reports the withdrawal as a protected change. |

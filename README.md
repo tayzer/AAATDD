@@ -71,7 +71,7 @@ The [lifecycle guide](docs/architecture/change-lifecycle.md) describes each stag
 | **Executable interpretation** | Bindings, assertions, fixtures, observers and drivers that decide whether a scenario passes | Human-reviewed with the baseline. Changes need renewed approval. |
 | **Service contracts** (optional) | Agreed producer/consumer expectations, declared per project | Protected like acceptance criteria when declared. |
 | **Fitness functions** | Agreed NFR thresholds and architecture rules, such as latency budgets or dependency boundaries | Protected when declared. Non-automatable concerns are recorded as required human review. |
-| **Supporting engineering tests** | Unit tests and implementation-focused integration tests | Delegated to the developer and agent. Not individually approved. |
+| **Supporting engineering tests** | Unit tests and implementation-focused integration tests | Delegated to the developer and agent. Not individually approved. Can be coordinated with acceptance through a captured [verification plan](docs/multi-level-verification.md). |
 
 Protection follows the requirement a check expresses, not its file type or test framework. See [ADR 0045](docs/decisions/0045-classify-protected-verification-obligations.md).
 
@@ -110,22 +110,20 @@ Approval of an expectation is distinct from permission to implement or merge. An
 
 You do not need to name TADA, Gherkin or any workflow command. The enabled agent workflow inspects the repository, asks the questions that change acceptance, proposes examples for you to agree, prepares verification when it is needed, and implements in small increments. It records a concise handoff in `.tada/context.md` so the next session can continue.
 
-The CLI operations used by the workflow are `tada init`, `tada baseline prepare | review | approve`, `tada run`, `tada verify` and `tada gate`. The [CI guide](docs/ci-pr-workflows.md) shows how to run the gate on pull requests.
+The CLI operations used by the workflow are `tada init`, `tada baseline prepare | review | approve`, `tada plan prepare`, `tada run`, `tada verify` and `tada gate`. The [CI guide](docs/ci-pr-workflows.md) shows how to run the gate on pull requests.
 
 ## Current capabilities and roadmap
 
 **Released in `0.1.0-alpha.12`:** plugin-guided workflow for ordinary requests; `tada init`; exact-byte baseline capture with review and approval; real Reqnroll/MSTest/MTP execution of a separate ASP.NET Core API; retained-evidence verification with `PASS`, `FAIL` and `INDETERMINATE`; preserved failure history; build-input and runtime observation with documented L1 limits. See the [release notes](docs/releases/0.1.0-alpha.12.md).
 
-**In source, not yet released:** the North Star workflow guidance; separate enforcement status with approved candidates and active obligations; `tada gate` with base-branch comparison; classification of protected contract, fitness, specification, interpretation and configuration changes; and the end-to-end lifecycle controls in `scripts/Test-EnforcementWorkflow.ps1`.
+**In source for `0.1.0-alpha.13`, not yet released:** [change-aware multi-level verification](docs/multi-level-verification.md) with captured verification plans, supporting MSTest/MTP suites, several owned local .NET services and explicit `NO_CHECKS` results for justified no-test changes ([ADR 0042](docs/decisions/0042-add-change-aware-multi-level-verification.md)); the North Star workflow guidance; separate enforcement status with approved candidates and active obligations; `tada gate` with base-branch comparison; classification of protected contract, fitness, specification, interpretation and configuration changes; and the end-to-end lifecycle controls in `scripts/Test-EnforcementWorkflow.ps1`.
 
-**Proposed in unmerged [PR #5](https://github.com/tayzer/TADA/pull/5):** change-aware verification plans that coordinate supporting MSTest suites with approved acceptance, multi-service local .NET systems, and explicit `NO_CHECKS` results for justified no-test changes. It is not part of `main`.
-
-**Planned:** an independent approval adapter for team CI (L2), protected contract and fitness suites outside the acceptance harness, and further runners, languages and platforms. The [North Star assessment](docs/architecture/north-star-assessment.md) records the gap analysis and prioritised roadmap.
+**Planned:** an independent approval adapter for team CI (L2), plan checks that run protected contract and fitness suites outside the acceptance harness, and further runners, languages and platforms. The [North Star assessment](docs/architecture/north-star-assessment.md) records the gap analysis and prioritised roadmap.
 
 ## Further reading
 
 - [Project charter](docs/vision.md) and [decision records](docs/decisions/)
-- [Development lifecycle](docs/architecture/change-lifecycle.md) and [enforcement guide](docs/enforcement.md)
+- [Development lifecycle](docs/architecture/change-lifecycle.md), [enforcement guide](docs/enforcement.md) and [multi-level verification](docs/multi-level-verification.md)
 - [CI and PR workflows](docs/ci-pr-workflows.md)
 - [Quickstart](docs/quickstart.md), [plugin](docs/plugin.md) and [native testing](docs/native-testing.md)
 - [Build-task contracts](docs/build-task-contracts.md) and [provenance audit](docs/validation/provenance-audit.md) for verifier trust boundaries

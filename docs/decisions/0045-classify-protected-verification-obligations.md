@@ -31,6 +31,6 @@ Non-functional requirements and fitness functions are part of requirements disco
 ## Consequences
 
 - Reviewers can see when a change alters a contract or fitness threshold, even though the mechanical protection, exact-byte capture and approval, is unchanged.
-- In the current supported stack, protected contract and fitness checks run through the approved Reqnroll/MSTest acceptance harness. Running separately captured MSTest suites as protected obligations would build on the verification plans proposed in PR #5 and remains future work.
+- In the current supported stack, protected contract and fitness checks run through the approved Reqnroll/MSTest acceptance harness. Running separately captured MSTest suites as protected obligations would build on the verification plans from [ADR 0042](0042-add-change-aware-multi-level-verification.md) and remains future work.
 - Supporting engineering tests outside the oracle can change without approval. They cannot weaken protected obligations, because protected inputs are captured separately.
 - Classification uses path conventions and declarations. It does not decide whether an assertion is semantically adequate. Human review of the executable interpretation remains necessary.

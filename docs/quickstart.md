@@ -27,7 +27,7 @@ cd MyApi
 dotnet new tool-manifest
 $feedPath = [Security.SecurityElement]::Escape("$tadaSource/.artifacts/packages")
 "<configuration><packageSources><clear/><add key='local' value='$feedPath'/></packageSources></configuration>" | Set-Content NuGet.Local.Config
-dotnet tool install Tada.Cli --version 0.1.0-alpha.12 --configfile NuGet.Local.Config
+dotnet tool install Tada.Cli --version 0.1.0-alpha.13 --configfile NuGet.Local.Config
 dotnet tool run tada --version
 dotnet tool run tada init
 ```
@@ -47,6 +47,8 @@ New projects preserve file bytes through Git checkouts with `* -text`; `.tada/.g
 Approved scenarios do not all have to pass immediately. `.tada/enforcement.json` records which approved scenarios are **active** merge obligations and which are **candidates** awaiting implementation. `tada gate --run <id> --base <target-branch>` requires active obligations to pass, reports candidates without blocking, and requires a passing candidate to be promoted. Run `tada gate` without `--run` to see current obligations and pending work. See the [enforcement guide](enforcement.md).
 
 ## Work with Codex or another agent
+
+Alpha.13 selects verification levels during discovery and supports [coordinated checks and several local services](multi-level-verification.md). Existing single-baseline commands remain available. Chores and refactors retain proportionate existing checks and can justify no new tests.
 
 Enable the installed TADA plugin, start a fresh Codex chat in the application directory and ask for the project normally.
 

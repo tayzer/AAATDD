@@ -1,0 +1,52 @@
+<Project>
+  <!-- The reference remains present during every restore, preserving one locked graph.
+       Recorded TADA runs build and capture the API separately and supply its actual path. -->
+  <Target Name="TadaStageNativeSut" AfterTargets="Build" DependsOnTargets="TadaPrepareNativeSut;TadaStageNamedService"
+          Condition="'$(TadaVerifiedBuild)' != 'true' and '$(DesignTimeBuild)' != 'true'" />
+  <Target Name="TadaPrepareNativeSut"
+          Condition="'$(TadaVerifiedBuild)' != 'true' and '$(DesignTimeBuild)' != 'true'">
+    <ItemGroup>
+      <_TadaSutReference Include="@(ProjectReference)" Condition="'%(ProjectReference.OutputItemType)' == 'TadaSutOutput'" />
+      <_TadaNamedReference Include="@(_TadaSutReference)" Condition="'%(_TadaSutReference.TadaServiceId)' != ''" />
+      <_TadaServiceIds Include="@(_TadaNamedReference->'%(TadaServiceId)')" />
+    </ItemGroup>
+    <PropertyGroup><_TadaUseNamedServices Condition="'@(_TadaNamedReference->Count())' != '0'">true</_TadaUseNamedServices></PropertyGroup>
+    <Error Condition="'@(_TadaServiceIds->Count())' != '@(_TadaServiceIds->Distinct()->Count())'" Text="TadaServiceId values must be distinct." />
+    <Error Condition="'@(_TadaSutReference->Count())' &gt; '1' and '%(_TadaSutReference.TadaServiceId)' == ''" Text="Multiple API references require a distinct TadaServiceId on each ProjectReference." />
+    <Error Condition="'@(_TadaSutReference)' != '' and '%(_TadaSutReference.ReferenceOutputAssembly)' != 'false'"
+           Text="The API reference must use ReferenceOutputAssembly=false to keep business assemblies out of acceptance assertions." />
+    <Error Condition="'@(_TadaSutReference)' != '' and '%(_TadaSutReference.Private)' != 'false'"
+           Text="The API reference must use Private=false because Tada.Acceptance.targets stages its complete runtime output separately." />
+    <Error Condition="'@(_TadaSutReference)' != '' and '@(TadaSutOutput->Count())' != '@(_TadaSutReference->Count())'"
+           Text="Each build-only API reference must produce exactly one target assembly. Build project dependencies before running acceptance tests." />
+    <Delete Files="$(TargetDir)tada-sut.txt" />
+    <Delete Files="$(TargetDir)tada-services.txt" />
+    <RemoveDir Directories="$(TargetDir)sut" />
+    <PropertyGroup>
+      <_TadaSutDirectory>@(TadaSutOutput->'%(RootDir)%(Directory)')</_TadaSutDirectory>
+    </PropertyGroup>
+    <ItemGroup Condition="'@(TadaSutOutput)' != '' and '$(_TadaUseNamedServices)' != 'true'">
+      <_TadaSutFiles Include="$(_TadaSutDirectory)**/*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_TadaSutFiles)" DestinationFiles="@(_TadaSutFiles->'$(TargetDir)sut/%(RecursiveDir)%(Filename)%(Extension)')" />
+    <WriteLinesToFile Condition="'@(TadaSutOutput)' != '' and '$(_TadaUseNamedServices)' != 'true'" File="$(TargetDir)tada-sut.txt"
+                      Lines="@(TadaSutOutput->'sut/%(Filename)%(Extension)')" Overwrite="true" Encoding="UTF-8" />
+  </Target>
+  <Target Name="TadaStageNamedService" Outputs="%(_TadaSutReference.Identity)" Condition="'$(_TadaUseNamedServices)' == 'true'">
+    <MSBuild Projects="@(_TadaSutReference)" Targets="GetTargetPath" BuildInParallel="false">
+      <Output TaskParameter="TargetOutputs" ItemName="_TadaNativeAssembly" />
+    </MSBuild>
+    <Error Condition="'@(_TadaNativeAssembly->Count())' != '1'" Text="Each named service must identify exactly one target assembly." />
+    <PropertyGroup>
+      <_TadaServiceDirectory>@(_TadaNativeAssembly->'%(RootDir)%(Directory)')</_TadaServiceDirectory>
+      <_TadaServiceAssembly>@(_TadaNativeAssembly->'%(Filename)%(Extension)')</_TadaServiceAssembly>
+      <_TadaServiceId>%(_TadaSutReference.TadaServiceId)</_TadaServiceId>
+    </PropertyGroup>
+    <Error Condition="'$(_TadaServiceDirectory)' == '' or !$([System.Text.RegularExpressions.Regex]::IsMatch('$(_TadaServiceId)', '^(?!con$|prn$|aux$|nul$|com[1-9]$|lpt[1-9]$)[a-z][a-z0-9_-]*$'))" Text="Named services require an assembly directory and a safe lowercase TadaServiceId." />
+    <ItemGroup>
+      <_TadaServiceFile Include="$(_TadaServiceDirectory)**/*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_TadaServiceFile)" DestinationFiles="@(_TadaServiceFile->'$(TargetDir)sut/$(_TadaServiceId)/%(RecursiveDir)%(Filename)%(Extension)')" />
+    <WriteLinesToFile File="$(TargetDir)tada-services.txt" Lines="$(_TadaServiceId)|sut/$(_TadaServiceId)/$(_TadaServiceAssembly)" Overwrite="false" Encoding="UTF-8" />
+  </Target>
+</Project>

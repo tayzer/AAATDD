@@ -25,17 +25,21 @@ public static class BuildInputs
     public const string Items = "Compile,EmbeddedResource,AdditionalFiles,Analyzer,EditorConfigFiles,GlobalAnalyzerConfigFiles,ReferencePath,ReferenceCopyLocalPaths,ProjectReference,Content,None,ReqnrollFeatureFile";
     public const string Properties = "MSBuildProjectFullPath,BaseIntermediateOutputPath,IntermediateOutputPath,MSBuildProjectExtensionsPath,ProjectAssetsFile,NuGetPackageRoot,CompilerResponseFile,AssemblyOriginatorKeyFile,Win32Resource,ApplicationIcon,ApplicationManifest,CodeAnalysisRuleSet,SourceLink,AppConfig,TadaVerifiedBuild";
 
-    public static ProjectDependency[] ReadDependencies(string evaluation, string role, string? sutProject)
+    public static ProjectDependency[] ReadDependencies(string evaluation, string role, string? sutProject, string[]? serviceProjects = null,
+        IReadOnlyDictionary<string, string>? serviceIds = null)
     {
+        var applications = serviceProjects ?? (sutProject == null ? [] : [sutProject]);
         using var document = JsonDocument.Parse(File.ReadAllBytes(evaluation));
         return document.RootElement.GetProperty("Items").GetProperty("ProjectReference").EnumerateArray().Select(item =>
         {
             string path = Path.GetFullPath(item.GetProperty("FullPath").GetString()!);
             bool sut = item.TryGetProperty("OutputItemType", out var output) && output.GetString() == "TadaSutOutput";
-            if (sut && (role != "harness" || sutProject == null || !string.Equals(path, sutProject, StringComparison.OrdinalIgnoreCase) ||
+            if (sut && (role != "harness" || !applications.Contains(path, StringComparer.OrdinalIgnoreCase) ||
                 !item.TryGetProperty("ReferenceOutputAssembly", out var reference) || !string.Equals(reference.GetString(), "false", StringComparison.OrdinalIgnoreCase) ||
                 !item.TryGetProperty("Private", out var copy) || !string.Equals(copy.GetString(), "false", StringComparison.OrdinalIgnoreCase)))
                 throw new TadaException("TadaSutOutput must be a build-only reference to the configured SUT, with ReferenceOutputAssembly=false and Private=false.");
+            if (sut && serviceIds != null && (!item.TryGetProperty("TadaServiceId", out var id) || !serviceIds.TryGetValue(path, out string? expectedId) || id.GetString() != expectedId))
+                throw new TadaException("Native TadaServiceId must match the captured service ID for this project.");
             return new ProjectDependency(path, sut ? "sut" : role, sut);
         }).OrderBy(item => item.Path, StringComparer.Ordinal).ToArray();
     }
@@ -90,12 +94,13 @@ public static class BuildInputs
             if (!Within(value, generated)) throw new TadaException($"{property} must remain inside this run's fresh build directory: {value}");
         }
         var oracle = inventory.Files.ToDictionary(file => Path.GetFullPath(repository.Resolve(file.Path)), file => file.Digest, StringComparer.OrdinalIgnoreCase);
-        var implementation = role == "sut" ? repository.CapturePaths(config with { OracleRoots = config.ImplementationRoots ?? [] })
+        var implementation = role == "sut" || inventory.Engineering != null ? repository.CapturePaths(config with { OracleRoots = config.ImplementationRoots ?? [] })
             .ToHashSet(StringComparer.OrdinalIgnoreCase) : [];
         string assets = properties.GetProperty("ProjectAssetsFile").GetString()!;
         var packages = PackageDirectories(repository, project, assets);
         var sutReferences = inventory.Policy.BuildInputs == Policy
-            ? ReadDependencies(evaluation, role, config.Execution.SutProject == null ? null : repository.Resolve(config.Execution.SutProject))
+            ? ReadDependencies(evaluation, role, null, config.Execution.Applications().Select(service => repository.Resolve(service.Project)).ToArray(),
+                config.Execution.Services?.ToDictionary(service => repository.Resolve(service.Project), service => service.Id, StringComparer.OrdinalIgnoreCase))
                 .Where(item => item.BuildOnlySut).Select(item => item.Path).ToHashSet(StringComparer.OrdinalIgnoreCase)
             : [];
         var paths = new Dictionary<string, HashSet<string>>(StringComparer.OrdinalIgnoreCase);
@@ -124,13 +129,13 @@ public static class BuildInputs
             if (Within(path, generated) || Within(path, output)) category = "generated";
             else if (Within(path, sdk) || Within(path, Path.Combine(dotnetRoot, "packs")) || Within(path, Path.Combine(dotnetRoot, "sdk-manifests"))) category = "sdk";
             else if (packages.Any(package => Within(path, package))) category = "locked-package";
+            else if (sutReferences.Contains(path) && pair.Value.SetEquals(["ProjectReference"])) category = "sut-reference";
             else if (oracle.TryGetValue(path, out string? approved))
             {
                 category = "oracle";
                 if (File.Exists(path) && CanonicalJson.FileDigest(path) != approved) throw new TadaException($"Reviewed build input changed: {repository.Relative(path)}");
             }
             else if (Within(path, repository.Root) && implementation.Contains(repository.Relative(path))) category = "implementation";
-            else if (sutReferences.Contains(path) && pair.Value.SetEquals(["ProjectReference"])) category = "sut-reference";
             else throw new TadaException($"Unreviewed {role} build input: {path}. Include repository inputs in the appropriate selected roots; external/shared inputs are unsupported.");
             NoLinks(path);
             result.Add(new BuildInput(path, category, CanonicalJson.FileDigest(path), pair.Value.Order(StringComparer.Ordinal).ToArray()));
@@ -167,7 +172,7 @@ public static class BuildInputs
 
     public static void Verify(string run, Inventory inventory, string? digest)
     {
-        if (inventory.SchemaVersion != 6 || !Supported(inventory.Policy.BuildInputs))
+        if (inventory.SchemaVersion is not (6 or 7) || !Supported(inventory.Policy.BuildInputs))
             throw new TadaException("This baseline predates the evaluated-build-input policy. Prepare, review and approve a new revision; historical inputs are not inferred.");
         string path = new Repository(run).Resolve(FileName);
         if (string.IsNullOrEmpty(digest) || CanonicalJson.FileDigest(path) != digest)
@@ -178,7 +183,8 @@ public static class BuildInputs
         if (evidence.Projects.Any(project => project == null) ||
             evidence.Projects.GroupBy(project => (project.Role, project.Project)).Any(group => group.Count() != 1))
             throw new TadaException("Null or duplicate project build-input evidence.");
-        foreach (var (project, role) in new[] { (inventory.Execution.Project, "harness"), (inventory.Execution.SutProject, "sut") })
+        foreach (var (project, role) in new[] { (inventory.Execution.Project, "harness") }
+            .Concat(inventory.Execution.Applications().Select(service => (service.Project, "sut"))))
             if (project != null && !evidence.Projects.Any(item => item.Project == project && item.Role == role))
                 throw new TadaException($"Build-input evidence does not cover the configured {role} project.");
         foreach (var project in evidence.Projects)
@@ -204,13 +210,17 @@ public static class BuildInputs
             {
                 string? sutProject = evidence.Projects.FirstOrDefault(item => item.Role == "sut" && item.Project == inventory.Execution.SutProject)?
                     .After.Single(input => input.Uses.Contains("project")).Path;
+                var serviceProjects = evidence.Projects.Where(item => item.Role == "sut" && inventory.Execution.Applications().Any(service => service.Project == item.Project))
+                    .Select(item => item.After.Single(input => input.Uses.Contains("project")).Path).ToArray();
+                var serviceIds = inventory.Execution.Services?.ToDictionary(service => evidence.Projects.Single(item => item.Role == "sut" && item.Project == service.Project)
+                    .After.Single(input => input.Uses.Contains("project")).Path, service => service.Id, StringComparer.OrdinalIgnoreCase);
                 if (project.Dependencies == null) throw new TadaException("Project dependency metadata is missing.");
                 foreach (string report in project.Reports.Keys.Where(path => path.EndsWith(".json", StringComparison.Ordinal)))
                 {
                     using var evaluation = JsonDocument.Parse(File.ReadAllBytes(new Repository(run).Resolve(report)));
                     if (evaluation.RootElement.GetProperty("Properties").GetProperty("TadaVerifiedBuild").GetString() != "true")
                         throw new TadaException("Build report does not identify a recorded TADA build.");
-                    if (!ReadDependencies(new Repository(run).Resolve(report), project.Role, sutProject).SequenceEqual(project.Dependencies))
+                    if (!ReadDependencies(new Repository(run).Resolve(report), project.Role, sutProject, serviceProjects, serviceIds).SequenceEqual(project.Dependencies))
                         throw new TadaException("Recorded project dependencies differ from the evaluated build reports.");
                 }
                 foreach (var dependency in project.Dependencies)
