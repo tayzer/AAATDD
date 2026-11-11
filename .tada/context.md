@@ -23,7 +23,7 @@ Focused and replay tests pass locally, including the knowledge, onboarding and g
 
 ## Next action
 
-Push the branch and open a draft pull request once the requester approves publishing it. Pushes and pull requests need that approval each time; merge and release remain separate decisions.
+The branch is pushed and a draft pull request is open for review. Address review feedback on this branch. Further pushes, merge and release need the requester's approval.
 
 ## Local environment
 
