@@ -68,6 +68,8 @@ jobs:
         run: dotnet pack src/Tada.Cli/Tada.Cli.csproj --no-restore --disable-build-servers -o .artifacts/packages
       - name: Orders end-to-end and negative controls
         run: pwsh -File scripts/Test-OrdersWorkflow.ps1
+      - name: Enforcement lifecycle controls
+        run: pwsh -File scripts/Test-EnforcementWorkflow.ps1
       - name: Package the TADA plugin and check project setup
         run: |
           [xml]$properties = Get-Content Directory.Build.props -Raw
@@ -108,6 +110,7 @@ jobs:
             .artifacts/native/*.build.json
             .artifacts/native/tests/*.build.json
             .artifacts/**/validation.json
+            .artifacts/**/enforcement-workflow.json
             .artifacts/**/run.json
             .artifacts/**/result.json
             .artifacts/**/tada-messages.ndjson
