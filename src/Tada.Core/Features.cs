@@ -44,8 +44,9 @@ public static partial class Features
         }
     }
     /// <summary>
-    /// Identifies each scenario's agreed business content, including inherited tags and background steps.
-    /// Binding, fixture and narrative-only changes do not alter a scenario fingerprint.
+    /// Identifies each scenario's agreed executable content: inherited tags, background and scenario steps.
+    /// Binding, fixture, title and narrative-only changes do not alter a scenario fingerprint, so they cannot
+    /// justify returning an active obligation to candidate.
     /// </summary>
     public static Dictionary<string, string> Fingerprints(Repository repository, IEnumerable<FileInput> files, Config config)
     {
@@ -72,8 +73,6 @@ public static partial class Features
                     result[id] = CanonicalJson.Identity(new
                     {
                         tags = tags.Concat(scenario.Tags.Select(t => t.Name)).Order(StringComparer.Ordinal).ToArray(),
-                        name = scenario.Name,
-                        description = scenario.Description ?? "",
                         background = local,
                         steps = scenario.Steps.Select(Render).ToArray()
                     });

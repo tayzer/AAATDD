@@ -128,6 +128,17 @@ public sealed class EnforcementTests
     }
 
     [TestMethod]
+    public void WeakenedPolicyCannotReleaseOverdueCandidateInTheSameChange()
+    {
+        var baseLedger = Ledger(Current, ["AC_OLD"], Pending("AC_NEW", "2026-09-01")) with { Policy = new EnforcementPolicy(30) };
+        var result = Gate(Ledger(Current, ["AC_OLD"], Pending("AC_NEW", "2026-09-01")),
+            Run(Current, ["AC_OLD"], new Reason("requirement-failure", "x", "AC_NEW")), baseLedger);
+        Assert.AreEqual("INDETERMINATE", result.Outcome);
+        Assert.IsTrue(result.Reasons.Any(r => r.Code == "candidate-overdue"));
+        Assert.IsTrue(result.ProtectedChanges.Any(c => c.Kind == Obligations.EnforcementPolicy));
+    }
+
+    [TestMethod]
     public void MissingExecutionIsNeverBehaviouralPass()
     {
         var withActive = Gate(Ledger(Current, ["AC_OLD"]), null);
@@ -233,6 +244,8 @@ public sealed class EnforcementTests
         FileInput[] files = [new("features/sample.feature", ["specification"], "")];
         string original = Features.Fingerprints(repository, files, config)["AC_ONE"];
         File.WriteAllText(Path.Combine(project.Root, "acceptance", "Steps.cs"), "// binding edit");
+        Assert.AreEqual(original, Features.Fingerprints(repository, files, config)["AC_ONE"]);
+        File.WriteAllText(project.Feature, Project.FeatureText.Replace("Scenario: Check", "Scenario: Renamed check\n  Narrative only."));
         Assert.AreEqual(original, Features.Fingerprints(repository, files, config)["AC_ONE"]);
         File.WriteAllText(project.Feature, Project.FeatureText.Replace("Then result is correct", "Then result is approximately correct"));
         Assert.AreNotEqual(original, Features.Fingerprints(repository, files, config)["AC_ONE"]);

@@ -46,7 +46,7 @@ No single mutable file is the protection boundary. Enforcement relies on:
 - approval-bound baseline content, which an agent cannot change without new human approval;
 - monotonic comparison with the target branch's committed ledger, which the pull request cannot alter;
 - the rule that passing candidates must be promoted;
-- scenario-level content fingerprints, so only a scenario whose agreed Gherkin was amended can return to candidate;
+- scenario-level fingerprints of steps, background and tags, so only a scenario whose agreed Gherkin behaviour was amended can return to candidate;
 - visible ages and policy limits for pending candidates;
 - independent human review of protected changes listed by the gate.
 

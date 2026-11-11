@@ -42,7 +42,7 @@ dotnet tool run tada run --baseline sha256:<digest> --dotnet <host>
 dotnet tool run tada gate --run <run-id> --base origin/main
 ```
 
-`--base` reads the target branch's committed ledger through Git. The pull request cannot alter that reference. Without `--base`, the gate reports `baseBaseline: not-compared` and applies only the local rules. Without `--run`, the gate reports status without executing anything: active obligations are `not-executed` and the result is `INDETERMINATE`.
+`--base` reads the target branch's committed ledger through Git. The pull request cannot alter that reference. A Git failure other than a missing ledger fails closed. Without `--base`, the gate reports `baseBaseline: not-compared` and applies only the local rules. That mode is for local status and agent self-checks. It cannot detect demotion or policy weakening, so a merge check must always pass `--base`. Without `--run`, the gate reports status without executing anything: active obligations are `not-executed` and the result is `INDETERMINATE`.
 
 | Outcome | Exit | Meaning |
 | --- | --- | --- |
@@ -61,7 +61,7 @@ The gate reports each obligation's state: `satisfied`, `failed` or `unverified` 
 | `unapproved-baseline`, `oracle-changed` | The ledger baseline is unapproved, superseded, or no longer matches the captured oracle bytes. |
 | `unclassified-obligation`, `unknown-obligation` | An approved scenario has no status, or an entry names no approved scenario. |
 | `candidate-satisfied-unpromoted` | A candidate passes. Move it to `active` in the same change. |
-| `active-obligation-demoted` | An obligation active on the base branch became a candidate or disappeared, and its Gherkin was not changed by an approved amendment. |
+| `active-obligation-demoted` | An obligation active on the base branch became a candidate or disappeared, and an approved amendment did not change its Gherkin steps, background or tags. Title, narrative and binding edits do not count. |
 | `unapproved-lineage` | The baseline does not supersede the base branch's baseline through approved, compared replacements. |
 | `candidate-history-changed` | A candidate's `since` date was reset or set in the future. |
 | `candidate-overdue` | A candidate exceeded `candidateMaxDays`. |
@@ -103,4 +103,6 @@ In the current supported stack, these files are used by the approved acceptance 
 - Removing an approved scenario is not supported. Replacements must preserve existing scenario and requirement identities.
 - If a harness also contains non-Gherkin tests that fail, the native runner reports failure without attributing it to a scenario. A run where every active scenario passes but the native runner fails is `INDETERMINATE`. When a candidate also fails, that unattributed failure can be masked. Keep the acceptance harness limited to Reqnroll scenarios.
 - The gate enforces rules over committed records. It does not authenticate who approved a baseline. Team CI needs independent authority, such as required code-owner review of `.tada/`, features and declared obligation roots, until a trusted approval adapter exists.
+- Failure history comes from local run records. Edited or deleted earlier run records can hide an earlier failure, which is the same local-tampering trust class as approval records.
+- A weakened `candidateMaxDays` takes effect only after it merges. The base branch's limit governs the change that weakens it.
 - Results remain local advisory L1, with the observation limits described in the [provenance audit](validation/provenance-audit.md).

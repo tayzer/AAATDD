@@ -57,16 +57,14 @@ public static partial class Enforcement
         if (string.IsNullOrWhiteSpace(reference) || reference.StartsWith('-') || reference.Contains(':') || reference.Any(char.IsControl))
             throw new TadaException("Expected a Git revision such as origin/main for --base.");
         var prefix = await Git(root, ["rev-parse", "--show-prefix"]);
-        string objectName = $"{reference}:{prefix.Trim()}{LedgerPath}";
-        var exists = await Processes.Execute("git", ["-C", root, "cat-file", "-e", objectName], root, 60);
-        if (exists.ExitCode != 0)
-        {
-            await Git(root, ["rev-parse", "--verify", "--quiet", reference + "^{commit}"]);
-            return (false, null);
-        }
-        var content = await Processes.Execute("git", ["-C", root, "cat-file", "blob", objectName], root, 60);
+        await Git(root, ["rev-parse", "--verify", "--quiet", reference + "^{commit}"]);
+        string path = prefix.Trim() + LedgerPath;
+        // Only an explicit empty listing means absence. Any other Git failure fails closed.
+        var listing = await Git(root, ["ls-tree", "--name-only", reference, "--", path]);
+        if (listing.Trim().Length == 0) return (false, null);
+        var content = await Processes.Execute("git", ["-C", root, "cat-file", "blob", $"{reference}:{path}"], root, 60);
         if (content.ExitCode != 0 || content.TimedOut) throw new TadaException("Cannot read the base enforcement ledger from Git.");
-        return (true, Parse(System.Text.Encoding.UTF8.GetBytes(content.Stdout), objectName));
+        return (true, Parse(System.Text.Encoding.UTF8.GetBytes(content.Stdout), $"{reference}:{path}"));
     }
 
     private static async Task<string> Git(string root, string[] arguments)
@@ -190,11 +188,13 @@ public static partial class Enforcement
                     $"Pending-candidate limit changed from {before} days to {(after == null ? "unlimited" : after + " days")}."));
         }
 
+        // A weakened policy takes effect only after it merges; the base limit governs this change.
+        int? limitDays = new[] { ledger.Policy?.CandidateMaxDays, inputs.Base?.Policy?.CandidateMaxDays }.Where(v => v != null).Min();
         foreach (var candidate in ledger.Candidates)
         {
             int age = inputs.Today.DayNumber - DateOnly.ParseExact(candidate.Since, "yyyy-MM-dd", CultureInfo.InvariantCulture).DayNumber;
             if (age < -1) reasons.Add(new Reason("candidate-history-changed", "A candidate cannot be recorded with a future 'since' date.", candidate.Scenario));
-            if (ledger.Policy?.CandidateMaxDays is int limit && age > limit)
+            if (limitDays is int limit && age > limit)
             {
                 reasons.Add(new Reason("candidate-overdue", $"Candidate has been pending for {age} days; the policy limit is {limit}.", candidate.Scenario));
                 next.Add($"Implement and promote {candidate.Scenario}, or take its amendment back to the approving humans.");
