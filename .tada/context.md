@@ -19,12 +19,11 @@ Focused and replay tests pass locally, including the knowledge, onboarding and g
 
 ## Open questions for the requester
 
-- Confirm the knowledge-mode design: settings in `.tada/knowledge.json`, no `writePolicy` setting, and `BLOCKED` for new records in reference mode.
-- `AGENTS.md` still names the merged draft PR #1 branch `codex/alpha-release-validation` as the delivery branch. That sentence records the requester's authorisation, so it is left for the requester to update.
+- None. The requester confirmed the knowledge-mode design in [ADR 0047](../docs/decisions/0047-add-reference-and-augment-knowledge-modes.md) and asked for the stale draft PR #1 branch authority to be removed from `AGENTS.md`.
 
 ## Next action
 
-Open a draft pull request for review. Merge and release remain separate decisions.
+Push the branch and open a draft pull request once the requester approves publishing it. Pushes and pull requests need that approval each time; merge and release remain separate decisions.
 
 ## Local environment
 

@@ -1,6 +1,6 @@
 # ADR 0047: Add reference and augment knowledge modes
 
-Status: **ACCEPTED — DIRECT USER INSTRUCTION**. The configuration location, record format and `tada knowledge check` are implementation decisions under [ADR 0041](0041-authorise-autonomous-release-implementation.md). Decision date: 2026-11-11.
+Status: **ACCEPTED — DIRECT USER INSTRUCTION**. The configuration location, record format and `tada knowledge check` are implementation decisions under [ADR 0041](0041-authorise-autonomous-release-implementation.md). On 2026-11-11 the requester confirmed this design as built: settings in `.tada/knowledge.json` outside the captured oracle, no `writePolicy` setting, and `BLOCKED` only for invalid records and records added in reference mode. Decision date: 2026-11-11.
 
 ## Context
 
