@@ -70,6 +70,7 @@ The body separates Verified, Inferred and Unknown claims and links its evidence.
 | `invalid-record` | blocking | A record lacks valid status, kind, checked commit or repository sources, or claims an unsupported field |
 | `reference-mode-record` | blocking | A record was added in reference mode, uncommitted or since `--base` |
 | `source-changed` | review | A record's sources changed after its `checked` commit |
+| `reviewed-record-edited` | review | A `reviewed` record changed since `HEAD` or `--base` without returning to `proposed` |
 | `source-missing`, `unknown-checkpoint`, `broken-link`, `superseded-target-missing` | review | References no longer resolve |
 | `git-unavailable` | review | Currency could not be checked |
 

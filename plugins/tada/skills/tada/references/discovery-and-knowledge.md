@@ -122,7 +122,7 @@ Supporting engineering context, not a requirement. Agreed behaviour lives in <li
 - <issue, pull request or commit references>
 ```
 
-Kinds are `discovery`, `defect`, `invariant`, `pitfall`, `constraint` and `trade-off`. Status is `proposed` when you write it. A human reviewer may set `reviewed`. Replacement uses `status: superseded` and `supersededBy: <path>`; keep the old record. When you revalidate a record, update its claims and `checked` commit together.
+Kinds are `discovery`, `defect`, `invariant`, `pitfall`, `constraint` and `trade-off`. Status is `proposed` when you write it. A human reviewer may set `reviewed`. Replacement uses `status: superseded` and `supersededBy: <path>`; keep the old record. When you revalidate a record, update its claims and `checked` commit together. If you change the claims of a `reviewed` record, set it back to `proposed`; `tada knowledge check` reports reviewed records edited without that step.
 
 ## Context handoff
 

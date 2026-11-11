@@ -19,7 +19,7 @@ public sealed class GuidanceTests
         foreach (string guidance in new[] { "**Low**", "**Medium**", "**High**", "Stop expanding", "change impact brief", "**Verified**", "**Inferred**", "**Unknowns**",
                      "never create standalone knowledge records", "**Augment** (opt-in by a human)", "Never convert an inference into an agreed requirement",
                      "tada knowledge check", "not a history log", "Chores need no impact brief document",
-                     "including when the human pauses or defers the work", "say that no document covers it", "Do not write that document yourself" })
+                     "including when the human pauses or defers the work", "say that no document covers it", "Do not write that document yourself", "set it back to `status: proposed`" })
             StringAssert.Contains(skill, guidance);
         foreach (string guidance in new[] { "## Knowledge authority", "## Change impact brief", "## Significance test", "## Record template (augment mode only)",
                      "status: proposed", "supersededBy", "## Context handoff" })

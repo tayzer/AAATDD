@@ -12,6 +12,7 @@ This guide explains how TADA investigates an existing system before agreeing acc
 | Reference mode forbids new standalone records | Checked by `tada knowledge check`, including against a target branch. |
 | Record provenance (status, kind, checked commit, sources) | Checked by `tada knowledge check`. |
 | Stale records after their sources change | Checked by `tada knowledge check`. |
+| Reviewed records edited without renewed review | Reported by `tada knowledge check`. |
 | Broken links in the handoff, index and records | Checked by `tada knowledge check`. |
 | Whether a claim is still true, or an old document contradicts the code | Agent and human judgement. The check only flags records whose sources moved. |
 
@@ -110,6 +111,7 @@ The report shows the mode and where it came from, the index, the context handoff
 - `invalid-record` (blocking): front matter is missing status, kind, checked commit or repository sources, or contains an unsupported field.
 - `reference-mode-record` (blocking): a record was added in reference mode, either uncommitted or since `--base`.
 - `source-changed`: a record's sources changed after its `checked` commit. Revalidate before relying on it.
+- `reviewed-record-edited`: a `reviewed` record changed since `HEAD` or `--base` without returning to `proposed`. Confirm a human reviewed the edit.
 - `source-missing`, `unknown-checkpoint`, `broken-link`, `superseded-target-missing`: references no longer resolve.
 - `git-unavailable`: currency could not be checked outside a Git work tree.
 

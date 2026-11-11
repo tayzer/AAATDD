@@ -99,6 +99,21 @@ public static partial class Knowledge
                     "Reference mode does not create standalone knowledge records. Link existing canonical sources from the index or context, propose an update to an existing document, or ask a human to enable augment mode."));
         }
 
+        if (hasGit)
+        {
+            string? revision = baseRevision ?? (await git.Succeeds(["rev-parse", "--verify", "--quiet", "HEAD"]) ? "HEAD" : null);
+            foreach (var record in records.Where(r => r.Status == "reviewed" && r.State != "invalid"))
+            {
+                // A reviewed record whose claims changed without returning to proposed would present unreviewed edits as reviewed.
+                if (revision == null || await git.Succeeds(["diff", "--quiet", revision, "--", record.Path])) continue;
+                if (!await git.Succeeds(["cat-file", "-e", $"{revision}:./{record.Path}"])) continue;
+                string previous = await git.Output(["show", $"{revision}:./{record.Path}"]);
+                if (FrontMatter(previous).Fields.GetValueOrDefault("status") == "reviewed")
+                    findings.Add(new("reviewed-record-edited", "review", record.Path,
+                        $"This reviewed record changed since {revision} without returning to proposed. Set status: proposed so the edit is reviewed, or confirm a human reviewed it."));
+            }
+        }
+
         string status = findings.Any(f => f.Severity == "blocking") ? "BLOCKED" : findings.Count > 0 ? "REVIEW" : "CURRENT";
         var next = new List<string>();
         if (findings.Any(f => f.Code == "source-changed"))
@@ -107,6 +122,8 @@ public static partial class Knowledge
             next.Add("Repair or retire references to sources that no longer exist.");
         if (findings.Any(f => f.Code == "reference-mode-record"))
             next.Add("Remove the new record or ask a human to choose augment mode in .tada/knowledge.json.");
+        if (findings.Any(f => f.Code == "reviewed-record-edited"))
+            next.Add("Return edited reviewed records to status: proposed until a human reviews the change.");
         if (findings.Any(f => f.Code == "invalid-record"))
             next.Add("Fix record front matter: status, kind, checked commit and at least one repository source.");
         if (context?.LaterCommits > 0)

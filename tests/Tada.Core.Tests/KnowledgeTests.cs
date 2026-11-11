@@ -145,6 +145,30 @@ public sealed class KnowledgeTests
     }
 
     [TestMethod]
+    public async Task EditingAReviewedRecordWithoutReturningToProposedNeedsReview()
+    {
+        using var repo = await GitRepository.Create();
+        repo.Write(".tada/knowledge.json", "{\"schemaVersion\":1,\"mode\":\"augment\"}");
+        repo.Write(".tada/knowledge/duplicate-outcomes.md", string.Format(Record, repo.Head));
+        await repo.Commit("docs: propose learning");
+        string reviewed = string.Format(Record, repo.Head).Replace("status: proposed", "status: reviewed", StringComparison.Ordinal);
+        repo.Write(".tada/knowledge/duplicate-outcomes.md", reviewed);
+        // A reviewer promoting a proposal is not an unreviewed edit.
+        Assert.AreEqual("CURRENT", (await Knowledge.Check(new Repository(repo.Root))).Status);
+        await repo.Commit("docs: review learning");
+
+        const string edit = "\n- Retries stop after ten attempts.\n";
+        repo.Write(".tada/knowledge/duplicate-outcomes.md", reviewed + edit);
+        var edited = await Knowledge.Check(new Repository(repo.Root));
+        Assert.AreEqual("REVIEW", edited.Status);
+        Assert.AreEqual("reviewed-record-edited", edited.Findings.Single().Code);
+        StringAssert.Contains(string.Join(" ", edited.Next), "status: proposed");
+
+        repo.Write(".tada/knowledge/duplicate-outcomes.md", reviewed.Replace("status: reviewed", "status: proposed", StringComparison.Ordinal) + edit);
+        Assert.AreEqual("CURRENT", (await Knowledge.Check(new Repository(repo.Root))).Status);
+    }
+
+    [TestMethod]
     public async Task MissingSourcesUnknownCheckpointsAndBrokenLinksNeedReview()
     {
         using var repo = await GitRepository.Create();
