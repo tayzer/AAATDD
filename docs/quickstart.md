@@ -42,6 +42,10 @@ The CLI records its .NET host in newly generated context so the plugin can reuse
 
 New projects preserve file bytes through Git checkouts with `* -text`; `.tada/.gitattributes` independently protects captured records. Existing root attributes are not overwritten. Review equivalent rules for your oracle paths if adopting TADA in an existing repository. Exact-byte checks intentionally reject approval carry-forward after actual file changes.
 
+## Agree first, enforce when implemented
+
+Approved scenarios do not all have to pass immediately. `.tada/enforcement.json` records which approved scenarios are **active** merge obligations and which are **candidates** awaiting implementation. `tada gate --run <id> --base <target-branch>` requires active obligations to pass, reports candidates without blocking, and requires a passing candidate to be promoted. Run `tada gate` without `--run` to see current obligations and pending work. See the [enforcement guide](enforcement.md).
+
 ## Work with Codex or another agent
 
 Enable the installed TADA plugin, start a fresh Codex chat in the application directory and ask for the project normally.

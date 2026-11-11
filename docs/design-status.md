@@ -6,6 +6,10 @@ Current tool name: **TADA — Test-Assured Development Assistance**, command pre
 
 The design-stage audit and completed bounded compatibility probe remain historical evidence. Product implementation now lives under `src/`, tests under `tests/`, and the Orders API/harness under `examples/Orders/`. See the [quickstart](quickstart.md) and [release checklist](release-readiness.md) for current executable behaviour and incomplete release obligations. No staging, commit, push or public publication is implied.
 
+## North Star alignment (2026-11-11)
+
+[ADR 0043](decisions/0043-adopt-the-tada-north-star.md) re-centres TADA on its North Star: an AI-first development workflow in which humans agree success criteria and protected obligations keep AI implementation accountable to them. [ADR 0044](decisions/0044-separate-approval-authority-from-merge-enforcement.md) adds enforcement status (active or candidate) separate from approval, implemented by `.tada/enforcement.json` and `tada gate`. [ADR 0045](decisions/0045-classify-protected-verification-obligations.md) classifies protected obligation changes. The [North Star assessment](architecture/north-star-assessment.md) records the gap analysis, what is implemented, what remains guidance only, and the prioritised roadmap. ADR 0042 is used by the unmerged PR #5.
+
 ## Authority and reading order
 
 1. Read the [charter](vision.md) for directions already established in the user's handover.

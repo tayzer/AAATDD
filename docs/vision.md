@@ -1,14 +1,18 @@
 # Project charter
 
-Status: established directions supplied in the original handover and reconciled with the user's Architecture & Design Update on 2026-10-26. See [ADR 0004](decisions/0004-gherkin-business-specification-authority.md) for the explicit change in business-specification authority. Proposals elsewhere remain unapproved unless expressly identified as agreed.
+Status: established directions supplied in the original handover, reconciled with the user's Architecture & Design Update on 2026-10-26, and re-centred on the North Star accepted in [ADR 0043](decisions/0043-adopt-the-tada-north-star.md) on 2026-11-11. See [ADR 0004](decisions/0004-gherkin-business-specification-authority.md) for the explicit change in business-specification authority. Proposals elsewhere remain unapproved unless expressly identified as agreed.
 
 ## Purpose
 
-TADA (Test-Assured Development Assistance), formerly AAATDD, is an open-source approach and prospective framework for AI-assisted software changes. It helps people define observable outcomes, preserve the authority of approved acceptance criteria, and assess independently produced verification evidence. [ADR 0034](decisions/0034-rename-tool-to-tada.md) records the rename; historical accepted records retain their original wording.
+**TADA is an AI-first software development workflow built around collaborative executable specifications, incremental implementation and protected verification obligations. It shifts human attention toward agreeing behaviour, architectural constraints and consequential risks, while using trustworthy evidence to reduce the burden of reviewing AI-generated implementation code.**
 
-Its principles are to specify what we want, verify that we received it, and proceed in small, safe steps. Human attention should shift toward behaviour, consequential design choices, trustworthy acceptance tests and credible evidence. Tests do not prove complete correctness or remove risk-based code review, security review or exploratory testing.
+TADA (Test-Assured Development Assistance), formerly AAATDD, is a development methodology supported by tooling. Its verification machinery serves the methodology. [ADR 0034](decisions/0034-rename-tool-to-tada.md) records the rename; historical accepted records retain their original wording.
 
-AI may propose requirements, executable checks, and amendments. AI must not independently change approved acceptance criteria or redefine success to accommodate its implementation.
+The central principle is that AI may propose and implement changes, but it must not independently redefine the conditions by which those changes are judged successful. Humans agree what success means. AI helps implement it efficiently. Protected executable obligations and trustworthy evidence keep the implementation accountable to that agreement.
+
+The lifecycle is Understand → Agree → Select verification → Establish evidence → Implement and verify → Complete and preserve, applied in proportion to each change. See the [lifecycle guide](architecture/change-lifecycle.md). Approval authority and merge enforcement are separate dimensions under [ADR 0044](decisions/0044-separate-approval-authority-from-merge-enforcement.md). Protected obligation kinds are defined in [ADR 0045](decisions/0045-classify-protected-verification-obligations.md).
+
+Tests do not prove complete correctness or remove risk-based code review, security review or exploratory testing.
 
 ## Established design directions
 

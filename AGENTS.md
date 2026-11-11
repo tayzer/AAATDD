@@ -2,7 +2,7 @@
 
 TADA is under active implementation. The user's autonomous-release goal authorises routine engineering decisions, code, tests and documentation. Preserve the first 40 accepted ADRs and original Orders feature as historical/accepted records; later instructions and implementation decisions can supersede their scope without rewriting them.
 
-Read `README.md`, `docs/quickstart.md` and `docs/release-readiness.md`. Design-stage documents remain historical context and must not override the newer implementation authority in ADR 0041.
+Read `README.md`, `docs/quickstart.md` and `docs/release-readiness.md`. [ADR 0043](docs/decisions/0043-adopt-the-tada-north-star.md) records the North Star that guides architecture decisions; the [North Star assessment](docs/architecture/north-star-assessment.md) holds the current gap analysis and roadmap. Design-stage documents remain historical context and must not override the newer implementation authority in ADR 0041.
 
 ## Development and validation
 
@@ -11,6 +11,7 @@ Read `README.md`, `docs/quickstart.md` and `docs/release-readiness.md`. Design-s
 - Run `dotnet build tests/Tada.Core.Tests/Tada.Core.Tests.csproj -c Release`, then `dotnet tests/Tada.Core.Tests/bin/Release/net10.0/Tada.Core.Tests.dll --progress off`.
 - Pack with `dotnet pack src/Tada.Cli/Tada.Cli.csproj -o .artifacts/packages`.
 - Run `pwsh -File scripts/Test-OrdersWorkflow.ps1` for real HTTP/SQLite business, integrity and invalid-evidence controls. The script uses a disposable copy.
+- Run `pwsh -File scripts/Test-EnforcementWorkflow.ps1` for the candidate/active enforcement lifecycle in a disposable Git repository with real Orders runs. Its approvals are labelled automated controls.
 - Run `pwsh -File scripts/Test-Onboarding.ps1` for fresh-package-cache installation, init, a second API, maintenance checks and context handoff. It needs NuGet network access and local process/loopback permissions.
 - Some restricted Windows sandboxes block Reqnroll task-host startup. Retain that failed result and rerun unchanged sources with the required permission; never report it as behavioural RED.
 - Git's MSYS helper and atomic directory renames in sandbox-managed temporary folders can also be restricted. `TADA_TEST_ROOT` can place owned tests under `.artifacts/`; run the Git test with the required permission rather than skipping it or weakening snapshot publication.
