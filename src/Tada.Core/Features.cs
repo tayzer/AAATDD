@@ -43,6 +43,53 @@ public static partial class Features
             }
         }
     }
+    /// <summary>
+    /// Identifies each scenario's agreed business content, including inherited tags and background steps.
+    /// Binding, fixture and narrative-only changes do not alter a scenario fingerprint.
+    /// </summary>
+    public static Dictionary<string, string> Fingerprints(Repository repository, IEnumerable<FileInput> files, Config config)
+    {
+        var result = new Dictionary<string, string>(StringComparer.Ordinal);
+        foreach (var file in files.Where(f => f.Roles.Contains("specification")))
+        {
+            var document = new Parser().Parse(new StringReader(File.ReadAllText(repository.Resolve(file.Path))));
+            if (document.Feature is null) throw new TadaException($"No feature in {file.Path}");
+            Visit(document.Feature.Children, document.Feature.Tags.Select(t => t.Name).ToArray(), []);
+        }
+        return result;
+
+        void Visit(IEnumerable<IHasLocation> children, string[] tags, object[] background)
+        {
+            var items = children.ToArray();
+            var local = background.Concat(items.OfType<Background>().SelectMany(b => b.Steps).Select(Render)).ToArray();
+            foreach (var child in items)
+            {
+                if (child is Rule rule) Visit(rule.Children, tags.Concat(rule.Tags.Select(t => t.Name)).ToArray(), local);
+                else if (child is Scenario scenario)
+                {
+                    var id = scenario.Tags.Select(t => t.Name.TrimStart('@')).SingleOrDefault(t => t.StartsWith(config.ScenarioPrefix, StringComparison.Ordinal));
+                    if (id == null) continue;
+                    result[id] = CanonicalJson.Identity(new
+                    {
+                        tags = tags.Concat(scenario.Tags.Select(t => t.Name)).Order(StringComparer.Ordinal).ToArray(),
+                        name = scenario.Name,
+                        description = scenario.Description ?? "",
+                        background = local,
+                        steps = scenario.Steps.Select(Render).ToArray()
+                    });
+                }
+            }
+        }
+
+        static object Render(Step step) => new
+        {
+            keyword = step.Keyword.Trim(),
+            text = step.Text,
+            docString = (step.Argument as DocString)?.Content,
+            table = (step.Argument as DataTable)?.Rows.Select(row => row.Cells.Select(cell => cell.Value).ToArray()).ToArray()
+        };
+    }
+
     [GeneratedRegex(@"\A[A-Z][A-Z0-9_]*\z", RegexOptions.CultureInvariant)]
     private static partial Regex Id();
 }
