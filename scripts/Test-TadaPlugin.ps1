@@ -7,6 +7,8 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $plugin = (Resolve-Path -LiteralPath $PluginRoot).Path
+# The Claude Code marketplace sits beside the packaged plugin, not inside the standalone ZIP.
+$marketplaceRoot = Split-Path $plugin -Parent
 $repository = Split-Path $PSScriptRoot -Parent
 $workspace = Join-Path $repository ('.artifacts/plugin-controls/' + [guid]::NewGuid().ToString('N'))
 if ($Archive) {
@@ -26,7 +28,6 @@ $claudeManifest = Get-Content -LiteralPath (Join-Path $plugin '.claude-plugin/pl
 if ($claudeManifest.name -ne $manifest.name -or $claudeManifest.version -ne $manifest.version -or $claudeManifest.license -ne $manifest.license) {
     throw 'Claude Code and Codex plugin metadata differ.'
 }
-$marketplaceRoot = Split-Path $plugin -Parent
 $claudeCatalog = Get-Content -LiteralPath (Join-Path $marketplaceRoot '.claude-plugin/marketplace.json') -Raw | ConvertFrom-Json
 if ($claudeCatalog.name -ne 'tada-development' -or !$claudeCatalog.owner.name -or @($claudeCatalog.plugins).Count -ne 1 -or
     $claudeCatalog.plugins[0].name -ne $manifest.name -or $claudeCatalog.plugins[0].source -ne './tada') {
