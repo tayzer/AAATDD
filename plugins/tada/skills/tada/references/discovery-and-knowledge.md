@@ -42,7 +42,7 @@ When sources conflict, report the conflict and its evidence. Do not quietly choo
 
 ## Change impact brief
 
-Present this before proposing new acceptance criteria. For small work it can be two sentences. For consequential work, use the structure below in conversation. It is not a specification. Persist it only where it is useful anyway: the context handoff, a pull request description, or the `impact` and `omissions` of a verification plan.
+Present this before proposing new acceptance criteria. For small work it can be two sentences. For consequential work, use the structure below in conversation. It is not a specification. Take each reference from the source itself, for example with `grep -n` or `git log`; a wrong line number misleads more than no line number. Persist it only where it is useful anyway: the context handoff, a pull request description, or the `impact` and `omissions` of a verification plan.
 
 ```markdown
 **Request:** <outcome wanted>. <Implementation approach suggested, if any, kept separate.>
