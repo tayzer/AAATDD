@@ -33,7 +33,7 @@ $guide = @'
 # Try TADA
 
 This alpha provides local advisory L1 acceptance verification.
-Prerequisites: Windows x64, .NET SDK 10.0.403 and Git for Windows. No C compiler or model API is required.
+Prerequisites are Windows x64, a stable .NET 10.0 SDK and Git for Windows. No C compiler or model API is required.
 Workspace paths may contain spaces; commas and semicolons are unsupported in this alpha.
 
 Extract the ZIP. From its extracted directory, create a separate application repository:
@@ -58,6 +58,8 @@ Keep the extracted feed available for later `dotnet tool restore --configfile Nu
 
 Enable the matching TADA plugin through the host's plugin controls. The plugin distribution includes this verifier package and its setup helper. Open MyApi in a fresh session and ask for your project normally.
 
+The matching plugin supports Codex and Claude Code through their native manifests and marketplaces. New application projects select the latest installed stable 10.0 feature band from a 10.0.100 floor. Existing global.json files are preserved. Changing a captured SDK policy requires renewed baseline review and human approval. Each run records the resolved SDK and observed toolchain identities.
+
 > Build me a simple API for tracking my reading list.
 
 Choose your own project and wording. The enabled plugin should make the agent discover behaviour, ask for business agreement and follow the workflow itself. Record reminders or missing adoption as usability findings. Check disable and re-enable controls in fresh sessions as part of the experience trial.
@@ -77,7 +79,7 @@ Plugin installation and activation: https://github.com/tayzer/AAATDD/blob/main/d
 [IO.File]::WriteAllText((Join-Path $payload 'README.md'), $guide.Replace('VERSION_PLACEHOLDER', $version), [Text.UTF8Encoding]::new($false))
 $assets = @('LICENSE','README.md','THIRD_PARTY_NOTICES.md',"feed/$packageName")
 $files = @($assets | Sort-Object | ForEach-Object { [pscustomobject]@{path=$_;sha256=(Get-FileHash -LiteralPath (Join-Path $payload $_) -Algorithm SHA256).Hash.ToLowerInvariant()} })
-$manifest = [ordered]@{schemaVersion=1;status='Alpha; local advisory L1';name='TADA';version=$version;package="feed/$packageName";supportedPlatform='Windows x64';dotnetSdk='10.0.403';assurance='L1-advisory';files=$files}
+$manifest = [ordered]@{schemaVersion=1;status='Alpha; local advisory L1';name='TADA';version=$version;package="feed/$packageName";supportedPlatform='Windows x64';dotnetSdk='stable 10.0 SDK, minimum 10.0.100';assurance='L1-advisory';files=$files}
 [IO.File]::WriteAllText((Join-Path $payload 'manifest.json'), ($manifest | ConvertTo-Json -Depth 8), [Text.UTF8Encoding]::new($false))
 $checksums = @($files | ForEach-Object { "$($_.sha256)  $($_.path)" }) + @((Get-FileHash -LiteralPath (Join-Path $payload 'manifest.json')).Hash.ToLowerInvariant() + '  manifest.json')
 [IO.File]::WriteAllLines((Join-Path $payload 'SHA256SUMS'), $checksums, [Text.UTF8Encoding]::new($false))

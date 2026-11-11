@@ -46,11 +46,14 @@ public static class BuildInputs
 
     public static string FindSdk(string installedSdks, string version)
     {
+        if (!Version.TryParse(version, out var selected) || selected.Major != 10 || selected.Minor != 0 ||
+            selected.Build < 100 || selected.Revision != -1)
+            throw new TadaException("This development profile requires a stable .NET 10.0 SDK selected by the reviewed global.json policy.");
         var roots = installedSdks.Split('\n', StringSplitOptions.RemoveEmptyEntries).Select(line => line.Trim())
             .Where(line => line.StartsWith(version + " [", StringComparison.Ordinal) && line.EndsWith(']'))
             .Select(line => Path.GetFullPath(Path.Combine(line[(version.Length + 2)..^1], version))).Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
         if (roots.Length != 1 || !File.Exists(Path.Combine(roots[0], "MSBuild.dll")))
-            throw new TadaException("Cannot identify the pinned SDK installation from dotnet --list-sdks.");
+            throw new TadaException("Cannot identify the resolved SDK installation from dotnet --list-sdks.");
         return roots[0];
     }
 

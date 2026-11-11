@@ -1,7 +1,8 @@
 param(
     [Parameter(Mandatory)][string]$PluginRoot,
     [string]$Dotnet = 'dotnet',
-    [string]$Archive
+    [string]$Archive,
+    [ValidatePattern('^10\.0\.[1-9][0-9]{2,}$')][string]$SdkVersion
 )
 
 $ErrorActionPreference = 'Stop'
@@ -21,6 +22,16 @@ if ($manifest.'$schema' -ne 'https://agent-plugins.org/schemas/1.0.0/plugin.sche
 if ($manifest.extensions.'com.openai'.PSObject.Properties.Name -contains 'onboardingSkill') {
     throw 'Installing TADA must not launch project setup through an onboarding skill.'
 }
+$claudeManifest = Get-Content -LiteralPath (Join-Path $plugin '.claude-plugin/plugin.json') -Raw | ConvertFrom-Json
+if ($claudeManifest.name -ne $manifest.name -or $claudeManifest.version -ne $manifest.version -or $claudeManifest.license -ne $manifest.license) {
+    throw 'Claude Code and Codex plugin metadata differ.'
+}
+$marketplaceRoot = Split-Path $plugin -Parent
+$claudeCatalog = Get-Content -LiteralPath (Join-Path $marketplaceRoot '.claude-plugin/marketplace.json') -Raw | ConvertFrom-Json
+if ($claudeCatalog.name -ne 'tada-development' -or !$claudeCatalog.owner.name -or @($claudeCatalog.plugins).Count -ne 1 -or
+    $claudeCatalog.plugins[0].name -ne $manifest.name -or $claudeCatalog.plugins[0].source -ne './tada') {
+    throw 'Claude Code marketplace does not resolve the shared TADA plugin.'
+}
 $entry = Join-Path $plugin 'skills/tada/SKILL.md'
 if (!(Test-Path -LiteralPath $entry) -or !(Test-Path -LiteralPath (Join-Path $plugin 'skills/tada/agents/openai.yaml'))) { throw 'Plugin skill or invocation metadata is missing.' }
 $application = Join-Path $workspace 'My API'
@@ -28,6 +39,11 @@ New-Item -ItemType Directory -Path $application -Force | Out-Null
 $instructions = Join-Path $application 'AGENTS.md'
 [IO.File]::WriteAllText($instructions, 'Existing project authority.')
 $before = (Get-FileHash -LiteralPath $instructions).Hash
+$sdkPolicy = Join-Path $application 'global.json'
+if ($SdkVersion) {
+    [IO.File]::WriteAllText($sdkPolicy, (@{sdk=@{version=$SdkVersion;rollForward='disable';allowPrerelease=$false};test=@{runner='Microsoft.Testing.Platform'}} | ConvertTo-Json -Depth 4))
+    $sdkPolicyBefore = (Get-FileHash -LiteralPath $sdkPolicy).Hash
+}
 $previousHome = $env:DOTNET_CLI_HOME
 $previousCache = $env:NUGET_PACKAGES
 $previousTelemetry = $env:DOTNET_CLI_TELEMETRY_OPTOUT
@@ -42,6 +58,12 @@ try {
     & $initializer -Repository $application -Dotnet $Dotnet | Out-Host
     if ((Get-FileHash -LiteralPath $instructions).Hash -ne $before) { throw 'Plugin setup altered project instructions.' }
     if (!(Test-Path -LiteralPath (Join-Path $application '.tada/context.md'))) { throw 'Plugin setup did not initialise project context.' }
+    if ($SdkVersion -and (Get-FileHash -LiteralPath $sdkPolicy).Hash -ne $sdkPolicyBefore) { throw 'Plugin setup changed the existing SDK policy.' }
+    Push-Location -LiteralPath $application
+    try {
+        $resolvedSdk = & $Dotnet --version
+        if ($LASTEXITCODE -or ($SdkVersion -and $resolvedSdk -ne $SdkVersion)) { throw 'Plugin setup did not use the application SDK policy.' }
+    } finally { Pop-Location }
     $report = [ordered]@{
         version = $manifest.version
         pluginRoot = $plugin
@@ -51,6 +73,10 @@ try {
         setupRepeatedSuccessfully = $true
         originalInstructionsByteExact = $true
         installationOnboardingSkillAbsent = $true
+        claudeCodeManifestAndMarketplace = $true
+        sharedSkillAndVerifierFeed = $true
+        resolvedSdk = $resolvedSdk
+        existingSdkPolicyByteExact = [bool]$SdkVersion
         nativeHostToggleTrial = 'pending'
         ordinaryRequestAgentTrial = 'pending'
     }

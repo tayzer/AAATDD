@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tada.Tests;
@@ -17,8 +18,25 @@ public sealed class OnboardingTests
         Assert.AreEqual(0, result.Updated.Length);
         Assert.IsFalse(File.Exists(Path.Combine(root, "AGENTS.md")));
         StringAssert.Contains(File.ReadAllText(Path.Combine(root, ".tada", "context.md")), host);
+        using var global = JsonDocument.Parse(File.ReadAllText(Path.Combine(root, "global.json")));
+        var sdk = global.RootElement.GetProperty("sdk");
+        Assert.AreEqual("10.0.100", sdk.GetProperty("version").GetString());
+        Assert.AreEqual("latestFeature", sdk.GetProperty("rollForward").GetString());
+        Assert.IsFalse(sdk.GetProperty("allowPrerelease").GetBoolean());
         Assert.AreEqual(0, Directory.GetFiles(root, "*.feature", SearchOption.AllDirectories).Length);
         Assert.IsFalse(Directory.Exists(Path.Combine(root, ".tada", "approvals")));
+    }
+
+    [TestMethod]
+    public void ExistingSdkPolicySurvivesRepeatedPreparationByteExact()
+    {
+        using var project = new CoreTests.Project();
+        string path = Path.Combine(project.Root, "global.json");
+        File.WriteAllText(path, "{\r\n  \"sdk\": { \"version\": \"10.0.103\", \"rollForward\": \"disable\" }\r\n}\r\n", new UTF8Encoding(true));
+        byte[] before = File.ReadAllBytes(path);
+        Onboarding.Initialise(project.Root);
+        Onboarding.Initialise(project.Root);
+        CollectionAssert.AreEqual(before, File.ReadAllBytes(path));
     }
 
     [TestMethod]
