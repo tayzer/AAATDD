@@ -17,17 +17,21 @@ Two advisory review tools run alongside `PR checks`. Their status checks are not
 
 Every attempt retains its available packages and evidence for 14 days, including failed attempts. The CI identity artifact and job summary record the repository, event, tested commit, PR head/base commits, run ID and attempt. Download evidence before expiry when longer retention is required.
 
-The main-branch protection configuration requires an up-to-date PR with the GitHub Actions `PR checks` result and resolved conversations. Administrators follow this policy. Force pushes and branch deletion are blocked.
+The main-branch protection configuration requires an up-to-date PR with the GitHub Actions `PR checks` and `Owner approval` results and resolved conversations. Administrators follow this policy. Force pushes and branch deletion are blocked.
 
 The separate `Main pull request review` ruleset requires changes to `main` to arrive through a PR with resolved review threads and dismisses stale reviews on new commits. It requires no approving GitHub review, because `tayzer` is the sole administrator and code owner, agents open PRs with the owner's credentials, and GitHub prevents authors from approving their own PRs. Repository administrators may bypass this ruleset when merging a PR. The separate branch protection continues to enforce the PR, CI and conversation requirements for administrators.
 
-Owner approval uses the `Owner approval` workflow in `.github/workflows/owner-approval.yml`. A repository administrator comments `/approve <head-sha>` on a ready PR, naming the head commit they reviewed (at least 7 hex characters). The comment event does not record which head the administrator saw, so a bare `/approve` is not an approval: the workflow replies with the current head SHA to review and quote. Only owner, member and collaborator comments start the job. The workflow checks the commenter's administrator permission, rejects a SHA that is not the current head and enables auto-merge (merge commit) bound to that SHA. GitHub merges after `PR checks` passes and conversations are resolved. Any push disables an auto-merge enabled before that push and requires a fresh `/approve <head-sha>`. To approve without auto-merge, merge manually. To withdraw an approval before merging, use GitHub's "Disable auto-merge" button. The workflow never checks out or runs PR content, and it reacts to the command and comments with the outcome.
+Owner approval uses the `Owner approval` workflow in `.github/workflows/owner-approval.yml` and the protected `owner-approval` environment. Every push to a ready PR starts one `Owner approval gate` job, which waits for a required reviewer of that environment. To approve, open the waiting `Owner approval gate` check from the PR, choose "Review deployments", select `owner-approval` and approve. The job then posts a success `Owner approval` commit status on the head commit of the push that started it, so the approval is bound to that exact commit. It also enables auto-merge (merge commit) for that head unless the PR has the `no-auto-merge` label. GitHub merges after `PR checks` and `Owner approval` pass and conversations are resolved. If both have already passed, the job merges immediately.
 
-Strict up-to-date checks still apply. When `main` moves, update the PR branch. The new commit disables auto-merge, so approve again after its checks start. Auto-merge must be allowed in the repository settings (`allow_auto_merge`).
+A later push has no `Owner approval` status, so the PR cannot merge until the new push's run is approved, even if auto-merge remains enabled. A newer push cancels the older waiting run. Strict up-to-date checks still apply, so updating the PR branch from `main` also needs a fresh approval. To withdraw consent before merging, use GitHub's "Disable auto-merge" button or reject the waiting run. Draft PRs start no gate until they are marked ready. Each approval adds a deployment entry to the PR timeline. The job never checks out or runs PR content, because `pull_request_target` runs the workflow definition from `main`.
 
-Merges enabled with the default workflow token do not trigger new workflow runs, so the post-merge `PR validation` and `CodeQL` push runs on `main` are skipped. The PR's required checks already ran on an up-to-date merge, and CodeQL also runs weekly. To keep the push runs, store a fine-grained token for an administrator with pull request and contents write access to this repository as the `TADA_AUTOMERGE_TOKEN` secret. The approval job uses it only to enable auto-merge. Permission checks, reactions and replies use the workflow token.
+The environment configuration in `.github/owner-approval-environment.json` names `tayzer` as the required reviewer, allows self-review because agents open PRs with the owner's credentials, and limits the environment to protected branches. `pull_request_target` runs in the context of `main`, so PR-triggered workflows cannot use the environment. Auto-merge must be allowed in the repository settings (`allow_auto_merge`).
 
-`.github/CODEOWNERS` names `@tayzer` as the repository-wide code owner for review routing. Adding repository administrators also grants `/approve` and the ruleset bypass. If other contributors gain write access, restore a required code-owner review in the ruleset.
+Merges enabled with the default workflow token do not trigger new workflow runs, so the post-merge `PR validation` and `CodeQL` push runs on `main` are skipped. The PR's required checks already ran on an up-to-date merge, and CodeQL also runs weekly. To keep the push runs, store a fine-grained token for an administrator with pull request and contents write access to this repository as the `TADA_AUTOMERGE_TOKEN` secret. The approval job uses it only to enable auto-merge. The approval status uses the workflow token.
+
+`Owner approval` is an ordinary commit status from GitHub Actions. A workflow added or changed by a same-repository PR could post a matching status, and agents act with the owner's credentials. Review workflow changes as executable infrastructure before approving, as for any change to the required checks.
+
+`.github/CODEOWNERS` names `@tayzer` as the repository-wide code owner for review routing. Adding environment reviewers grants approval, and adding repository administrators grants the ruleset bypass. If other contributors gain write access, restore a required code-owner review in the ruleset.
 
 Apply the reviewed configuration using an authenticated repository administrator, then read back the resulting policy.
 
@@ -38,9 +42,13 @@ gh api repos/tayzer/TADA/branches/main/protection
 gh api --method POST repos/tayzer/TADA/rulesets --input .github/main-review-ruleset.json
 gh api repos/tayzer/TADA/rulesets
 gh api --method PATCH repos/tayzer/TADA -F allow_auto_merge=true
+gh api --method PUT repos/tayzer/TADA/environments/owner-approval --input .github/owner-approval-environment.json
+gh api repos/tayzer/TADA/environments/owner-approval
 ```
 
-Repository administrators can change this configuration. Review workflow and policy changes as executable infrastructure. The source CI trusts the administrator's `/approve` command or review bypass for those changes, and its automated fixture approvals remain isolated controls. The independent business-approval adapter for application repositories remains proposed below.
+Create the environment before merging the workflow. Apply branch protection requiring `Owner approval` only after the workflow is on `main`; otherwise the PR that adds the workflow cannot satisfy it.
+
+Repository administrators can change this configuration. Review workflow and policy changes as executable infrastructure. The source CI trusts the owner's environment approval or review bypass for those changes, and its automated fixture approvals remain isolated controls. The independent business-approval adapter for application repositories remains proposed below.
 
 ## Pull request execution
 
