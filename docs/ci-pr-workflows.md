@@ -19,9 +19,15 @@ Every attempt retains its available packages and evidence for 14 days, including
 
 The main-branch protection configuration requires an up-to-date PR with the GitHub Actions `PR checks` result and resolved conversations. Administrators follow this policy. Force pushes and branch deletion are blocked.
 
-The separate `Main code-owner review` ruleset requires one approving code-owner review for other contributors. New commits dismiss stale approvals, and someone other than the latest reviewable pusher must approve the latest push. Repository administrators may bypass this review ruleset when merging a PR. The separate branch protection continues to enforce the PR, CI and conversation requirements for administrators.
+The separate `Main pull request review` ruleset requires changes to `main` to arrive through a PR with resolved review threads and dismisses stale reviews on new commits. It requires no approving GitHub review, because `tayzer` is the sole administrator and code owner, agents open PRs with the owner's credentials, and GitHub prevents authors from approving their own PRs. Repository administrators may bypass this ruleset when merging a PR. The separate branch protection continues to enforce the PR, CI and conversation requirements for administrators.
 
-`.github/CODEOWNERS` names `@tayzer` as the repository-wide code owner. At setup, `tayzer` is the sole repository administrator. GitHub prevents authors from approving their own PRs, so owner self-service merging uses the review-only administrator bypass. GitHub's ruleset bypass follows the administrator role. Adding names to CODEOWNERS does not grant that bypass, and adding administrators extends it.
+Owner approval uses the `Owner approval` workflow in `.github/workflows/owner-approval.yml`. A repository administrator comments `/approve` on a ready PR, or `/approve <head-sha>` to bind the approval to the commit they reviewed. The workflow checks the commenter's administrator permission and enables auto-merge (merge commit) for the current head SHA only. GitHub merges after `PR checks` passes and conversations are resolved. Any later push disables auto-merge and requires a fresh `/approve`. To approve without auto-merge, merge manually. To withdraw an approval before merging, use GitHub's "Disable auto-merge" button. The workflow never checks out or runs PR content, and it reacts to the command and comments with the outcome.
+
+Strict up-to-date checks still apply. When `main` moves, update the PR branch. The new commit disables auto-merge, so approve again after its checks start. Auto-merge must be allowed in the repository settings (`allow_auto_merge`).
+
+Merges enabled with the default workflow token do not trigger new workflow runs, so the post-merge `PR validation` and `CodeQL` push runs on `main` are skipped. The PR's required checks already ran on an up-to-date merge, and CodeQL also runs weekly. To keep the push runs, store a fine-grained token for an administrator with pull request and contents write access to this repository as the `TADA_AUTOMERGE_TOKEN` secret. The approval job then uses it.
+
+`.github/CODEOWNERS` names `@tayzer` as the repository-wide code owner for review routing. Adding repository administrators also grants `/approve` and the ruleset bypass. If other contributors gain write access, restore a required code-owner review in the ruleset.
 
 Apply the reviewed configuration using an authenticated repository administrator, then read back the resulting policy.
 
@@ -31,9 +37,10 @@ gh api repos/tayzer/TADA/branches/main/protection
 # Create the review ruleset once. For updates, use PUT with its returned ID.
 gh api --method POST repos/tayzer/TADA/rulesets --input .github/main-review-ruleset.json
 gh api repos/tayzer/TADA/rulesets
+gh api --method PATCH repos/tayzer/TADA -F allow_auto_merge=true
 ```
 
-Repository administrators can change this configuration. Review workflow and policy changes as executable infrastructure. The source CI trusts code-owner review or the owner's review bypass for those changes, and its automated fixture approvals remain isolated controls. The independent business-approval adapter for application repositories remains proposed below.
+Repository administrators can change this configuration. Review workflow and policy changes as executable infrastructure. The source CI trusts the administrator's `/approve` command or review bypass for those changes, and its automated fixture approvals remain isolated controls. The independent business-approval adapter for application repositories remains proposed below.
 
 ## Pull request execution
 

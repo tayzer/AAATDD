@@ -1,0 +1,111 @@
+name: Owner approval
+# A repository administrator comments `/approve` (optionally `/approve <head-sha>`)
+# on a pull request to approve it and enable auto-merge for that exact head commit.
+# GitHub then merges once the required `PR checks` result and conversation rules pass.
+# Any later push to the pull request disables auto-merge again.
+#
+# These jobs never check out or execute pull request content. Comment text is read
+# only through environment variables.
+on:
+  issue_comment:
+    types: [created]
+  pull_request_target:
+    types: [synchronize]
+permissions:
+  contents: read
+concurrency:
+  group: tada-owner-approval-${{ github.event.issue.number || github.event.pull_request.number }}
+  cancel-in-progress: false
+jobs:
+  approve:
+    name: Approve and enable auto-merge
+    if: >-
+      github.event_name == 'issue_comment' &&
+      github.event.issue.pull_request &&
+      startsWith(github.event.comment.body, '/approve')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    env:
+      GH_TOKEN: ${{ secrets.TADA_AUTOMERGE_TOKEN || github.token }}
+      GH_REPO: ${{ github.repository }}
+      PR: ${{ github.event.issue.number }}
+      ACTOR: ${{ github.event.comment.user.login }}
+      COMMENT_ID: ${{ github.event.comment.id }}
+      BODY: ${{ github.event.comment.body }}
+    steps:
+      - name: Approve the current head and enable auto-merge
+        run: |
+          set -euo pipefail
+          react() {
+            gh api --silent --method POST "repos/$GH_REPO/issues/comments/$COMMENT_ID/reactions" -f content="$1" || true
+          }
+          reply() {
+            gh pr comment "$PR" --body "$1"
+          }
+
+          # Accept only `/approve` or `/approve <sha>` as the first line.
+          first_line="$(printf '%s\n' "$BODY" | head -n 1 | tr -d '\r')"
+          if [[ ! "$first_line" =~ ^/approve([[:space:]]+([0-9a-fA-F]{7,40}))?[[:space:]]*$ ]]; then
+            echo "Comment is not an approval command."
+            exit 0
+          fi
+          requested_sha="${BASH_REMATCH[2]:-}"
+
+          permission="$(gh api "repos/$GH_REPO/collaborators/$ACTOR/permission" --jq .permission)"
+          if [[ "$permission" != "admin" ]]; then
+            react confused
+            reply "@$ACTOR does not have administrator permission, so \`/approve\` was ignored."
+            exit 1
+          fi
+
+          pr_json="$(gh pr view "$PR" --json headRefOid,isDraft,state)"
+          head_sha="$(jq -r .headRefOid <<<"$pr_json")"
+          if [[ "$(jq -r .state <<<"$pr_json")" != "OPEN" ]]; then
+            react confused
+            reply "This pull request is not open, so \`/approve\` was ignored."
+            exit 1
+          fi
+          if [[ "$(jq -r .isDraft <<<"$pr_json")" == "true" ]]; then
+            react confused
+            reply "Mark this pull request ready for review before using \`/approve\`."
+            exit 1
+          fi
+          if [[ -n "$requested_sha" && "$head_sha" != "${requested_sha,,}"* ]]; then
+            react confused
+            reply "The pull request head is now \`$head_sha\`, not \`$requested_sha\`. Review the new commits and approve again."
+            exit 1
+          fi
+
+          if ! gh pr merge "$PR" --auto --merge --match-head-commit "$head_sha"; then
+            react confused
+            reply "Approved \`$head_sha\`, but auto-merge could not be enabled. Check the workflow log."
+            exit 1
+          fi
+          react '+1'
+          reply "Approved by @$ACTOR at \`$head_sha\`. Auto-merge is enabled and will merge once required checks and conversations pass. A new push cancels this approval."
+
+  revoke:
+    name: Cancel approval after new commits
+    if: >-
+      github.event_name == 'pull_request_target' &&
+      github.event.pull_request.auto_merge
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      pull-requests: write
+      issues: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      PR: ${{ github.event.pull_request.number }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - name: Disable auto-merge
+        run: |
+          set -euo pipefail
+          gh pr merge "$PR" --disable-auto
+          gh pr comment "$PR" --body "New commits arrived (head \`$HEAD_SHA\`), so auto-merge was disabled. Review them and comment \`/approve\` again."
