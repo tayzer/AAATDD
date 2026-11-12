@@ -9,7 +9,7 @@ The [first public alpha](https://github.com/tayzer/AAATDD/releases/tag/v0.1.0-al
 After building and validating the tool package, run from the repository root:
 
 ```powershell
-$bundle = & ./scripts/New-ReleaseBundle.ps1 -Package .artifacts/packages/Tada.Cli.0.1.0-alpha.12.nupkg
+$bundle = & ./scripts/New-ReleaseBundle.ps1 -Package .artifacts/packages/Tada.Cli.0.1.0-alpha.13.nupkg
 pwsh -File scripts/Test-ReleaseBundle.ps1 -Archive $bundle.archive
 ```
 
@@ -19,7 +19,7 @@ The output is a fresh directory under `.artifacts/release-bundles/`; existing ar
 
 ## Try the application workflow
 
-Extract the ZIP and follow its README. The application prerequisites are Windows x64, .NET SDK 10.0.403 and Git for Windows. Use `dotnet tool run tada` from the application directory. No model API or agent SDK is required.
+Extract the ZIP and follow its README. The application prerequisites are Windows x64, a stable .NET 10.0 SDK and Git for Windows. New projects allow stable SDK feature-band and patch updates within 10.0, starting at 10.0.100. Existing SDK policies are preserved and each run records the selected toolchain identity. Use `dotnet tool run tada` from the application directory. No model API or agent SDK is required.
 
 Use the [TADA plugin](plugin.md) for automatic workflow selection through the host's enable/disable controls. The CLI bundle prepares and verifies projects. With the plugin enabled, open a fresh session and describe your project normally. Agree success/failure examples and Gherkin, review the executable oracle and declare approval. Build the separate API in small verified increments and preserve existing obligations during maintenance.
 

@@ -4,6 +4,10 @@ $ErrorActionPreference = 'Stop'
 $repository = Split-Path $PSScriptRoot -Parent
 $source = Join-Path $repository 'plugins/tada'
 $manifest = Get-Content -LiteralPath (Join-Path $source 'plugin.json') -Raw | ConvertFrom-Json
+$claudeManifest = Get-Content -LiteralPath (Join-Path $source '.claude-plugin/plugin.json') -Raw | ConvertFrom-Json
+if ($claudeManifest.name -ne $manifest.name -or $claudeManifest.version -ne $manifest.version) {
+    throw 'Codex and Claude Code plugin identities must match.'
+}
 $packagePath = (Resolve-Path -LiteralPath $Package).Path
 $packageZip = [IO.Compression.ZipFile]::OpenRead($packagePath)
 try {
@@ -40,6 +44,15 @@ $standaloneCatalogDirectory = Join-Path $plugin '.agents/plugins'
 New-Item -ItemType Directory -Path $standaloneCatalogDirectory -Force | Out-Null
 $catalog.plugins[0].source.path = './'
 $catalog | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $standaloneCatalogDirectory 'marketplace.json') -Encoding utf8
+$claudeCatalogDirectory = Join-Path $marketplaceRoot '.claude-plugin'
+New-Item -ItemType Directory -Path $claudeCatalogDirectory -Force | Out-Null
+$claudeCatalog = [ordered]@{
+    name = 'tada-development'
+    description = 'TADA development previews for test-assured software development.'
+    owner = @{ name = 'TADA contributors' }
+    plugins = @(@{ name = $manifest.name; source = './tada' })
+}
+$claudeCatalog | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $claudeCatalogDirectory 'marketplace.json') -Encoding utf8
 $archive = Join-Path $output "TADA-plugin-$($manifest.version).zip"
 [IO.Compression.ZipFile]::CreateFromDirectory($plugin, $archive)
 $result = [pscustomobject]@{
@@ -50,6 +63,7 @@ $result = [pscustomobject]@{
     packageSha256 = (Get-FileHash -LiteralPath $packagePath).Hash.ToLowerInvariant()
     marketplaceRoot = $marketplaceRoot
     pluginRoot = $plugin
+    hosts = @('Codex', 'Claude Code')
     status = 'Local plugin prepared for host installation and enable/disable testing'
 }
 $result | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $output 'plugin.json') -Encoding utf8

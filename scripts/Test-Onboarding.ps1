@@ -1,10 +1,16 @@
-param([string]$Dotnet = 'dotnet')
+param(
+    [string]$Dotnet = 'dotnet',
+    [ValidatePattern('^10\.0\.[1-9][0-9]{2,}$')][string]$SdkVersion
+)
 $ErrorActionPreference = 'Stop'
 $repository = Split-Path $PSScriptRoot -Parent
 [xml]$buildProperties = Get-Content -Raw (Join-Path $repository 'Directory.Build.props')
 $version = [string]$buildProperties.Project.PropertyGroup.Version
 $workspace = Join-Path $repository ('.artifacts/onboarding/' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $workspace -Force | Out-Null
+if ($SdkVersion) {
+    [IO.File]::WriteAllText((Join-Path $workspace 'global.json'), (@{sdk=@{version=$SdkVersion;rollForward='disable';allowPrerelease=$false};test=@{runner='Microsoft.Testing.Platform'}} | ConvertTo-Json -Depth 4))
+}
 $feed = Join-Path $repository '.artifacts/packages'
 $config = Join-Path $workspace 'NuGet.Local.Config'
 [IO.File]::WriteAllText($config, '<configuration><packageSources><clear/><add key="local" value="'+[Security.SecurityElement]::Escape($feed)+'"/></packageSources></configuration>')
@@ -37,6 +43,8 @@ try {
         return $result
     }
     Tada @('init') | Out-Null
+    $resolvedSdk = & $Dotnet --version
+    if ($LASTEXITCODE -or ($SdkVersion -and $resolvedSdk -ne $SdkVersion)) { throw 'Application SDK selection failed.' }
     $hooks=Join-Path $workspace '.tada/git-control-hooks'
     New-Item -ItemType Directory -Path $hooks -Force | Out-Null
     function ControlGit([string[]]$Arguments) {
@@ -129,6 +137,9 @@ public sealed record EchoRequest(string Message);
     }
     $restored = Tada @('run','--baseline',$baseline,'--dotnet',$Dotnet)
     $restoredRecord = RunRecord $restored
+    if (@($restoredRecord.commands | Where-Object { $_.arguments.Count -eq 1 -and $_.arguments[0] -eq '--version' -and $_.stdout.Trim() -eq $resolvedSdk }).Count -ne 1) {
+        throw 'Retained run did not capture the selected SDK version.'
+    }
     if ($restoredRecord.implementation -ne $refactorRecord.implementation -or $restoredRecord.environment -ne $refactorRecord.environment) { throw 'Restored implementation did not recover its identified source/environment.' }
     $installedLogger = Join-Path $env:NUGET_PACKAGES "tada.cli/$version/tools/net10.0/any/Tada.BuildLogger.dll"
     $loggerDigest = (Get-FileHash -LiteralPath $installedLogger -Algorithm SHA256).Hash

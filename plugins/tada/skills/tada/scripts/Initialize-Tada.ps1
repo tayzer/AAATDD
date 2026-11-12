@@ -11,13 +11,16 @@ $manifest = Get-Content -LiteralPath (Join-Path $pluginRoot 'plugin.json') -Raw 
 $feed = Join-Path $pluginRoot 'feed'
 $package = Join-Path $feed "Tada.Cli.$($manifest.version).nupkg"
 if (!(Test-Path -LiteralPath $package)) { throw 'The packaged TADA feed is missing. Use the distribution built by New-TadaPlugin.ps1.' }
-if ((& $Dotnet --version) -ne '10.0.403' -or $LASTEXITCODE) { throw 'Select .NET SDK 10.0.403 with -Dotnet.' }
 
 $projectRoot = (Resolve-Path -LiteralPath $Repository).Path
 $previousPathSetup = $env:DOTNET_ADD_GLOBAL_TOOLS_TO_PATH
 $env:DOTNET_ADD_GLOBAL_TOOLS_TO_PATH = 'false'
 Push-Location -LiteralPath $projectRoot
 try {
+    $sdk = & $Dotnet --version
+    if ($LASTEXITCODE -or $sdk -notmatch '^10\.0\.[1-9][0-9]{2,}$') {
+        throw 'Select a stable .NET 10.0 SDK with -Dotnet that satisfies the application repository SDK policy.'
+    }
     if (!(Test-Path -LiteralPath 'dotnet-tools.json') -and !(Test-Path -LiteralPath '.config/dotnet-tools.json')) {
         & $Dotnet new tool-manifest | Out-Host
         if ($LASTEXITCODE) { throw 'Local tool manifest creation failed.' }

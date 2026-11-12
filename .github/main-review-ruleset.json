@@ -1,5 +1,5 @@
 {
-  "name": "Main pull request review",
+  "name": "Main code-owner review",
   "target": "branch",
   "enforcement": "active",
   "bypass_actors": [
@@ -11,9 +11,7 @@
   ],
   "conditions": {
     "ref_name": {
-      "include": [
-        "refs/heads/main"
-      ],
+      "include": ["refs/heads/main"],
       "exclude": []
     }
   },
@@ -21,10 +19,10 @@
     {
       "type": "pull_request",
       "parameters": {
-        "required_approving_review_count": 0,
+        "required_approving_review_count": 1,
         "dismiss_stale_reviews_on_push": true,
-        "require_code_owner_review": false,
-        "require_last_push_approval": false,
+        "require_code_owner_review": true,
+        "require_last_push_approval": true,
         "required_review_thread_resolution": true
       }
     }
