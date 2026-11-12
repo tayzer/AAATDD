@@ -1,0 +1,75 @@
+name: Owner approval
+# Every push to a ready pull request starts one "Owner approval gate" job. The job waits
+# until a required reviewer of the `owner-approval` environment approves it ("Review
+# deployments" on the workflow run). It then posts a success "Owner approval" commit
+# status on the exact head commit of that push, which branch protection requires, and
+# enables auto-merge unless the pull request has the `no-auto-merge` label.
+#
+# A later push has no "Owner approval" status, so it cannot merge until its own run is
+# approved. A newer push cancels the older waiting run.
+#
+# pull_request_target runs this definition from main, so a pull request cannot change it.
+# The job never checks out or runs pull request content.
+on:
+  pull_request_target:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+permissions:
+  contents: read
+concurrency:
+  group: tada-owner-approval-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  gate:
+    name: Owner approval gate
+    if: ${{ !github.event.pull_request.draft }}
+    environment: owner-approval
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      actions: read
+      contents: write
+      pull-requests: write
+      statuses: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      MERGE_TOKEN: ${{ secrets.TADA_AUTOMERGE_TOKEN || github.token }}
+      GH_REPO: ${{ github.repository }}
+      PR: ${{ github.event.pull_request.number }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - name: Record approval and enable auto-merge
+        run: |
+          set -euo pipefail
+          approver="$(gh api "repos/$GH_REPO/actions/runs/$GITHUB_RUN_ID/approvals" \
+            --jq '[.[] | select(.state == "approved") | .user.login] | last // "unknown"')"
+
+          # The status binds this approval to the head commit of the triggering push.
+          gh api --silent --method POST "repos/$GH_REPO/statuses/$HEAD_SHA" \
+            -f state=success \
+            -f context="Owner approval" \
+            -f description="Approved by $approver" \
+            -f target_url="$RUN_URL"
+          echo "Approved \`$HEAD_SHA\` by $approver." >> "$GITHUB_STEP_SUMMARY"
+
+          pr_json="$(gh pr view "$PR" --json state,headRefOid,labels,autoMergeRequest)"
+          if [[ "$(jq -r .state <<<"$pr_json")" != "OPEN" ]]; then
+            echo "The pull request is not open, so auto-merge was not enabled."
+            exit 0
+          fi
+          if [[ "$(jq -r .headRefOid <<<"$pr_json")" != "$HEAD_SHA" ]]; then
+            echo "The head moved after this push. The newer push has its own approval run."
+            exit 0
+          fi
+          if jq -e '.labels | any(.name == "no-auto-merge")' <<<"$pr_json" >/dev/null; then
+            echo "The no-auto-merge label is present, so auto-merge was not enabled."
+            exit 0
+          fi
+          if jq -e '.autoMergeRequest != null' <<<"$pr_json" >/dev/null; then
+            echo "Auto-merge is already enabled."
+            exit 0
+          fi
+
+          # --match-head-commit makes GitHub refuse if the head moved after the check above.
+          GH_TOKEN="$MERGE_TOKEN" gh pr merge "$PR" --auto --merge --match-head-commit "$HEAD_SHA"

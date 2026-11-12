@@ -5,6 +5,10 @@
       {
         "context": "PR checks",
         "app_id": 15368
+      },
+      {
+        "context": "Owner approval",
+        "app_id": 15368
       }
     ]
   },
