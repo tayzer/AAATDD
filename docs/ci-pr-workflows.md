@@ -25,7 +25,7 @@ Owner approval uses the `Owner approval` workflow in `.github/workflows/owner-ap
 
 A later push has no `Owner approval` status, so the PR cannot merge until the new push's run is approved, even if auto-merge remains enabled. A newer push cancels the older waiting run. Strict up-to-date checks still apply, so updating the PR branch from `main` also needs a fresh approval. To withdraw consent before merging, use GitHub's "Disable auto-merge" button or reject the waiting run. Draft PRs start no gate until they are marked ready. Each approval adds a deployment entry to the PR timeline. The job never checks out or runs PR content, because `pull_request_target` runs the workflow definition from `main`.
 
-The environment configuration in `.github/owner-approval-environment.json` names `tayzer` as the required reviewer, allows self-review because agents open PRs with the owner's credentials, and limits the environment to protected branches. `pull_request_target` runs in the context of `main`, so PR-triggered workflows cannot use the environment. Auto-merge must be allowed in the repository settings (`allow_auto_merge`).
+The environment configuration in `.github/owner-approval-environment.json` names `tayzer` as the required reviewer, allows self-review because agents open PRs with the owner's credentials, and limits the environment to protected branches. Workflows triggered by `pull_request` run on `refs/pull/*`, which is not a protected branch, so they cannot use the environment. `pull_request_target` runs on the base branch, so only the definition on `main` can use it. The gate runs only for PRs targeting `main`. Auto-merge must be allowed in the repository settings (`allow_auto_merge`).
 
 Merges enabled with the default workflow token do not trigger new workflow runs, so the post-merge `PR validation` and `CodeQL` push runs on `main` are skipped. The PR's required checks already ran on an up-to-date merge, and CodeQL also runs weekly. To keep the push runs, store a fine-grained token for an administrator with pull request and contents write access to this repository as the `TADA_AUTOMERGE_TOKEN` secret. The approval job uses it only to enable auto-merge. The approval status uses the workflow token.
 
@@ -47,6 +47,12 @@ gh api repos/tayzer/TADA/environments/owner-approval
 ```
 
 Create the environment before merging the workflow. Apply branch protection requiring `Owner approval` only after the workflow is on `main`; otherwise the PR that adds the workflow cannot satisfy it.
+
+Only the workflow definition on `main` can post `Owner approval`. If that workflow or the environment breaks, or no reviewer is available, no PR can merge, including the PR that fixes the gate. As a break-glass step, an administrator temporarily requires only `PR checks`, merges the fix after normal review, and then restores the reviewed protection by reapplying `.github/main-branch-protection.json` with the PUT command above. Record the reason in the fixing PR.
+
+```powershell
+'{"strict":true,"checks":[{"context":"PR checks","app_id":15368}]}' | gh api --method PATCH repos/tayzer/TADA/branches/main/protection/required_status_checks --input -
+```
 
 Repository administrators can change this configuration. Review workflow and policy changes as executable infrastructure. The source CI trusts the owner's environment approval or review bypass for those changes, and its automated fixture approvals remain isolated controls. The independent business-approval adapter for application repositories remains proposed below.
 

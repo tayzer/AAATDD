@@ -12,6 +12,7 @@ name: Owner approval
 # The job never checks out or runs pull request content.
 on:
   pull_request_target:
+    branches: [main]
     types: [opened, synchronize, reopened, ready_for_review]
 permissions:
   contents: read
