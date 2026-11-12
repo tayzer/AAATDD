@@ -31,7 +31,7 @@ public sealed class OnboardingTests
     public void ExistingSdkPolicySurvivesRepeatedPreparationByteExact()
     {
         using var project = new CoreTests.Project();
-        string path = Path.Combine(project.Root, "global.json");
+        string path = Path.Join(project.Root, "global.json");
         File.WriteAllText(path, "{\r\n  \"sdk\": { \"version\": \"10.0.103\", \"rollForward\": \"disable\" }\r\n}\r\n", new UTF8Encoding(true));
         byte[] before = File.ReadAllBytes(path);
         Onboarding.Initialise(project.Root);
