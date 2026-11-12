@@ -40,6 +40,14 @@ public sealed class OnboardingTests
     }
 
     [TestMethod]
+    public void LegacyMigrationSignatureKeepsTheExactAlpha8Bytes()
+    {
+        // The migration only removes unmodified alpha.8 blocks, so the signature must not track current guidance.
+        string hash = Convert.ToHexStringLower(System.Security.Cryptography.SHA256.HashData(Encoding.UTF8.GetBytes(Onboarding.AgentInstructions)));
+        Assert.AreEqual("7faa7f5a0858eb38adf8a4a4f1f4692061fe8e513df5bbd6422e60c9fb353b5c", hash);
+    }
+
+    [TestMethod]
     [DataRow(false, "AGENTS.override.md")]
     [DataRow(true, "AGENTS.override.md")]
     [DataRow(false, "AGENTS.md")]
