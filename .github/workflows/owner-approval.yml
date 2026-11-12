@@ -1,8 +1,10 @@
 name: Owner approval
-# A repository administrator comments `/approve` (optionally `/approve <head-sha>`)
-# on a pull request to approve it and enable auto-merge for that exact head commit.
-# GitHub then merges once the required `PR checks` result and conversation rules pass.
-# Any later push to the pull request disables auto-merge again.
+# A repository administrator comments `/approve <head-sha>` on a pull request to
+# approve the reviewed head commit and enable auto-merge bound to it. GitHub then
+# merges once the required `PR checks` result and conversation rules pass. A bare
+# `/approve` only replies with the current head SHA, because the comment event does
+# not record which head the administrator reviewed. Any later push disables an
+# auto-merge enabled before that push.
 #
 # These jobs never check out or execute pull request content. Comment text is read
 # only through environment variables.
@@ -13,19 +15,17 @@ on:
     types: [synchronize]
 permissions:
   contents: read
-# Concurrency is set per job, keyed by event and pull request, so approval and
-# revocation runs do not replace each other, and skipped runs for ordinary
-# comments do not replace a pending approval.
+# Approval jobs have no concurrency group: each is bound to an explicit head SHA, so
+# parallel approvals are harmless and no comment can replace a pending approval.
+# Revocation jobs share a per-pull-request group, so the newest push is always checked.
 jobs:
   approve:
     name: Approve and enable auto-merge
     if: >-
       github.event_name == 'issue_comment' &&
       github.event.issue.pull_request &&
-      startsWith(github.event.comment.body, '/approve')
-    concurrency:
-      group: tada-owner-approval-${{ github.event_name }}-${{ github.event.issue.number }}
-      cancel-in-progress: false
+      startsWith(github.event.comment.body, '/approve') &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
@@ -33,14 +33,15 @@ jobs:
       pull-requests: write
       issues: write
     env:
-      GH_TOKEN: ${{ secrets.TADA_AUTOMERGE_TOKEN || github.token }}
+      GH_TOKEN: ${{ github.token }}
+      MERGE_TOKEN: ${{ secrets.TADA_AUTOMERGE_TOKEN || github.token }}
       GH_REPO: ${{ github.repository }}
       PR: ${{ github.event.issue.number }}
       ACTOR: ${{ github.event.comment.user.login }}
       COMMENT_ID: ${{ github.event.comment.id }}
       BODY: ${{ github.event.comment.body }}
     steps:
-      - name: Approve the current head and enable auto-merge
+      - name: Approve the requested head and enable auto-merge
         run: |
           set -euo pipefail
           react() {
@@ -50,13 +51,15 @@ jobs:
             gh pr comment "$PR" --body "$1"
           }
 
-          # Accept only `/approve` or `/approve <sha>` as the first line.
+          # The command is the first line: `/approve` followed by optional arguments.
           first_line="$(printf '%s\n' "$BODY" | head -n 1 | tr -d '\r')"
-          if [[ ! "$first_line" =~ ^/approve([[:space:]]+([0-9a-fA-F]{7,40}))?[[:space:]]*$ ]]; then
+          if [[ ! "$first_line" =~ ^/approve([[:space:]].*)?$ ]]; then
             echo "Comment is not an approval command."
             exit 0
           fi
-          requested_sha="${BASH_REMATCH[2]:-}"
+          argument="${BASH_REMATCH[1]:-}"
+          argument="${argument#"${argument%%[![:space:]]*}"}"
+          argument="${argument%"${argument##*[![:space:]]}"}"
 
           permission="$(gh api "repos/$GH_REPO/collaborators/$ACTOR/permission" --jq .permission)"
           if [[ "$permission" != "admin" ]]; then
@@ -77,13 +80,24 @@ jobs:
             reply "Mark this pull request ready for review before using \`/approve\`."
             exit 1
           fi
-          if [[ -n "$requested_sha" && "$head_sha" != "${requested_sha,,}"* ]]; then
+          if [[ -z "$argument" ]]; then
+            react eyes
+            reply "Approval needs the reviewed head commit. The current head is \`$head_sha\`. After reviewing it, comment \`/approve ${head_sha:0:12}\`."
+            exit 0
+          fi
+          if [[ ! "$argument" =~ ^[0-9a-fA-F]{7,40}$ ]]; then
             react confused
-            reply "The pull request head is now \`$head_sha\`, not \`$requested_sha\`. Review the new commits and approve again."
+            reply "\`/approve\` takes one argument: the reviewed head commit SHA (7 to 40 hex characters). The current head is \`$head_sha\`."
+            exit 1
+          fi
+          if [[ "$head_sha" != "${argument,,}"* ]]; then
+            react confused
+            reply "The pull request head is \`$head_sha\`, not \`$argument\`. Review the new commits and approve again."
             exit 1
           fi
 
-          if ! gh pr merge "$PR" --auto --merge --match-head-commit "$head_sha"; then
+          # --match-head-commit makes GitHub refuse if the head moved after the check above.
+          if ! GH_TOKEN="$MERGE_TOKEN" gh pr merge "$PR" --auto --merge --match-head-commit "$head_sha"; then
             react confused
             reply "Approved \`$head_sha\`, but auto-merge could not be enabled. Check the workflow log."
             exit 1
@@ -93,11 +107,9 @@ jobs:
 
   revoke:
     name: Cancel approval after new commits
-    if: >-
-      github.event_name == 'pull_request_target' &&
-      github.event.pull_request.auto_merge
+    if: github.event_name == 'pull_request_target'
     concurrency:
-      group: tada-owner-approval-${{ github.event_name }}-${{ github.event.pull_request.number }}
+      group: tada-owner-approval-revoke-${{ github.event.pull_request.number }}
       cancel-in-progress: false
     runs-on: ubuntu-24.04
     timeout-minutes: 5
@@ -109,9 +121,23 @@ jobs:
       GH_REPO: ${{ github.repository }}
       PR: ${{ github.event.pull_request.number }}
       HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      PUSHED_AT: ${{ github.event.pull_request.updated_at }}
     steps:
-      - name: Disable auto-merge
+      - name: Disable auto-merge enabled before this push
         run: |
           set -euo pipefail
+          # Read the current state rather than the event snapshot, so an approval that
+          # landed while this push was being processed is still revoked.
+          enabled_at="$(gh pr view "$PR" --json autoMergeRequest --jq '.autoMergeRequest.enabledAt // empty')"
+          if [[ -z "$enabled_at" ]]; then
+            echo "Auto-merge is not enabled."
+            exit 0
+          fi
+          # An approval enabled after this push names a head the administrator reviewed
+          # after it arrived, so leave it in place. Equal timestamps are revoked.
+          if (( $(date -d "$enabled_at" +%s) > $(date -d "$PUSHED_AT" +%s) )); then
+            echo "Auto-merge was enabled at $enabled_at, after this push at $PUSHED_AT."
+            exit 0
+          fi
           gh pr merge "$PR" --disable-auto
-          gh pr comment "$PR" --body "New commits arrived (head \`$HEAD_SHA\`), so auto-merge was disabled. Review them and comment \`/approve\` again."
+          gh pr comment "$PR" --body "New commits arrived (head \`$HEAD_SHA\`), so auto-merge was disabled. Review them and comment \`/approve ${HEAD_SHA:0:12}\` to approve again."
