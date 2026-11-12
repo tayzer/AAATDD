@@ -23,6 +23,8 @@ The separate `Main code-owner review` ruleset requires one approving code-owner 
 
 `.github/CODEOWNERS` names `@tayzer` as the repository-wide code owner. At setup, `tayzer` is the sole repository administrator. GitHub prevents authors from approving their own PRs, so owner self-service merging uses the review-only administrator bypass. GitHub's ruleset bypass follows the administrator role. Adding names to CODEOWNERS does not grant that bypass, and adding administrators extends it.
 
+To merge an owner PR, wait for `PR checks` to pass and use the merge button's "Merge without waiting for requirements to be met (bypass rules)" option. The bypass skips only the review requirement; branch protection still blocks the merge until `PR checks` passes, the branch is up to date and conversations are resolved. Auto-merge is allowed for contributor PRs and fires after the code-owner approval and checks. It does not apply the administrator bypass, so owner PRs are merged by hand.
+
 Apply the reviewed configuration using an authenticated repository administrator, then read back the resulting policy.
 
 ```powershell
