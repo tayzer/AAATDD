@@ -1,0 +1,10 @@
+{
+  "name": "tada",
+  "version": "0.1.0-alpha.13",
+  "description": "Test-Assured Development Assistance for everyday software development.",
+  "author": {
+    "name": "TADA contributors"
+  },
+  "repository": "https://github.com/tayzer/AAATDD",
+  "license": "MIT"
+}

@@ -20,7 +20,7 @@ jobs:
   windows:
     name: Windows validation
     runs-on: windows-2025
-    timeout-minutes: 35
+    timeout-minutes: 50
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: '1'
       DOTNET_GENERATE_ASPNET_CERTIFICATE: 'false'
@@ -48,7 +48,9 @@ jobs:
           $identity.GetEnumerator() | ForEach-Object { "- $($_.Key) = $($_.Value)" } | Add-Content $env:GITHUB_STEP_SUMMARY
       - uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
         with:
-          dotnet-version: 10.0.403
+          dotnet-version: |
+            10.0.103
+            10.0.403
       - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: .artifacts/native-toolchain
@@ -78,8 +80,12 @@ jobs:
           $version = [string]$properties.Project.PropertyGroup.Version
           $plugin = & ./scripts/New-TadaPlugin.ps1 -Package ".artifacts/packages/Tada.Cli.$version.nupkg"
           pwsh -File scripts/Test-TadaPlugin.ps1 -PluginRoot $plugin.pluginRoot -Archive $plugin.archive
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          pwsh -File scripts/Test-TadaPlugin.ps1 -PluginRoot $plugin.pluginRoot -SdkVersion 10.0.103
       - name: Installed-package onboarding and second API
         run: pwsh -File scripts/Test-Onboarding.ps1
+      - name: Installed-package workflow with an existing earlier SDK policy
+        run: pwsh -File scripts/Test-Onboarding.ps1 -SdkVersion 10.0.103
       - name: Observed task-only tool environment identity
         run: |
           $file = Get-ChildItem .artifacts/onboarding -Filter validation.json -Recurse -File | Sort-Object LastWriteTime -Descending | Select-Object -First 1

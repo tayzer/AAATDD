@@ -55,15 +55,16 @@ public sealed class RunEngine(BaselineStore store, string dotnet = "dotnet", Act
             string environmentFile = Path.Combine(run, RuntimeInputs.EnvironmentFile);
             Data.WriteNew(environmentFile, executionEnvironment);
             executionEnvironmentDigest = CanonicalJson.FileDigest(environmentFile);
-            progress?.Invoke("Checking the pinned .NET SDK and execution environment.");
+            progress?.Invoke("Resolving the reviewed .NET SDK policy and execution environment.");
             var version = await Command(["--version"]);
-            using var sdkDocument = JsonDocument.Parse(File.ReadAllBytes(store.Repository.Resolve("global.json")));
-            string expectedSdk = sdkDocument.RootElement.GetProperty("sdk").GetProperty("version").GetString()!;
-            if (version.ExitCode != 0 || version.Stdout.Trim() != expectedSdk)
-                throw new TadaException("Actual dotnet SDK does not match the reviewed SDK pin.");
+            if (version.ExitCode != 0 || version.TimedOut)
+                throw new TadaException("Cannot resolve the reviewed global.json SDK policy; see retained dotnet --version evidence.");
+            // The host resolves global.json from the reviewed repository working directory.
+            // Its version field is a policy floor when rollForward permits newer SDKs.
+            string selectedSdk = version.Stdout.Trim();
             var installed = await Command(["--list-sdks"]);
             if (installed.ExitCode != 0 || installed.TimedOut) throw new TadaException("Cannot identify installed SDKs.");
-            sdk = BuildInputs.FindSdk(installed.Stdout, expectedSdk);
+            sdk = BuildInputs.FindSdk(installed.Stdout, selectedSdk);
             host = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(sdk))!, "dotnet.exe");
             taskLogger = TaskJournal.Install(run);
             var info = await Command(["--info"]);

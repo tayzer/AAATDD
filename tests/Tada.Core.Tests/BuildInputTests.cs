@@ -228,12 +228,26 @@ public sealed class BuildInputTests
     }
 
     [TestMethod]
-    public void SelectedSdkInstallationComesFromHostInventory()
+    [DataRow("10.0.103")]
+    [DataRow("10.0.403")]
+    public void SelectedSdkInstallationComesFromHostInventory(string version)
     {
         using var fixture = new Fixture();
-        string sdk = Path.GetDirectoryName(fixture.File(".tada/host/sdk/10.0.403/MSBuild.dll", "synthetic SDK control"))!;
-        Assert.AreEqual(sdk, BuildInputs.FindSdk($"10.0.403 [{Path.GetDirectoryName(sdk)}]\r\n", "10.0.403"));
-        Assert.ThrowsExactly<TadaException>(() => BuildInputs.FindSdk($"10.0.402 [{Path.GetDirectoryName(sdk)}]\r\n", "10.0.403"));
+        string sdk = Path.GetDirectoryName(fixture.File($".tada/host/sdk/{version}/MSBuild.dll", "synthetic SDK control"))!;
+        Assert.AreEqual(sdk, BuildInputs.FindSdk($"{version} [{Path.GetDirectoryName(sdk)}]\r\n", version));
+        Assert.ThrowsExactly<TadaException>(() => BuildInputs.FindSdk($"10.0.402 [{Path.GetDirectoryName(sdk)}]\r\n", version));
+    }
+
+    [TestMethod]
+    [DataRow("8.0.415")]
+    [DataRow("11.0.100")]
+    [DataRow("10.0.100-preview.1")]
+    [DataRow("10.1.100")]
+    public void UnsupportedResolvedSdkIsRejected(string version)
+    {
+        using var fixture = new Fixture();
+        string sdk = Path.GetDirectoryName(fixture.File($".tada/host/sdk/{version}/MSBuild.dll", "synthetic unsupported SDK control"))!;
+        Assert.ThrowsExactly<TadaException>(() => BuildInputs.FindSdk($"{version} [{Path.GetDirectoryName(sdk)}]\r\n", version));
     }
 
     [TestMethod]

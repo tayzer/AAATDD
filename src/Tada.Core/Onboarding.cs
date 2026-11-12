@@ -12,8 +12,8 @@ public static class Onboarding
         {
             [".tada/WORKFLOW.md"] = Workflow,
             [".tada/context.md"] = "# Project context\n\nRecord current goals, accepted behaviour links and unresolved questions here. Treat this as a concise index, not a second functional specification.\n"
-                + (dotnetHost == null ? "" : $"\n## Local SDK host\n\nInitialisation used `{dotnetHost}`. Recheck this path and SDK 10.0.403 before use, especially after moving machines. Use this host for SDK/tool commands and pass the same host through `--dotnet` to `tada run`. This is an environment note, not business authority.\n"),
-            ["global.json"] = "{\"sdk\":{\"version\":\"10.0.403\",\"rollForward\":\"disable\",\"allowPrerelease\":false},\"test\":{\"runner\":\"Microsoft.Testing.Platform\"}}\n",
+                + (dotnetHost == null ? "" : $"\n## Local SDK host\n\nInitialisation used `{dotnetHost}`. Recheck this path and the stable .NET 10.0 SDK selected by this repository's `global.json` before use, especially after moving machines. Use this host for SDK/tool commands and pass the same host through `--dotnet` to `tada run`. TADA records the resolved SDK and observed toolchain identities for each run. This is an environment note, not business authority.\n"),
+            ["global.json"] = "{\"sdk\":{\"version\":\"10.0.100\",\"rollForward\":\"latestFeature\",\"allowPrerelease\":false},\"test\":{\"runner\":\"Microsoft.Testing.Platform\"}}\n",
             ["NuGet.Config"] = "<configuration><packageSources><clear/><add key=\"nuget.org\" value=\"https://api.nuget.org/v3/index.json\"/></packageSources></configuration>\n",
             [".gitattributes"] = "# Approval identities use exact file bytes. Keep Git from rewriting line endings.\n* -text\n",
             [".tada/.gitattributes"] = "# Captured approval/evidence bytes must survive every checkout unchanged.\n* -text\n",

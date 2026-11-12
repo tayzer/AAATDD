@@ -1,6 +1,10 @@
 # Build and try the development alpha
 
-This guide covers alpha `0.1.0-alpha.12`. Initial support is Windows x64 with .NET SDK **10.0.403**. See [release notes](releases/0.1.0-alpha.12.md) for scope and distribution. Public feed availability of `Tada.Cli` is not assumed.
+This guide covers alpha `0.1.0-alpha.12`. Initial support is Windows x64. Applications created with alpha.12 pin .NET SDK **10.0.403**; the alpha.13 source relaxes this as described below. See [release notes](releases/0.1.0-alpha.12.md) for scope and distribution. Public feed availability of `Tada.Cli` is not assumed.
+
+From alpha.13, application prerequisites are Windows x64 and a stable **.NET 10.0 SDK**. New projects use a 10.0.100 floor with `rollForward: latestFeature` and `allowPrerelease: false`, allowing installed 10.0 patch and feature-band updates. Existing application `global.json` files are preserved. TADA's source build and CI remain pinned to SDK 10.0.403.
+
+The .NET host resolves the reviewed application SDK policy. TADA captures the actual selected SDK, platform and observed toolchain identities for each run. An unavailable SDK policy produces INDETERMINATE with retained diagnostics. To relax an earlier generated exact pin, explicitly edit the application's `global.json`, then prepare, review and obtain human approval for a new baseline. Existing approval records retain their captured bytes. See Microsoft's [SDK roll-forward reference](https://learn.microsoft.com/en-us/dotnet/core/tools/global-json).
 
 Building TADA from source also requires PowerShell 7. The build downloads a checksum-pinned Zig 0.15.2 compiler into `.artifacts/` for its small native observer (about 93 MB compressed). Nothing is installed system-wide. The packaged tool includes the observer DLL; application developers need no C compiler. See [native observation](research/native-loader-observation.md) for the build pin and boundary.
 
@@ -40,6 +44,18 @@ On Windows, run `git config core.longpaths true` inside the application reposito
 
 The CLI records its .NET host in newly generated context so the plugin can reuse a portable SDK. Recheck that host after moving machines. CLI installation and project preparation are distinct from host plugin activation.
 
+For an application created by an earlier TADA version, upgrading the tool preserves its existing exact SDK pin. To adopt roll-forward, edit the `sdk` object in that application's `global.json` while retaining its other settings.
+
+```json
+"sdk": {
+  "version": "10.0.100",
+  "rollForward": "latestFeature",
+  "allowPrerelease": false
+}
+```
+
+Run `dotnet --version` from the application directory to check selection. Restore the application and harness, reviewing any required lock-file changes. Prepare and review a new baseline, then obtain human approval before recorded execution. The final quickstart commands below show that review and approval flow.
+
 New projects preserve file bytes through Git checkouts with `* -text`; `.tada/.gitattributes` independently protects captured records. Existing root attributes are not overwritten. Review equivalent rules for your oracle paths if adopting TADA in an existing repository. Exact-byte checks intentionally reject approval carry-forward after actual file changes.
 
 ## Agree first, enforce when implemented
@@ -50,7 +66,7 @@ Approved scenarios do not all have to pass immediately. `.tada/enforcement.json`
 
 Alpha.13 selects verification levels during discovery and supports [coordinated checks and several local services](multi-level-verification.md). Existing single-baseline commands remain available. Chores and refactors retain proportionate existing checks and can justify no new tests.
 
-Enable the installed TADA plugin, start a fresh Codex chat in the application directory and ask for the project normally.
+Enable the installed TADA plugin in Codex or Claude Code, start a fresh session in the application directory and ask for the project normally. The [plugin guide](plugin.md) gives each host's installation and toggle commands.
 
 Plugin installation does not ask for an application folder or install the verifier. The enabled skill prepares verification in the active application repository when the work needs it. The source-build commands above are an explicit manual CLI setup alternative.
 
