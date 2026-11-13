@@ -24,7 +24,7 @@ claude plugin marketplace add (Get-Location).Path
 claude plugin install tada@tada-development --scope user
 ```
 
-Use `--scope project` to install for the current repository only. `claude plugin disable tada@tada-development` and `claude plugin enable tada@tada-development` turn it off and on.
+To install for one repository only, change to that application repository and run `claude plugin install tada@tada-development --scope project` there. `claude plugin disable tada@tada-development` and `claude plugin enable tada@tada-development` turn it off and on.
 
 ## Cursor
 

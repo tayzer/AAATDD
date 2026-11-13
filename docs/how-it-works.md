@@ -125,7 +125,7 @@ An approved scenario is not automatically mandatory for merge. TADA tracks two s
 - **Is this expectation approved?** Recorded by human review and approval of an immutable baseline.
 - **Is it currently enforced?** Recorded in `.tada/enforcement.json`. Each approved scenario is either **active**, which means it must pass for merge, or a **candidate**, which means it is approved and pending implementation.
 
-A spec-only change can therefore merge approved candidates without breaking mainline CI. `tada gate` requires every active obligation to pass, reports candidates with their age as non-blocking diagnostics, and requires a candidate to be promoted to active once it passes. Against the target branch, an active obligation cannot be demoted unless an approved amendment changed that scenario. See [ADR 0044](decisions/0044-separate-approval-authority-from-merge-enforcement.md) and the [enforcement guide](enforcement.md).
+A spec-only change can therefore merge approved candidates without breaking mainline CI. `tada gate` requires every active obligation to pass, reports candidates with their age as non-blocking diagnostics, unless a candidate is older than an optional `candidateMaxDays` limit, in which case it blocks, and requires a candidate to be promoted to active once it passes. Against the target branch, an active obligation cannot be demoted unless an approved amendment changed that scenario. See [ADR 0044](decisions/0044-separate-approval-authority-from-merge-enforcement.md) and the [enforcement guide](enforcement.md).
 
 ## What human approval means
 

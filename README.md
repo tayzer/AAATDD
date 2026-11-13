@@ -114,6 +114,7 @@ Use `--scope project` instead to install for the current repository only. Inside
 **Cursor**
 
 ```powershell
+New-Item -ItemType Directory -Force "$HOME\.cursor\plugins\local" | Out-Null
 Copy-Item "$HOME\tools\tada-plugin" "$HOME\.cursor\plugins\local\tada" -Recurse
 ```
 
@@ -209,7 +210,7 @@ Only the plugin is required. Everything else is added when a task needs it. Each
 | **Acceptance baseline** | Locks the approved Gherkin plus its bindings and fixtures | `tada baseline prepare`, then review and approve | Not needed for chores and refactors with existing checks |
 | **Contract and fitness obligations** | Protects agreed API contracts and NFR thresholds, such as latency budgets and architecture rules | `obligations` in `tada.json` | Leave `obligations` out |
 | **Several local services** | One acceptance run across several of your .NET services | `execution.services` in `tada.json` (schema 2) | Use a single `sutProject` |
-| **Enforcement ledger** *(source)* | Splits approved scenarios into **active** (must pass to merge) and **candidates** (agreed, not built yet) | `.tada/enforcement.json` | Leave out the file. `tada gate` then reports `NO_CHECKS` |
+| **Enforcement ledger** *(source)* | Splits approved scenarios into **active** (must pass to merge) and **candidates** (agreed, not built yet) | `.tada/enforcement.json` | Leave out the file and don't run `tada gate`, which needs it |
 | **Verification plan** *(source)* | Coordinates acceptance, unit, contract and journey checks for a change | `tada plan prepare --file .tada/verification-plan.json` | Leave it out and run `tada run --baseline` directly |
 | **CI merge gate** *(source)* | Blocks pull requests when active obligations fail | `tada gate --run <id> --base origin/main` in CI | Leave it out of CI |
 | **Knowledge augment mode** *(source)* | Lets the agent propose short, evidence-backed knowledge records when a real gap exists. The default **reference** mode only reuses and updates your existing docs. | `.tada/knowledge.json` with `{ "schemaVersion": 1, "mode": "augment" }` | Delete the file to return to reference mode |

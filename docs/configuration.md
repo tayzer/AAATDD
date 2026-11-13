@@ -147,7 +147,7 @@ For opaque project evaluation, use target `@evaluation` and task `property-funct
 
 ## `.tada/enforcement.json` *(alpha.13)*
 
-This file is optional. Without it, `tada gate` reports `NO_CHECKS`, which is not a behavioural pass.
+TADA works without this file, but `tada gate` requires it. Without it, `tada gate` stops with a command error (exit code 3). With the file present, `tada gate` reports `NO_CHECKS` only when there are no active obligations and no `--run` is supplied. `NO_CHECKS` is not a behavioural pass.
 
 ```json
 {
