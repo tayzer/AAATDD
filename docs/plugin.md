@@ -16,30 +16,27 @@ pwsh -File scripts/Test-TadaPlugin.ps1 -PluginRoot $plugin.pluginRoot -Archive $
 
 The output contains a standalone plugin ZIP and a local marketplace directory. The marketplace directory includes `.agents/plugins/marketplace.json` for Codex, `.claude-plugin/marketplace.json` for Claude Code, `.cursor-plugin/marketplace.json` for Cursor, and one shared packaged `tada` folder. The plugin ZIP contains one plugin at its root, including all three plugin manifests, Codex and Claude Code marketplace catalogs that resolve the ZIP root, an installation README, the skill, setup helper, verifier feed and licence notices. Validation extracts that exact ZIP and prepares a disposable application from the extracted plugin.
 
+The marketplace directory is also the published content of the [`tayzer/tada-plugins`](https://github.com/tayzer/tada-plugins) Git marketplace. The [release guide](releasing.md) describes how releases update it. From alpha.13 the marketplace is named `tada`, so the plugin ID is `tada@tada`. Alpha.12 used `tada@tada-development`.
+
 ## Install and toggle in Codex
 
-Register the generated marketplace directory with the installed Codex CLI.
+Register the published Git marketplace, or a generated or extracted marketplace directory, with the installed Codex CLI.
 
 ```powershell
-codex plugin marketplace add $plugin.marketplaceRoot
+codex plugin marketplace add tayzer/tada-plugins      # or a local directory such as $plugin.marketplaceRoot
+codex plugin add tada@tada
 ```
 
-For a downloaded `TADA-plugin-0.1.0-alpha.12.zip`, extract it to a persistent directory. Register that extracted directory directly. The bundled catalog resolves the plugin at its own root.
+An extracted standalone plugin ZIP also registers directly, because its bundled catalog resolves the plugin at its own root. `codex plugin marketplace upgrade tada` refreshes a Git marketplace.
 
-```powershell
-Expand-Archive -LiteralPath ./TADA-plugin-0.1.0-alpha.12.zip -DestinationPath ./TADA-plugin
-codex plugin marketplace add (Resolve-Path ./TADA-plugin).Path
-codex plugin add tada@tada-development
-```
-
-Open the host's Plugins browser, select the `tada-development` marketplace and install TADA. Use its normal plugin controls to enable or disable it. In Codex CLI, `/plugins` opens the browser and Space toggles an installed plugin. Start a fresh session after changing activation so the trial observes the selected skill set. [Official plugin controls](https://learn.chatgpt.com/docs/plugins)
+Open the host's Plugins browser, select the `tada` marketplace and install TADA. Use its normal plugin controls to enable or disable it. In Codex CLI, `/plugins` opens the browser and Space toggles an installed plugin. Start a fresh session after changing activation so the trial observes the selected skill set. [Official plugin controls](https://learn.chatgpt.com/docs/plugins)
 
 Installation requires no application folder or project setup. Alpha.10 omits the optional `onboardingSkill` hook that launched the development skill during alpha.9 installation. Open the application you want to work on and describe the task normally. The enabled skill discovers requirements and prepares the local verifier in that project's workspace when business verification needs it. It asks for a folder only if the target is then ambiguous. [Official onboarding hook documentation](https://developers.openai.com/plugins/build/plugins#add-an-onboarding-skill)
 
 The host can also apply project-scoped configuration in a trusted application repository.
 
 ```toml
-[plugins."tada@tada-development"]
+[plugins."tada@tada"]
 enabled = true
 ```
 
@@ -47,13 +44,13 @@ Set `enabled = false` for the disabled control. Keep project preparation, accept
 
 ## Install and toggle in Claude Code
 
-Register the generated marketplace and install TADA through Claude Code. Use the `marketplaceRoot` returned by the packaging script, or the absolute path to that directory on the receiving machine.
+Register the published Git marketplace (`claude plugin marketplace add tayzer/tada-plugins`), or a generated marketplace directory, and install TADA through Claude Code. For a local directory, use the `marketplaceRoot` returned by the packaging script, or the absolute path to that directory on the receiving machine.
 
 ```powershell
 claude plugin validate $plugin.pluginRoot
 claude plugin validate $plugin.marketplaceRoot
 claude plugin marketplace add $plugin.marketplaceRoot
-claude plugin install tada@tada-development --scope project
+claude plugin install tada@tada --scope project
 ```
 
 Use `--scope user` for a personal installation. An extracted standalone plugin ZIP is also a marketplace: run `claude plugin marketplace add 'C:/path/to/extracted/tada'`, then install as above. For a temporary session without installing, run `claude --plugin-dir 'C:/path/to/extracted/tada'` in the application directory. Retain the complete plugin directory, including its feed. Claude Code caches marketplace plugins with their local files. [Marketplace guide](https://code.claude.com/docs/en/plugin-marketplaces).
@@ -61,8 +58,8 @@ Use `--scope user` for a personal installation. An extracted standalone plugin Z
 The skill's description allows automatic selection for ordinary software work. `/tada:tada` also invokes it explicitly. Use native activation controls and start a fresh session after changing them.
 
 ```powershell
-claude plugin disable tada@tada-development --scope project
-claude plugin enable tada@tada-development --scope project
+claude plugin disable tada@tada --scope project
+claude plugin enable tada@tada --scope project
 ```
 
 On Windows, the agent runs the packaged PowerShell helper with `pwsh -NoProfile -File` and absolute quoted paths for the helper, application repository and selected .NET host. Installation itself requires no application folder or verifier setup. [Claude Code skill documentation](https://code.claude.com/docs/en/skills).
@@ -79,7 +76,7 @@ Quit and reopen Cursor. A window reload may keep a cached plugin list. Check tha
 
 Copy the folder rather than linking it. Cursor has reported problems loading symlinked local plugins on Windows. The plugin root must contain `.cursor-plugin/plugin.json` directly; a nested extraction folder will not load.
 
-Teams and Enterprise workspaces can instead import a Git repository that contains the generated marketplace directory, with `.cursor-plugin/marketplace.json` at its root, through **Dashboard → Plugins & MCPs → Add Marketplace → Import from Repo**. Members then install TADA from **Customize**, choosing project or user scope.
+Teams and Enterprise workspaces can instead import `https://github.com/tayzer/tada-plugins`, whose root holds `.cursor-plugin/marketplace.json`, through **Dashboard → Plugins & MCPs → Add Marketplace → Import from Repo**. Members then install TADA from **Customize**, choosing project or user scope.
 
 Cursor discovers the shared skill from its `name` and `description`. **Customize** lists installed plugins and their controls; start a new chat after any change. A local plugin applies to every workspace, and Cursor does not document a per-project switch for it. To keep TADA off by default in Cursor, install it through a team marketplace with project scope, or remove the local folder when it is not wanted. [Cursor plugin documentation](https://cursor.com/docs/plugins).
 

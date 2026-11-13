@@ -49,11 +49,11 @@ Agent: I checked OrdersController, the stock reservation path and the existing
 
 The current release is `0.1.0-alpha.12`, an early alpha. Its results are **local advisory (L1)**. See [Limits](#limits).
 
-| Host | Released package | From source (`main`) |
-| --- | --- | --- |
-| Codex | alpha.12 | Yes |
-| Claude Code | First release in alpha.13 | Yes |
-| Cursor | First release in alpha.13 | Yes |
+| Host | Release ZIP | TADA marketplace | Public directory |
+| --- | --- | --- | --- |
+| Codex | alpha.12 and later | From alpha.13 | Submission planned |
+| Claude Code | From alpha.13 | From alpha.13 | Submission planned |
+| Cursor | From alpha.13 | Team import from alpha.13 | Submission planned |
 
 ## Install
 
@@ -62,62 +62,61 @@ TADA has two parts:
 - **The plugin** gives the agent the workflow. Most people only install this. It carries the matching verifier with it.
 - **The `tada` CLI** handles approvals and verification. The plugin installs it into a project automatically when a task needs it.
 
-### Step 1: get the plugin
+### From the TADA marketplace (alpha.13 and later)
 
-**Released alpha.12 (Codex only):**
+The [`tayzer/tada-plugins`](https://github.com/tayzer/tada-plugins) repository is the install source for all three hosts. Each release updates it automatically.
+
+**Codex**
 
 ```powershell
-# Download the plugin and checksums
-gh release download v0.1.0-alpha.12 -R tayzer/TADA -p "TADA-plugin-*.zip" -p SHA256SUMS
-
-# Check the download (should print True)
-$expected = ((Select-String SHA256SUMS -Pattern 'TADA-plugin-0.1.0-alpha.12.zip').Line -split '\s+')[0]
-(Get-FileHash .\TADA-plugin-0.1.0-alpha.12.zip -Algorithm SHA256).Hash.ToLower() -eq $expected
-
-# Extract it somewhere permanent. The host reads the plugin from this folder.
-Expand-Archive .\TADA-plugin-0.1.0-alpha.12.zip -DestinationPath "$HOME\tools\tada-plugin"
+codex plugin marketplace add tayzer/tada-plugins
+codex plugin add tada@tada
 ```
 
-You can also download the files by hand from the [release page](https://github.com/tayzer/TADA/releases/tag/v0.1.0-alpha.12).
+In Codex, `/plugins` opens the plugin browser, where TADA appears under the `tada` marketplace.
 
-**From source (Codex, Claude Code and Cursor).** This needs PowerShell 7 as well:
+**Claude Code**
+
+```powershell
+claude plugin marketplace add tayzer/tada-plugins
+claude plugin install tada@tada
+```
+
+Add `--scope project` to the install command to enable TADA for the current repository only. Inside Claude Code, `/plugin` opens the same controls.
+
+**Cursor**
+
+Install TADA from the Cursor marketplace, once its listing is approved. Until then, or on a plan without marketplace access, download `TADA-plugin-<version>.zip` from the [releases page](https://github.com/tayzer/TADA/releases), then copy it into Cursor's local plugin folder:
+
+```powershell
+Expand-Archive .\TADA-plugin-<version>.zip -DestinationPath "$HOME\.cursor\plugins\local\tada"
+```
+
+Quit and reopen Cursor; a window reload is not always enough. TADA then appears under **Customize**. If it does not, enable **Include third-party Plugins, Skills, and other configs** in Cursor settings. Copy the folder rather than linking it, because Cursor does not reliably load linked plugins on Windows. Teams and Enterprise workspaces can import `tayzer/tada-plugins` as a team marketplace. See [plugin details](docs/plugin.md#install-and-toggle-in-cursor).
+
+### From a release ZIP
+
+Every [release](https://github.com/tayzer/TADA/releases) also attaches `TADA-plugin-<version>.zip` and `SHA256SUMS`, for offline machines or for checking exact bytes:
+
+```powershell
+$expected = ((Select-String SHA256SUMS -Pattern 'TADA-plugin-').Line -split '\s+')[0]
+(Get-FileHash .\TADA-plugin-<version>.zip -Algorithm SHA256).Hash.ToLower() -eq $expected   # should print True
+Expand-Archive .\TADA-plugin-<version>.zip -DestinationPath "$HOME\tools\tada-plugin"
+codex plugin marketplace add "$HOME\tools\tada-plugin"    # or: claude plugin marketplace add ...
+```
+
+Do not delete or move the extracted folder while a host uses it. The alpha.12 ZIP supports Codex only, and its plugin ID is `tada@tada-development`.
+
+### From source
+
+This needs PowerShell 7 as well:
 
 ```powershell
 git clone https://github.com/tayzer/TADA.git; cd TADA
 dotnet pack src/Tada.Cli/Tada.Cli.csproj -o .artifacts/packages
 $plugin = & ./scripts/New-TadaPlugin.ps1 -Package .artifacts/packages/Tada.Cli.0.1.0-alpha.13.nupkg
-Expand-Archive $plugin.archive -DestinationPath "$HOME\tools\tada-plugin"
+codex plugin marketplace add $plugin.marketplaceRoot      # or: claude plugin marketplace add ...
 ```
-
-Do not delete or move the extracted folder while a host uses it.
-
-### Step 2: install it in your host
-
-**Codex**
-
-```powershell
-codex plugin marketplace add "$HOME\tools\tada-plugin"
-codex plugin add tada@tada-development
-```
-
-In Codex, `/plugins` opens the plugin browser, where TADA appears under the `tada-development` marketplace.
-
-**Claude Code**
-
-```powershell
-claude plugin marketplace add "$HOME\tools\tada-plugin"
-claude plugin install tada@tada-development --scope user
-```
-
-Use `--scope project` instead to install for the current repository only. Inside Claude Code, `/plugin` opens the same controls.
-
-**Cursor**
-
-```powershell
-Copy-Item "$HOME\tools\tada-plugin" "$HOME\.cursor\plugins\local\tada" -Recurse
-```
-
-Quit and reopen Cursor; a window reload is not always enough. TADA then appears under **Customize**. If it does not, enable **Include third-party Plugins, Skills, and other configs** in Cursor settings. Copy the folder rather than linking it, because Cursor does not reliably load linked plugins on Windows. Teams can import the generated marketplace from a Git repository instead. See [plugin details](docs/plugin.md#install-and-toggle-in-cursor).
 
 ### CLI only (no agent workflow)
 
@@ -159,8 +158,8 @@ TADA installs no global instructions. The plugin is the only switch, so turning 
 | I want to… | Codex | Claude Code | Cursor |
 | --- | --- | --- | --- |
 | Toggle it interactively | `/plugins`, select TADA, press Space | `/plugin` | **Customize** lists installed plugins and their controls |
-| Turn it off everywhere | `enabled = false` in `~/.codex/config.toml` | `claude plugin disable tada@tada-development --scope user` | Remove `~/.cursor/plugins/local/tada` and restart Cursor |
-| Turn it on for one repository | `enabled = true` in `<repo>/.codex/config.toml` | `claude plugin enable tada@tada-development --scope project` | Install from a team marketplace with project scope |
+| Turn it off everywhere | `enabled = false` in `~/.codex/config.toml` | `claude plugin disable tada@tada --scope user` | Remove `~/.cursor/plugins/local/tada` and restart Cursor |
+| Turn it on for one repository | `enabled = true` in `<repo>/.codex/config.toml` | `claude plugin enable tada@tada --scope project` | Install from a team marketplace with project scope |
 | Skip it for one task | Say so: *"Don't use TADA for this one."* | Same | Same |
 | Remove it completely | [Uninstall](#update-or-uninstall) | [Uninstall](#update-or-uninstall) | [Uninstall](#update-or-uninstall) |
 
@@ -169,14 +168,14 @@ TADA installs no global instructions. The plugin is the only switch, so turning 
 **Codex.** Disable TADA in your user configuration, `~/.codex/config.toml`:
 
 ```toml
-[plugins."tada@tada-development"]
+[plugins."tada@tada"]
 enabled = false
 ```
 
 Then enable it in each repository that should use it, in `<repo>/.codex/config.toml`:
 
 ```toml
-[plugins."tada@tada-development"]
+[plugins."tada@tada"]
 enabled = true
 ```
 
@@ -185,10 +184,10 @@ Codex applies project configuration only in repositories you have marked as trus
 **Claude Code.** Install with project scope only, in each repository that should use TADA:
 
 ```powershell
-claude plugin install tada@tada-development --scope project
+claude plugin install tada@tada --scope project
 ```
 
-If you already installed it for your user, run `claude plugin disable tada@tada-development --scope user` once, then `claude plugin enable tada@tada-development --scope project` in each repository.
+If you already installed it for your user, run `claude plugin disable tada@tada --scope user` once, then `claude plugin enable tada@tada --scope project` in each repository.
 
 **Cursor.** A plugin in `~/.cursor/plugins/local` applies to every workspace. For per-repository control, install TADA from a team marketplace and choose project scope. Otherwise, remove the local folder when you don't want TADA.
 
@@ -281,13 +280,15 @@ On Windows, run `git config core.longpaths true` once in the repository, because
 
 ## Update or uninstall
 
-**Update:** extract the new plugin to a new folder, then point your host at it.
+**Update:**
 
-| Host | Update |
-| --- | --- |
-| Codex | `codex plugin marketplace remove tada-development`, then `codex plugin marketplace add <new-folder>` and `codex plugin add tada@tada-development` |
-| Claude Code | `claude plugin marketplace remove tada-development`, then `claude plugin marketplace add <new-folder>` and `claude plugin install tada@tada-development` |
-| Cursor | Replace `~/.cursor/plugins/local/tada` with the new folder, then restart Cursor |
+| Host | Installed from the TADA marketplace | Installed from a ZIP folder |
+| --- | --- | --- |
+| Codex | `codex plugin marketplace upgrade tada` | `codex plugin marketplace remove tada`, then add the new folder and run `codex plugin add tada@tada` |
+| Claude Code | `claude plugin marketplace update tada` | `claude plugin marketplace remove tada`, then add the new folder and run `claude plugin install tada@tada` |
+| Cursor | Marketplace installs update automatically | Replace `~/.cursor/plugins/local/tada` with the new folder, then restart Cursor |
+
+**Moving from alpha.12:** alpha.12 used the plugin ID `tada@tada-development`. Remove it with `codex plugin remove tada@tada-development` and `codex plugin marketplace remove tada-development`, then install from the TADA marketplace. Your project files are unaffected.
 
 A new CLI version can change captured tool bytes. Expect to review and re-approve the baseline once, so the agreement stays honest.
 
@@ -295,8 +296,8 @@ A new CLI version can change captured tool bytes. Expect to review and re-approv
 
 | Host | Uninstall |
 | --- | --- |
-| Codex | `codex plugin remove tada@tada-development`, then `codex plugin marketplace remove tada-development` |
-| Claude Code | `claude plugin uninstall tada@tada-development`, then `claude plugin marketplace remove tada-development` |
+| Codex | `codex plugin remove tada@tada`, then `codex plugin marketplace remove tada` |
+| Claude Code | `claude plugin uninstall tada@tada`, then `claude plugin marketplace remove tada` |
 | Cursor | Delete `~/.cursor/plugins/local/tada` and restart Cursor |
 
 **Remove the CLI from a repository:** run `dotnet tool uninstall Tada.Cli` in that repository.
@@ -338,6 +339,7 @@ The [quickstart](docs/quickstart.md) and [release notes](docs/releases/0.1.0-alp
 - [Quickstart](docs/quickstart.md): building from source and running the verifier by hand
 - [Native testing](docs/native-testing.md) and [CI and PR workflows](docs/ci-pr-workflows.md)
 - [Enforcement guide](docs/enforcement.md), [multi-level verification](docs/multi-level-verification.md) and [discovery and knowledge](docs/knowledge.md)
+- [Releasing](docs/releasing.md) and the [directory listing kit](docs/listings.md)
 - [Project charter](docs/vision.md), [decision records](docs/decisions/) and [release checklist](docs/release-readiness.md)
 
 Source licence: [MIT](LICENSE). Historical ADRs and probe evidence retain the earlier AAATDD name.

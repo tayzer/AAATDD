@@ -1,0 +1,25 @@
+{
+  "name": "tada",
+  "version": "0.1.0-alpha.13",
+  "description": "Test-Assured Development Assistance for everyday software development. The agent agrees executable Gherkin acceptance with you before implementing, protects the approved expectations byte for byte and reports PASS, FAIL or INDETERMINATE from retained evidence.",
+  "author": {
+    "name": "TADA contributors",
+    "url": "https://github.com/tayzer/TADA"
+  },
+  "homepage": "https://github.com/tayzer/TADA",
+  "repository": "https://github.com/tayzer/TADA",
+  "license": "MIT",
+  "keywords": ["testing", "gherkin", "acceptance", "dotnet", "tdd"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "TADA",
+    "shortDescription": "Test-assured development",
+    "longDescription": "Discover agreed executable acceptance, verify small changes and recover project context through the TADA CLI. Supports C#/.NET APIs with Reqnroll and MSTest on Windows x64. Results are local advisory (L1).",
+    "developerName": "TADA contributors",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://github.com/tayzer/TADA",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/icon.png"
+  }
+}
