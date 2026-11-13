@@ -19,11 +19,11 @@ Every attempt retains its available packages and evidence for 14 days, including
 
 The main-branch protection configuration requires an up-to-date PR with the GitHub Actions `PR checks` result and resolved conversations. Administrators follow this policy. Force pushes and branch deletion are blocked.
 
-The separate `Main code-owner review` ruleset requires one approving code-owner review for other contributors. New commits dismiss stale approvals, and someone other than the latest reviewable pusher must approve the latest push. Repository administrators may bypass this review ruleset when merging a PR. The separate branch protection continues to enforce the PR, CI and conversation requirements for administrators.
+The separate `Main pull request rules` ruleset requires every change to `main` to arrive through a pull request with resolved review threads. It requires no approving review, so a solo maintainer can merge their own PR once `PR checks` passes. This repository has one maintainer, and GitHub prevents authors from approving their own PRs. New commits still dismiss any stale approvals that were given.
 
-`.github/CODEOWNERS` names `@tayzer` as the repository-wide code owner. At setup, `tayzer` is the sole repository administrator. GitHub prevents authors from approving their own PRs, so owner self-service merging uses the review-only administrator bypass. GitHub's ruleset bypass follows the administrator role. Adding names to CODEOWNERS does not grant that bypass, and adding administrators extends it.
+`.github/CODEOWNERS` names `@tayzer` as the repository-wide code owner, so GitHub requests their review automatically on contributor PRs. That review is not enforced. To require reviews again when more maintainers join, set `required_approving_review_count` to 1 and `require_code_owner_review` to true in `.github/main-review-ruleset.json`, and apply it as shown below.
 
-To merge an owner PR, wait for `PR checks` to pass and use the merge button's "Merge without waiting for requirements to be met (bypass rules)" option. The bypass skips only the review requirement; branch protection still blocks the merge until `PR checks` passes, the branch is up to date and conversations are resolved. Auto-merge is allowed for contributor PRs and fires after the code-owner approval and checks. It does not apply the administrator bypass, so owner PRs are merged by hand.
+Merging to `main` is a release decision: every validated push publishes a build ([ADR 0048](decisions/0048-publish-every-validated-main-build.md)). Auto-merge is allowed and fires once checks pass and conversations are resolved.
 
 Apply the reviewed configuration using an authenticated repository administrator, then read back the resulting policy.
 
@@ -35,7 +35,7 @@ gh api --method POST repos/tayzer/TADA/rulesets --input .github/main-review-rule
 gh api repos/tayzer/TADA/rulesets
 ```
 
-Repository administrators can change this configuration. Review workflow and policy changes as executable infrastructure. The source CI trusts code-owner review or the owner's review bypass for those changes, and its automated fixture approvals remain isolated controls. The independent business-approval adapter for application repositories remains proposed below.
+Repository administrators can change this configuration. Review workflow and policy changes as executable infrastructure. The source CI trusts the maintainer who merges those changes, and its automated fixture approvals remain isolated controls. The independent business-approval adapter for application repositories remains proposed below.
 
 ## Pull request execution
 
