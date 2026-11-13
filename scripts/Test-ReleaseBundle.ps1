@@ -8,7 +8,7 @@ New-Item -ItemType Directory -Path $extracted -Force | Out-Null
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 [IO.Compression.ZipFile]::ExtractToDirectory($archivePath, $extracted)
 $manifest = Get-Content -LiteralPath (Join-Path $extracted 'manifest.json') -Raw | ConvertFrom-Json
-if ($manifest.schemaVersion -ne 1 -or $manifest.version -notmatch '^0\.1\.0-alpha\.[0-9]+$' -or $manifest.package -ne "feed/Tada.Cli.$($manifest.version).nupkg") { throw 'Unsupported bundle manifest.' }
+if ($manifest.schemaVersion -ne 1 -or $manifest.version -notmatch '^0\.1\.0-alpha\.[0-9]+(?:\.[0-9]+)?$' -or $manifest.package -ne "feed/Tada.Cli.$($manifest.version).nupkg") { throw 'Unsupported bundle manifest.' }
 $expected = @('LICENSE','README.md','THIRD_PARTY_NOTICES.md',$manifest.package) | Sort-Object
 if ((@($manifest.files.path | Sort-Object) -join "`n") -ne ($expected -join "`n")) { throw 'Unexpected or duplicate bundle assets.' }
 $actual = @(Get-ChildItem -LiteralPath $extracted -Recurse -File | ForEach-Object { [IO.Path]::GetRelativePath($extracted, $_.FullName).Replace('\','/') } | Sort-Object)

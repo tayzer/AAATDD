@@ -122,6 +122,23 @@ jobs:
           $version = [string]$properties.Project.PropertyGroup.Version
           $bundle = & ./scripts/New-ReleaseBundle.ps1 -Package ".artifacts/packages/Tada.Cli.$version.nupkg"
           pwsh -File scripts/Test-ReleaseBundle.ps1 -Archive $bundle.archive
+      # The release workflow publishes <base>.<run number> builds. Package one here so a
+      # version rule that only accepts the base version fails on the PR, not after merge.
+      - name: Package a stamped release build
+        if: matrix.suite == 'core'
+        run: |
+          [xml]$properties = Get-Content Directory.Build.props -Raw
+          $version = & ./scripts/Set-TadaVersion.ps1 -Version "$([string]$properties.Project.PropertyGroup.Version).$env:GITHUB_RUN_NUMBER"
+          dotnet pack src/Tada.Cli/Tada.Cli.csproj --no-restore --disable-build-servers -o .artifacts/stamped-packages
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          $package = ".artifacts/stamped-packages/Tada.Cli.$version.nupkg"
+          $plugin = & ./scripts/New-TadaPlugin.ps1 -Package $package
+          pwsh -File scripts/Test-TadaPlugin.ps1 -PluginRoot $plugin.pluginRoot -Archive $plugin.archive
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          $bundle = & ./scripts/New-ReleaseBundle.ps1 -Package $package
+          pwsh -File scripts/Test-ReleaseBundle.ps1 -Archive $bundle.archive
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          git checkout -- Directory.Build.props plugins/tada
       - name: Retain package and validation evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

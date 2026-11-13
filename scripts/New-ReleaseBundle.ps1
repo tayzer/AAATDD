@@ -12,7 +12,7 @@ try {
     try { [xml]$metadata = $reader.ReadToEnd() } finally { $reader.Dispose() }
     $id = [string]$metadata.package.metadata.id
     $version = [string]$metadata.package.metadata.version
-    if ($id -ne 'Tada.Cli' -or $version -notmatch '^0\.1\.0-alpha\.[0-9]+$') { throw 'Expected a versioned TADA development alpha package.' }
+    if ($id -ne 'Tada.Cli' -or $version -notmatch '^0\.1\.0-alpha\.[0-9]+(?:\.[0-9]+)?$') { throw 'Expected a versioned TADA development alpha package.' }
     if ($metadata.package.metadata.license.InnerText -ne 'MIT' -or $metadata.package.metadata.license.type -ne 'expression') { throw 'Package must declare its MIT licence.' }
     $expectedDlls = @('Cucumber.Messages.dll','Gherkin.dll','Tada.BuildLogger.dll','Tada.Cli.dll','Tada.Core.dll','Tada.RuntimeProbe.dll','tada_native_observer.dll') | Sort-Object
     $dlls = @($archive.Entries | Where-Object FullName -match '\.dll$' | ForEach-Object { $_.Name } | Sort-Object)
