@@ -1,6 +1,6 @@
 # Directory listing kit
 
-This page holds what you need to list TADA in the Cursor marketplace, the Anthropic plugin directory and the OpenAI plugin directory. Each directory reviews submissions manually. Submit only after the [marketplace repository](releasing.md#one-time-setup) is public and contains a published release.
+This page holds what you need to list TADA in the Cursor marketplace, the Anthropic plugin directory and the OpenAI plugin directory. Each directory reviews submissions manually. Submit only after the [marketplace repository](releasing.md#one-time-setup-done) contains a published build.
 
 ## Shared listing content
 
@@ -45,7 +45,7 @@ The same text is in the plugin README, which the Anthropic directory shows as th
 Submit at [claude.ai/directory/manage](https://claude.ai/directory/manage): **Submit new → Plugin bundle**. You need a paid Claude plan, a role that can submit, and your GitHub account connected on claude.ai with push access to `tayzer/tada-plugins`. See [Submit your plugin](https://claude.com/docs/plugins/submit).
 
 - [ ] Repository `tayzer/tada-plugins`, plugin path `tada`.
-- [ ] Track the `main` branch, which receives each published release, or a specific release tag.
+- [ ] Track the `main` branch, which receives every published build, or a specific release tag.
 - [ ] Run **Validate**. Run `claude plugin validate ./tada` locally first; the release workflow's package already passes it with no findings.
 - [ ] Expect a **policy hold** for reviewer inspection, not a block. `feed/Tada.Cli.<version>.nupkg` is a binary larger than 256 KiB, and the setup script installs a package. In review notes, point to the source repository, the release manifest and the disclosure above.
 - [ ] Enter the data handling answers above.

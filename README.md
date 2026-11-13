@@ -64,7 +64,7 @@ TADA has two parts:
 
 ### From the TADA marketplace (alpha.13 and later)
 
-The [`tayzer/tada-plugins`](https://github.com/tayzer/tada-plugins) repository is the install source for all three hosts. Each release updates it automatically.
+The [`tayzer/tada-plugins`](https://github.com/tayzer/tada-plugins) repository is the install source for all three hosts. Every validated merge to `main` publishes a new build there automatically.
 
 **Codex**
 

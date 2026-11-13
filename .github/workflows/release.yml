@@ -1,39 +1,65 @@
 name: Release
-# Pushing a version tag validates the source and prepares a draft GitHub release.
-# A maintainer reviews the draft and publishes it. Publishing then copies the exact
-# approved marketplace bytes to the plugin marketplace repository.
+# Every push to main that passes the full "PR validation" workflow is published (ADR 0048):
+# a GitHub prerelease with checked assets, then the exact marketplace bytes in the plugin
+# marketplace repository for Codex, Claude Code and Cursor.
 on:
-  push:
-    tags: ['v*']
-  release:
-    types: [published]
+  workflow_run:
+    workflows: ['PR validation']
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: 'Commit on main to republish (defaults to the head of main). It must have passed PR validation.'
+        required: false
 permissions:
   contents: read
+concurrency:
+  group: tada-release
+  cancel-in-progress: false
 defaults:
   run:
     shell: pwsh
 jobs:
-  validate:
-    name: Validate tagged source
-    if: github.event_name == 'push'
-    uses: ./.github/workflows/ci.yml
-
-  draft:
-    name: Prepare draft release
-    if: github.event_name == 'push'
-    needs: validate
+  package:
+    name: Package and publish the release
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
     runs-on: windows-2025
     timeout-minutes: 30
     permissions:
       contents: write
+    outputs:
+      tag: ${{ steps.version.outputs.tag }}
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: '1'
       DOTNET_GENERATE_ASPNET_CERTIFICATE: 'false'
       DOTNET_ADD_GLOBAL_TOOLS_TO_PATH: 'false'
+      SOURCE_SHA: ${{ github.event.workflow_run.head_sha || inputs.commit || github.sha }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 0
           persist-credentials: false
+      - name: Confirm the commit is on main and passed validation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TRIGGER_RUN_URL: ${{ github.event.workflow_run.html_url }}
+          TRIGGER_RUN_NUMBER: ${{ github.event.workflow_run.run_number }}
+        run: |
+          git merge-base --is-ancestor $env:SOURCE_SHA origin/main
+          if ($LASTEXITCODE) { throw "$env:SOURCE_SHA is not on main." }
+          # The build number is the validation run number, so each validated push gets its own version.
+          if ($env:TRIGGER_RUN_URL) { $url = $env:TRIGGER_RUN_URL; $number = $env:TRIGGER_RUN_NUMBER }
+          else {
+            $runs = @(gh run list --repo $env:GITHUB_REPOSITORY --workflow ci.yml --commit $env:SOURCE_SHA --event push --status success --json url,number --limit 1 | ConvertFrom-Json)
+            if (-not $runs) { throw "$env:SOURCE_SHA has no successful PR validation run on main." }
+            $url = $runs[0].url; $number = $runs[0].number
+          }
+          "VALIDATION_RUN=$url" >> $env:GITHUB_ENV
+          "BUILD_NUMBER=$number" >> $env:GITHUB_ENV
       - uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
         with:
           dotnet-version: 10.0.403
@@ -41,18 +67,19 @@ jobs:
         with:
           path: .artifacts/native-toolchain
           key: zig-windows-x64-0.15.2-3a0ed1e8799a2f8ce2a6e6290a9ff22e6906f8227865911fb7ddedc3cc14cb0c
-      - name: Check that the tag matches every declared version
+      - name: Give this build its unique version
         id: version
         run: |
           [xml]$properties = Get-Content Directory.Build.props -Raw
-          $version = [string]$properties.Project.PropertyGroup.Version
-          if ($env:GITHUB_REF_NAME -ne "v$version") { throw "Tag $env:GITHUB_REF_NAME does not match version $version." }
+          $base = [string]$properties.Project.PropertyGroup.Version
           foreach ($manifest in @('plugin.json', '.codex-plugin/plugin.json', '.claude-plugin/plugin.json', '.cursor-plugin/plugin.json')) {
             $declared = (Get-Content -LiteralPath "plugins/tada/$manifest" -Raw | ConvertFrom-Json).version
-            if ($declared -ne $version) { throw "plugins/tada/$manifest declares $declared, not $version." }
+            if ($declared -ne $base) { throw "plugins/tada/$manifest declares $declared, not $base." }
           }
+          $version = & ./scripts/Set-TadaVersion.ps1 -Version "$base.$env:BUILD_NUMBER"
           "version=$version" >> $env:GITHUB_OUTPUT
-          "prerelease=$($version.Contains('-').ToString().ToLowerInvariant())" >> $env:GITHUB_OUTPUT
+          "tag=v$version" >> $env:GITHUB_OUTPUT
+          "Publishing **$version** from ``$env:SOURCE_SHA``." >> $env:GITHUB_STEP_SUMMARY
       - name: Restore, build and pack
         run: |
           dotnet restore src/Tada.Cli/Tada.Cli.csproj --locked-mode
@@ -81,10 +108,11 @@ jobs:
             schemaVersion = 1
             name = 'TADA'
             version = $env:VERSION
-            tag = $env:GITHUB_REF_NAME
-            sourceCommit = $env:GITHUB_SHA
+            tag = "v$env:VERSION"
+            sourceCommit = $env:SOURCE_SHA
             repository = $env:GITHUB_REPOSITORY
-            validationRun = "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"
+            validationRun = $env:VALIDATION_RUN
+            packagingRun = "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"
             hosts = @('Codex', 'Claude Code', 'Cursor')
             marketplace = $plugin.marketplace
             supportedPlatform = 'Windows x64'
@@ -96,25 +124,29 @@ jobs:
             "$((Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant())  $($_.Name)"
           }
           [IO.File]::WriteAllLines("$release/SHA256SUMS", [string[]]$sums, [Text.UTF8Encoding]::new($false))
-          Get-Content "$release/SHA256SUMS" | ForEach-Object { "- ``$_``" } | Add-Content $env:GITHUB_STEP_SUMMARY
-      - name: Create the draft release
+      - name: Publish the GitHub prerelease
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ steps.version.outputs.version }}
-          PRERELEASE: ${{ steps.version.outputs.prerelease }}
         run: |
-          $arguments = @('release', 'create', $env:GITHUB_REF_NAME, '--draft', '--verify-tag', '--title', "TADA $env:VERSION")
-          if ($env:PRERELEASE -eq 'true') { $arguments += '--prerelease' }
-          $notes = "docs/releases/$env:VERSION.md"
-          if (Test-Path -LiteralPath $notes) { $arguments += @('--notes-file', $notes) } else { $arguments += '--generate-notes' }
-          $arguments += @(Get-ChildItem .artifacts/release -File | ForEach-Object FullName)
-          gh @arguments
+          $notes = @"
+          Automated build of ``$env:SOURCE_SHA`` from ``main``, published after [full validation]($env:VALIDATION_RUN) passed.
+
+          Install or update: ``codex plugin marketplace add tayzer/tada-plugins`` or ``claude plugin marketplace add tayzer/tada-plugins``, then install ``tada@tada``. Cursor users can copy ``TADA-plugin-$env:VERSION.zip`` into ``~/.cursor/plugins/local/tada``. Check downloads against ``SHA256SUMS``; ``release-manifest.json`` identifies the source and validation run.
+
+          Results are local advisory (L1). Windows x64 and a stable .NET 10.0 SDK are required.
+          "@
+          $notesFile = Join-Path $env:RUNNER_TEMP 'notes.md'
+          [IO.File]::WriteAllText($notesFile, $notes, [Text.UTF8Encoding]::new($false))
+          $assets = @(Get-ChildItem .artifacts/release -File | ForEach-Object FullName)
+          gh release create "v$env:VERSION" --target $env:SOURCE_SHA --prerelease --title "TADA $env:VERSION" --notes-file $notesFile @assets
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
-      - name: Retain release candidate evidence
+          Get-Content .artifacts/release/SHA256SUMS | ForEach-Object { "- ``$_``" } | Add-Content $env:GITHUB_STEP_SUMMARY
+      - name: Retain release evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: release-candidate-${{ github.ref_name }}
+          name: release-${{ steps.version.outputs.version || github.run_id }}
           if-no-files-found: warn
           include-hidden-files: true
           retention-days: 90
@@ -124,14 +156,14 @@ jobs:
 
   marketplace:
     name: Publish to the plugin marketplace repository
-    if: github.event_name == 'release' && !github.event.release.draft
+    needs: package
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     environment: marketplace
     permissions:
       contents: read
     env:
-      TAG: ${{ github.event.release.tag_name }}
+      TAG: ${{ needs.package.outputs.tag }}
       MARKETPLACE_REPOSITORY: ${{ vars.MARKETPLACE_REPOSITORY || 'tayzer/tada-plugins' }}
     defaults:
       run:
@@ -180,4 +212,5 @@ jobs:
           git tag -f "$TAG"
           git push origin main
           git push --force origin "refs/tags/$TAG"
+          rm -f "$RUNNER_TEMP/deploy_key"
           echo "Published $TAG to $MARKETPLACE_REPOSITORY." >> "$GITHUB_STEP_SUMMARY"
