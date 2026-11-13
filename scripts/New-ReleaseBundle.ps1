@@ -58,7 +58,7 @@ Keep the extracted feed available for later `dotnet tool restore --configfile Nu
 
 Enable the matching TADA plugin through the host's plugin controls. The plugin distribution includes this verifier package and its setup helper. Open MyApi in a fresh session and ask for your project normally.
 
-The matching plugin supports Codex and Claude Code through their native manifests and marketplaces. New application projects select the latest installed stable 10.0 feature band from a 10.0.100 floor. Existing global.json files are preserved. Changing a captured SDK policy requires renewed baseline review and human approval. Each run records the resolved SDK and observed toolchain identities.
+The matching plugin supports Codex, Claude Code and Cursor through their native manifests and marketplaces. New application projects select the latest installed stable 10.0 feature band from a 10.0.100 floor. Existing global.json files are preserved. Changing a captured SDK policy requires renewed baseline review and human approval. Each run records the resolved SDK and observed toolchain identities.
 
 > Build me a simple API for tracking my reading list.
 

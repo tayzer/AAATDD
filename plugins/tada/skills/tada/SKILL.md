@@ -95,12 +95,12 @@ For refactors, establish passing preservation checks before restructuring and ad
 
 Installing or enabling the plugin needs no application folder or verifier setup. For an installation-only request, confirm plugin availability and stop. Do not ask the user to choose a repository or offer a "plugin only" setup choice.
 
-The plugin supplies agent behaviour in Codex and Claude Code. The repository-local `tada` command supplies baseline, enforcement and evidence verification. Initial support is Windows x64, stable .NET 10.0 SDKs, Reqnroll 3.3.4, MSTest 4.5.2 and MTP 2.5.2. New projects use SDK 10.0.100 with `rollForward: latestFeature` and prerelease SDKs disabled. Preserve existing application SDK policies. Each run records the resolved SDK and observed toolchain identities.
+The plugin supplies agent behaviour in Codex, Claude Code and Cursor. The repository-local `tada` command supplies baseline, enforcement and evidence verification. Initial support is Windows x64, stable .NET 10.0 SDKs, Reqnroll 3.3.4, MSTest 4.5.2 and MTP 2.5.2. New projects use SDK 10.0.100 with `rollForward: latestFeature` and prerelease SDKs disabled. Preserve existing application SDK policies. Each run records the resolved SDK and observed toolchain identities.
 
 Infer the application repository from the current workspace and project context. Prepare its verifier when business verification requires it. Ask for a folder only if the target is genuinely ambiguous at that point. Chores and behaviour-preserving refactors use existing checks without installing a verifier solely for ceremony.
 
 Inspect the existing local tool manifest and `.tada/context.md`. Reuse the recorded SDK host after checking its availability and version. When setup is needed, run [scripts/Initialize-Tada.ps1](scripts/Initialize-Tada.ps1) with the repository path and selected .NET host. The distributed plugin includes its exact local package feed. The helper prepares files and migrates known alpha.8 instruction blocks. It reports edited legacy blocks for review.
 
-On Windows, invoke the setup helper through `pwsh -NoProfile -File` with absolute quoted paths to the helper, `-Repository` and `-Dotnet`. Resolve the helper relative to this skill's installed directory so Claude Code and Codex use the packaged feed.
+On Windows, invoke the setup helper through `pwsh -NoProfile -File` with absolute quoted paths to the helper, `-Repository` and `-Dotnet`. Resolve the helper relative to this skill's installed directory so Codex, Claude Code and Cursor use the packaged feed.
 
 Keep workflow activation in the plugin. Repository context should point to decisions, features, baseline/run IDs, durable knowledge and the next action. Persistent global or repository instructions that force TADA would bypass the user's plugin toggle.

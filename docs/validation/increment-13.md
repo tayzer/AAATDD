@@ -31,3 +31,18 @@ CI now installs both SDKs and exercises both application policies. Hosted execut
 The local package and plugin artifacts were built from an already dirty working tree. Their parent Git commit identifies historical committed inputs. `.artifacts/alpha13-source-inputs.json` records digests of the changed runtime, setup and CI sources. `.artifacts/alpha13-plugin.json` and `.artifacts/alpha13-bundle.json` record artifact hashes. A publication candidate still requires its selected final committed source and hosted validation.
 
 Ordinary-request discovery, human agreement and useful development in a genuinely fresh Claude Code session remain an experience check. Native plugin state controls establish installation and activation state. Verification retains local advisory L1 scope and its existing observation limits.
+
+## Cursor packaging and standalone Claude Code marketplace
+
+Date 2026-11-13. Source `main` at `42f1429` plus the change that introduced this section.
+
+The shared plugin adds `.cursor-plugin/plugin.json`. Packaging refuses Cursor metadata whose name or version differs from the Codex manifest. The marketplace directory adds `.cursor-plugin/marketplace.json`, and Cursor resolves its `tada` entry through `tada/.cursor-plugin/plugin.json`. The standalone plugin ZIP adds a Claude Code catalog that resolves its own root, so a downloaded ZIP registers as a Claude Code marketplace as well as a Codex marketplace. A Cursor user copies the extracted ZIP to `~/.cursor/plugins/local/tada`.
+
+Completed local controls:
+
+- `dotnet pack` with PowerShell 7.6.1 and the packaged plugin control (`Test-TadaPlugin.ps1 -Archive`) passed on SDK 10.0.403. The control checks all three manifests, the Codex, Claude Code and Cursor catalogs and the shared skill frontmatter, then prepares a disposable application from the extracted ZIP.
+- Claude Code 2.1.323 `claude plugin validate` passed for the packaged plugin, its standalone marketplace and the generated marketplace directory. The optional listing-icon advisory remains.
+- With an isolated `CLAUDE_CONFIG_DIR`, the extracted standalone ZIP registered as a marketplace, and TADA installed, disabled and re-enabled at user scope.
+- With an isolated `CODEX_HOME`, the extracted ZIP registered and installed. `codex debug prompt-input` showed the `tada:tada` skill when enabled for the user, hid it when disabled for the user, and showed it again inside a trusted project whose `.codex/config.toml` enabled it. This confirms the documented off-by-default, on-per-project setup.
+
+Remaining: Cursor plugin loading, its Customize controls and an ordinary-request trial in a fresh Cursor chat have not been exercised; Cursor was not available in this environment. Fresh-session workflow adoption in Claude Code and Cursor remains an experience check. Hosted CI runs the updated plugin control.
