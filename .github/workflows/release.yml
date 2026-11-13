@@ -63,10 +63,9 @@ jobs:
       - uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
         with:
           dotnet-version: 10.0.403
-      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
-        with:
-          path: .artifacts/native-toolchain
-          key: zig-windows-x64-0.15.2-3a0ed1e8799a2f8ce2a6e6290a9ff22e6906f8227865911fb7ddedc3cc14cb0c
+      # No actions/cache here: this job can write releases, so it must not restore a cache
+      # that other workflows could have written. The build downloads its checksum-pinned
+      # native toolchain afresh.
       - name: Give this build its unique version
         id: version
         run: |
