@@ -5,7 +5,9 @@
   "author": {
     "name": "TADA contributors"
   },
-  "repository": "https://github.com/tayzer/AAATDD",
+  "homepage": "https://github.com/tayzer/TADA",
+  "repository": "https://github.com/tayzer/TADA",
   "license": "MIT",
-  "keywords": ["testing", "gherkin", "acceptance", "dotnet", "tdd"]
+  "keywords": ["testing", "gherkin", "acceptance", "dotnet", "tdd"],
+  "logo": "assets/icon.png"
 }

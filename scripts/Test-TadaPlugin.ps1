@@ -16,7 +16,7 @@ if ($Archive) {
     [IO.Compression.ZipFile]::ExtractToDirectory((Resolve-Path -LiteralPath $Archive).Path, $plugin)
 }
 $catalog = Get-Content -LiteralPath (Join-Path $plugin '.agents/plugins/marketplace.json') -Raw | ConvertFrom-Json
-if ($catalog.name -ne 'tada-development' -or @($catalog.plugins).Count -ne 1 -or
+if ($catalog.name -ne 'tada' -or @($catalog.plugins).Count -ne 1 -or
     $catalog.plugins[0].name -ne 'tada' -or $catalog.plugins[0].source.source -ne 'local' -or
     $catalog.plugins[0].source.path -ne './') { throw 'Standalone plugin marketplace must resolve its own plugin root.' }
 $manifest = Get-Content -LiteralPath (Join-Path $plugin 'plugin.json') -Raw | ConvertFrom-Json
@@ -29,12 +29,12 @@ if ($claudeManifest.name -ne $manifest.name -or $claudeManifest.version -ne $man
     throw 'Claude Code and Codex plugin metadata differ.'
 }
 $claudeCatalog = Get-Content -LiteralPath (Join-Path $marketplaceRoot '.claude-plugin/marketplace.json') -Raw | ConvertFrom-Json
-if ($claudeCatalog.name -ne 'tada-development' -or !$claudeCatalog.owner.name -or @($claudeCatalog.plugins).Count -ne 1 -or
+if ($claudeCatalog.name -ne 'tada' -or !$claudeCatalog.owner.name -or @($claudeCatalog.plugins).Count -ne 1 -or
     $claudeCatalog.plugins[0].name -ne $manifest.name -or $claudeCatalog.plugins[0].source -ne './tada') {
     throw 'Claude Code marketplace does not resolve the shared TADA plugin.'
 }
 $standaloneClaudeCatalog = Get-Content -LiteralPath (Join-Path $plugin '.claude-plugin/marketplace.json') -Raw | ConvertFrom-Json
-if ($standaloneClaudeCatalog.name -ne 'tada-development' -or @($standaloneClaudeCatalog.plugins).Count -ne 1 -or
+if ($standaloneClaudeCatalog.name -ne 'tada' -or @($standaloneClaudeCatalog.plugins).Count -ne 1 -or
     $standaloneClaudeCatalog.plugins[0].name -ne $manifest.name -or $standaloneClaudeCatalog.plugins[0].source -ne './') {
     throw 'Standalone Claude Code marketplace must resolve its own plugin root.'
 }
@@ -45,10 +45,37 @@ if ($cursorManifest.name -ne $manifest.name -or $cursorManifest.version -ne $man
 }
 # Cursor resolves each marketplace entry as <source>/.cursor-plugin/plugin.json beside the catalog.
 $cursorCatalog = Get-Content -LiteralPath (Join-Path $marketplaceRoot '.cursor-plugin/marketplace.json') -Raw | ConvertFrom-Json
-if ($cursorCatalog.name -ne 'tada-development' -or !$cursorCatalog.owner.name -or @($cursorCatalog.plugins).Count -ne 1 -or
+if ($cursorCatalog.name -ne 'tada' -or !$cursorCatalog.owner.name -or @($cursorCatalog.plugins).Count -ne 1 -or
     $cursorCatalog.plugins[0].name -ne $manifest.name -or $cursorCatalog.plugins[0].source -ne 'tada' -or
     !(Test-Path -LiteralPath (Join-Path $marketplaceRoot "$($cursorCatalog.plugins[0].source)/.cursor-plugin/plugin.json"))) {
     throw 'Cursor marketplace does not resolve the shared TADA plugin.'
+}
+# The Codex-format manifest is what the OpenAI plugin directory reviews.
+$codexManifest = Get-Content -LiteralPath (Join-Path $plugin '.codex-plugin/plugin.json') -Raw | ConvertFrom-Json
+if ($codexManifest.name -ne $manifest.name -or $codexManifest.version -ne $manifest.version -or $codexManifest.license -ne $manifest.license -or
+    $codexManifest.PSObject.Properties.Name -contains '$schema' -or $codexManifest.skills -ne './skills/' -or !$codexManifest.author.name) {
+    throw 'Codex-format manifest differs from the shared plugin identity or omits required fields.'
+}
+foreach ($field in @('displayName', 'shortDescription', 'longDescription', 'developerName', 'category', 'composerIcon', 'logo')) {
+    if (!$codexManifest.interface.$field) { throw "Codex-format manifest omits interface.$field." }
+}
+if ($codexManifest.interface.displayName.Length -gt 30 -or $codexManifest.interface.shortDescription.Length -gt 30) {
+    throw 'Codex display name and short description must be 30 characters or fewer.'
+}
+# OpenAI reads the root manifest's inline interface when present, without merging it with
+# .codex-plugin/plugin.json, so the two interfaces must be identical.
+$inlineInterface = $manifest.extensions.'com.openai'.interface
+if ($inlineInterface -and (($inlineInterface | ConvertTo-Json -Depth 5 -Compress) -ne ($codexManifest.interface | ConvertTo-Json -Depth 5 -Compress))) {
+    throw 'The inline OpenAI interface in plugin.json differs from .codex-plugin/plugin.json.'
+}
+foreach ($icon in @($codexManifest.interface.logo, $codexManifest.interface.composerIcon, $claudeManifest.icon, $cursorManifest.logo)) {
+    if (!$icon -or !(Test-Path -LiteralPath (Join-Path $plugin $icon) -PathType Leaf)) { throw "Plugin icon $icon is missing." }
+}
+if (!$Archive) {
+    foreach ($published in @('README.md', 'LICENSE', '.gitattributes')) {
+        if (!(Test-Path -LiteralPath (Join-Path $marketplaceRoot $published) -PathType Leaf)) { throw "Marketplace repository content omits $published." }
+    }
+    if ((Get-Content -LiteralPath (Join-Path $marketplaceRoot 'README.md') -Raw) -match 'VERSION_PLACEHOLDER') { throw 'Marketplace README version was not filled in.' }
 }
 $skillHeader = (Get-Content -LiteralPath (Join-Path $plugin 'skills/tada/SKILL.md') -TotalCount 4) -join "`n"
 if ($skillHeader -notmatch '(?m)^name: tada$' -or $skillHeader -notmatch '(?m)^description: \S') {
@@ -109,6 +136,8 @@ try {
         installationOnboardingSkillAbsent = $true
         claudeCodeManifestAndMarketplace = $true
         cursorManifestAndMarketplace = $true
+        codexDirectoryManifest = $true
+        marketplace = $catalog.name
         sharedSkillAndVerifierFeed = $true
         resolvedSdk = $resolvedSdk
         existingSdkPolicyByteExact = [bool]$SdkVersion

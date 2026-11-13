@@ -17,11 +17,11 @@ The TADA plugin is the only activation switch. TADA writes no global or reposito
 
 ### Codex
 
-The plugin identifier is `tada@tada-development`.
+The plugin identifier is `tada@tada`.
 
 ```toml
 # ~/.codex/config.toml (user) or <repo>/.codex/config.toml (trusted project)
-[plugins."tada@tada-development"]
+[plugins."tada@tada"]
 enabled = false   # true to enable
 ```
 
@@ -30,9 +30,9 @@ Codex reads project configuration only in trusted repositories. A common setup i
 ### Claude Code *(source; first release in alpha.13)*
 
 ```powershell
-claude plugin install tada@tada-development --scope project   # this repository only
-claude plugin disable tada@tada-development --scope user       # off by default for you
-claude plugin enable tada@tada-development --scope project     # on for this repository
+claude plugin install tada@tada --scope project   # this repository only
+claude plugin disable tada@tada --scope user       # off by default for you
+claude plugin enable tada@tada --scope project     # on for this repository
 ```
 
 Project scope is recorded in the repository's `.claude/settings.json`. The skill can also be invoked explicitly as `/tada:tada`.

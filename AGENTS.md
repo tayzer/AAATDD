@@ -24,7 +24,7 @@ Hash captured oracle files exactly, preserve immutable baseline/review/approval 
 
 Chores and refactors use proportionate checks without invented business scenarios. Preserve useful context in concise Git-native records. Do not turn supporting Markdown into a second business specification.
 
-Keep unrelated dirty work intact. Do not publish packages, merge or change remote access merely to make a checklist green. The final user/Codex install-to-API acceptance is separate from automated validation.
+Keep unrelated dirty work intact. Do not publish packages, merge or change remote access merely to make a checklist green. The final user/Codex install-to-API acceptance is separate from automated validation. Every push to `main` that passes validation publishes a release automatically ([ADR 0048](docs/decisions/0048-publish-every-validated-main-build.md)), so treat merging to `main` as a release decision. Do not publish by any other route.
 
 ## Communication
 

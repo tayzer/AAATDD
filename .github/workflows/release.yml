@@ -1,0 +1,282 @@
+name: Release
+# Every push to main that passes the full "PR validation" workflow is published (ADR 0048):
+# a GitHub prerelease with checked assets, then the exact marketplace bytes in the plugin
+# marketplace repository for Codex, Claude Code and Cursor.
+on:
+  workflow_run:
+    workflows: ['PR validation']
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: 'Commit on main to republish (defaults to the head of main). It must have passed PR validation.'
+        required: false
+permissions:
+  contents: read
+# Keep every pending release (up to GitHub's 100) instead of replacing the pending one.
+# Queue order is not guaranteed, so the marketplace job never moves to an older version.
+concurrency:
+  group: tada-release
+  cancel-in-progress: false
+  queue: max
+defaults:
+  run:
+    shell: pwsh
+jobs:
+  package:
+    name: Package and publish the release
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
+    runs-on: windows-2025
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    outputs:
+      tag: ${{ steps.version.outputs.tag }}
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+      DOTNET_GENERATE_ASPNET_CERTIFICATE: 'false'
+      DOTNET_ADD_GLOBAL_TOOLS_TO_PATH: 'false'
+      SOURCE_SHA: ${{ github.event.workflow_run.head_sha || inputs.commit || github.sha }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Confirm the commit is on main and passed validation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TRIGGER_RUN_URL: ${{ github.event.workflow_run.html_url }}
+          TRIGGER_RUN_NUMBER: ${{ github.event.workflow_run.run_number }}
+        run: |
+          git merge-base --is-ancestor $env:SOURCE_SHA origin/main
+          if ($LASTEXITCODE) { throw "$env:SOURCE_SHA is not on main." }
+          # The build number is the validation run number, so each validated push gets its own version.
+          if ($env:TRIGGER_RUN_URL) { $url = $env:TRIGGER_RUN_URL; $number = $env:TRIGGER_RUN_NUMBER }
+          else {
+            $runs = @(gh run list --repo $env:GITHUB_REPOSITORY --workflow ci.yml --commit $env:SOURCE_SHA --event push --status success --json url,number --limit 1 | ConvertFrom-Json)
+            if (-not $runs) { throw "$env:SOURCE_SHA has no successful PR validation run on main." }
+            $url = $runs[0].url; $number = $runs[0].number
+          }
+          "VALIDATION_RUN=$url" >> $env:GITHUB_ENV
+          "BUILD_NUMBER=$number" >> $env:GITHUB_ENV
+      - uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
+        with:
+          dotnet-version: 10.0.403
+      # No actions/cache here: this job can write releases, so it must not restore a cache
+      # that other workflows could have written. The build downloads its checksum-pinned
+      # native toolchain afresh.
+      - name: Give this build its unique version
+        id: version
+        run: |
+          [xml]$properties = Get-Content Directory.Build.props -Raw
+          $base = [string]$properties.Project.PropertyGroup.Version
+          foreach ($manifest in @('plugin.json', '.codex-plugin/plugin.json', '.claude-plugin/plugin.json', '.cursor-plugin/plugin.json')) {
+            $declared = (Get-Content -LiteralPath "plugins/tada/$manifest" -Raw | ConvertFrom-Json).version
+            if ($declared -ne $base) { throw "plugins/tada/$manifest declares $declared, not $base." }
+          }
+          $version = & ./scripts/Set-TadaVersion.ps1 -Version "$base.$env:BUILD_NUMBER"
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "tag=v$version" >> $env:GITHUB_OUTPUT
+          "Publishing **$version** from ``$env:SOURCE_SHA``." >> $env:GITHUB_STEP_SUMMARY
+      - name: Reuse an existing release for this version
+        id: existing
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          # A rerun after a failed marketplace push must not rebuild or overwrite published assets.
+          gh release view $env:TAG --repo $env:GITHUB_REPOSITORY --json tagName 2>$null | Out-Null
+          if ($LASTEXITCODE) { "exists=false" >> $env:GITHUB_OUTPUT; exit 0 }
+          $tagged = gh api "repos/$env:GITHUB_REPOSITORY/commits/$env:TAG" --jq .sha
+          if ($LASTEXITCODE -or $tagged -ne $env:SOURCE_SHA) { throw "Release $env:TAG exists for commit $tagged, not $env:SOURCE_SHA." }
+          $assets = @(gh release view $env:TAG --repo $env:GITHUB_REPOSITORY --json assets --jq '.assets[].name')
+          foreach ($required in @('SHA256SUMS', 'release-manifest.json', "TADA-marketplace-$($env:TAG.Substring(1)).zip")) {
+            if ($assets -notcontains $required) { throw "Release $env:TAG exists but lacks $required. Inspect it before republishing." }
+          }
+          "exists=true" >> $env:GITHUB_OUTPUT
+          "Release $env:TAG already exists for this commit; reusing its published assets." >> $env:GITHUB_STEP_SUMMARY
+      - name: Restore, build and pack
+        if: steps.existing.outputs.exists != 'true'
+        run: |
+          dotnet restore src/Tada.Cli/Tada.Cli.csproj --locked-mode
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          dotnet pack src/Tada.Cli/Tada.Cli.csproj --no-restore --disable-build-servers -o .artifacts/packages
+      - name: Package and check the plugin, marketplace and download bundle
+        if: steps.existing.outputs.exists != 'true'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          $package = ".artifacts/packages/Tada.Cli.$env:VERSION.nupkg"
+          $plugin = & ./scripts/New-TadaPlugin.ps1 -Package $package
+          pwsh -File scripts/Test-TadaPlugin.ps1 -PluginRoot $plugin.pluginRoot
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          pwsh -File scripts/Test-TadaPlugin.ps1 -PluginRoot $plugin.pluginRoot -Archive $plugin.archive
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          $bundle = & ./scripts/New-ReleaseBundle.ps1 -Package $package
+          pwsh -File scripts/Test-ReleaseBundle.ps1 -Archive $bundle.archive
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+
+          $release = New-Item -ItemType Directory -Path .artifacts/release -Force
+          Copy-Item -LiteralPath $package, $plugin.archive, $plugin.marketplaceArchive, $bundle.archive -Destination $release
+          $assets = @(Get-ChildItem -LiteralPath $release -File | Sort-Object Name | ForEach-Object {
+            [ordered]@{ name = $_.Name; sha256 = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant(); bytes = $_.Length }
+          })
+          $manifest = [ordered]@{
+            schemaVersion = 1
+            name = 'TADA'
+            version = $env:VERSION
+            tag = "v$env:VERSION"
+            sourceCommit = $env:SOURCE_SHA
+            repository = $env:GITHUB_REPOSITORY
+            validationRun = $env:VALIDATION_RUN
+            packagingRun = "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"
+            hosts = @('Codex', 'Claude Code', 'Cursor')
+            marketplace = $plugin.marketplace
+            supportedPlatform = 'Windows x64'
+            assurance = 'L1-advisory'
+            assets = $assets
+          }
+          [IO.File]::WriteAllText("$release/release-manifest.json", ($manifest | ConvertTo-Json -Depth 6), [Text.UTF8Encoding]::new($false))
+          $sums = Get-ChildItem -LiteralPath $release -File | Sort-Object Name | ForEach-Object {
+            "$((Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant())  $($_.Name)"
+          }
+          [IO.File]::WriteAllLines("$release/SHA256SUMS", [string[]]$sums, [Text.UTF8Encoding]::new($false))
+      - name: Publish the GitHub prerelease
+        if: steps.existing.outputs.exists != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          $notes = @"
+          Automated build of ``$env:SOURCE_SHA`` from ``main``, published after [full validation]($env:VALIDATION_RUN) passed.
+
+          Install or update: ``codex plugin marketplace add tayzer/tada-plugins`` or ``claude plugin marketplace add tayzer/tada-plugins``, then install ``tada@tada``. Cursor users can copy ``TADA-plugin-$env:VERSION.zip`` into ``~/.cursor/plugins/local/tada``. Check downloads against ``SHA256SUMS``; ``release-manifest.json`` identifies the source and validation run.
+
+          Results are local advisory (L1). Windows x64 and a stable .NET 10.0 SDK are required.
+          "@
+          $notesFile = Join-Path $env:RUNNER_TEMP 'notes.md'
+          [IO.File]::WriteAllText($notesFile, $notes, [Text.UTF8Encoding]::new($false))
+          $assets = @(Get-ChildItem .artifacts/release -File | ForEach-Object FullName)
+          gh release create "v$env:VERSION" --target $env:SOURCE_SHA --prerelease --title "TADA $env:VERSION" --notes-file $notesFile @assets
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          Get-Content .artifacts/release/SHA256SUMS | ForEach-Object { "- ``$_``" } | Add-Content $env:GITHUB_STEP_SUMMARY
+      - name: Retain release evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-${{ steps.version.outputs.version || github.run_id }}
+          if-no-files-found: warn
+          include-hidden-files: true
+          retention-days: 90
+          path: |
+            .artifacts/release/**
+            .artifacts/plugin-controls/**/validation.json
+
+  marketplace:
+    name: Publish to the plugin marketplace repository
+    needs: package
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment: marketplace
+    permissions:
+      contents: read
+    env:
+      TAG: ${{ needs.package.outputs.tag }}
+      MARKETPLACE_REPOSITORY: ${{ vars.MARKETPLACE_REPOSITORY || 'tayzer/tada-plugins' }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Download and verify the published release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir release && cd release
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY"
+          sha256sum --check --strict SHA256SUMS
+          version="${TAG#v}"
+          test -f "TADA-marketplace-$version.zip"
+          mkdir ../content && cd ../content
+          unzip -q "../release/TADA-marketplace-$version.zip"
+          declared=$(jq -r .version tada/plugin.json)
+          test "$declared" = "$version" || { echo "Marketplace declares $declared, not $version." >&2; exit 1; }
+      - name: Push the marketplace content
+        env:
+          DEPLOY_KEY: ${{ secrets.MARKETPLACE_DEPLOY_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "$DEPLOY_KEY" ]; then
+            echo "MARKETPLACE_DEPLOY_KEY is not configured. See docs/releasing.md." >&2
+            exit 1
+          fi
+          install -m 600 /dev/null "$RUNNER_TEMP/deploy_key"
+          printf '%s\n' "$DEPLOY_KEY" > "$RUNNER_TEMP/deploy_key"
+          export GIT_SSH_COMMAND="ssh -i $RUNNER_TEMP/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes"
+          mkdir -p ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null
+          git clone "git@github.com:$MARKETPLACE_REPOSITORY.git" marketplace
+          cd marketplace
+          # Base on the published main explicitly; the clone's default branch may not be main.
+          if git rev-parse -q --verify refs/remotes/origin/main >/dev/null; then
+            git checkout -q -B main refs/remotes/origin/main
+          else
+            git checkout -q -B main
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Never move marketplace main to an older build. Queued or retried runs can finish out of order.
+          incoming="${TAG#v}"
+          current=$(jq -r '.version // empty' tada/plugin.json 2>/dev/null || true)
+          newer=$(python3 - "$incoming" "$current" <<'PY'
+          import sys
+          def key(v):
+              core, _, pre = v.partition('-')
+              parts = [int(x) for x in core.split('.')]
+              ids = [(0, int(x), '') if x.isdigit() else (1, 0, x) for x in pre.split('.')] if pre else []
+              # A release sorts after its prereleases; within prereleases, more identifiers sort later.
+              return (parts, 0 if pre else 1, ids)
+          incoming, current = sys.argv[1], sys.argv[2]
+          print('yes' if not current or key(incoming) >= key(current) else 'no')
+          PY
+          )
+
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a ../content/. .
+          git add --all
+
+          # Published tags never move. A retry may reuse a tag only when it holds exactly this content.
+          expected_tree=$(git write-tree)
+          tag_exists=no
+          if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+            if [ "$(git rev-parse "refs/tags/$TAG^{tree}")" != "$expected_tree" ]; then
+              echo "Marketplace tag $TAG already exists with different content. Refusing to move it." >&2
+              exit 1
+            fi
+            tag_exists=yes
+          fi
+
+          if [ "$newer" = "yes" ]; then
+            if git diff --cached --quiet; then
+              echo "Marketplace content already matches $TAG."
+            else
+              git commit -m "Release TADA $TAG" -m "Source: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$TAG"
+            fi
+            [ "$tag_exists" = "yes" ] || git tag "$TAG"
+            git push origin main
+            [ "$tag_exists" = "yes" ] || git push origin "refs/tags/$TAG"
+            echo "Published $TAG to $MARKETPLACE_REPOSITORY." >> "$GITHUB_STEP_SUMMARY"
+          elif [ "$tag_exists" = "yes" ]; then
+            echo "$TAG is older than the published $current and is already tagged; nothing to do." >> "$GITHUB_STEP_SUMMARY"
+          else
+            # Keep the older build addressable by its tag without replacing newer content on main.
+            git commit -q --allow-empty -m "Release TADA $TAG (superseded by $current)" -m "Source: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$TAG"
+            git tag "$TAG"
+            git push origin "refs/tags/$TAG"
+            echo "$TAG is older than the published $current; tagged only, main unchanged." >> "$GITHUB_STEP_SUMMARY"
+          fi
+          rm -f "$RUNNER_TEMP/deploy_key"

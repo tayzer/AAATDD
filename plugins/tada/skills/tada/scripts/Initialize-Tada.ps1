@@ -4,6 +4,18 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+
+# Each validated main build publishes 0.1.0-alpha.<n>[.<build>]. A project may move forward
+# within that line, never backward and never to a different release line.
+function Test-OlderAlpha([string]$Installed, [string]$Target) {
+    $pattern = '^0\.1\.0-alpha\.(\d+)(?:\.(\d+))?$'
+    $from = [regex]::Match($Installed, $pattern)
+    $to = [regex]::Match($Target, $pattern)
+    if (!$from.Success -or !$to.Success) { return $false }
+    $fromKey = @([long]$from.Groups[1].Value, $(if ($from.Groups[2].Success) { [long]$from.Groups[2].Value } else { -1 }))
+    $toKey = @([long]$to.Groups[1].Value, $(if ($to.Groups[2].Success) { [long]$to.Groups[2].Value } else { -1 }))
+    return $fromKey[0] -lt $toKey[0] -or ($fromKey[0] -eq $toKey[0] -and $fromKey[1] -lt $toKey[1])
+}
 $skillDirectory = Split-Path $PSScriptRoot -Parent
 $skillsDirectory = Split-Path $skillDirectory -Parent
 $pluginRoot = Split-Path $skillsDirectory -Parent
@@ -36,7 +48,7 @@ try {
             & $Dotnet tool install Tada.Cli --version $manifest.version --configfile $configuration | Out-Host
         }
         else {
-            if ($installed[0].version -ne $manifest.version -and $installed[0].version -notmatch '^0\.1\.0-alpha\.(?:[0-9]|1[0-2])$') {
+            if ($installed[0].version -ne $manifest.version -and !(Test-OlderAlpha $installed[0].version $manifest.version)) {
                 throw "This project selects Tada.Cli $($installed[0].version). Select a compatible TADA plugin for that version."
             }
             & $Dotnet tool update Tada.Cli --version $manifest.version --configfile $configuration | Out-Host
