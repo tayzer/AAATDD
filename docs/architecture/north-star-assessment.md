@@ -73,3 +73,24 @@ This change addresses the first three and the CI model. It does not attempt inde
 
 - Focused tests in `tests/Tada.Core.Tests/EnforcementTests.cs` cover gate rules, ledger validation, lineage, obligation classification and scenario fingerprints.
 - `scripts/Test-EnforcementWorkflow.ps1` exercises a disposable Git repository with real HTTP/SQLite Orders runs. It covers: a spec-only candidate before bindings, rejected demotion, rejected unclassified scenarios, fresh-session status, meaningful behavioural RED, implementation GREEN with mandatory promotion, rejected assertion weakening, contract and fitness amendments, supporting tests outside the oracle, policy weakening, defect reproduction and repair, a refactor without new approval, a chore without execution, and tampered evidence. Its approvals are labelled automated controls, not human acceptance.
+
+## Discovery and continuous learning assessment
+
+Assessment date: 2026-11-11, against `main` at `cf267fa`. [ADR 0046](../decisions/0046-investigate-before-agreeing-acceptance.md) and [ADR 0047](../decisions/0047-add-reference-and-augment-knowledge-modes.md) record the resulting decisions.
+
+| Capability | State before this change | Gap | Resolution |
+| --- | --- | --- | --- |
+| Investigation before agreement | Guidance only. One Understand paragraph in the skill: inspect the request, obligations, components, constraints and tests. | No depth guide, stopping rule, distributed-system checklist or reporting format. Agents could propose Gherkin after reading a few files. | Risk-proportionate depth guide, stopping rule, retrieval by relevance and a conversational change impact brief in the skill, its reference and the generated workflow. |
+| Verified, inferred and unknown findings | Guidance only: "never silently adopt an assumption as agreed". | No convention distinguishing evidence from inference, or code behaviour from intended behaviour. | Brief separates Verified (with references), Inferred and Unknown. Authority order documented. |
+| Session handoff | Implemented as a file convention: `tada init` creates `.tada/context.md`, the skill updates it. | Mixed current work with history and went stale. This repository's handoff still named a merged branch and a completed next action. | Handoff restricted to current work, finished work replaced, and `tada knowledge check` reports how many commits landed after the handoff last changed. |
+| Persistent engineering knowledge | Absent. The charter stated Git authority and relevance indexing; Q11 left mechanics open. | No defined home for root causes, invariants or pitfalls; no index; no provenance. | Optional pointer index in reference mode; focused records only in augment mode, with front-matter provenance. |
+| Knowledge creation policy | Absent. | No way for a team to allow or forbid agent-authored knowledge documents. | `.tada/knowledge.json` with `reference` (default) and `augment` modes, outside the captured oracle. |
+| Staleness and supersession | Absent. | Recorded facts could be trusted after the code moved on. | Records carry a `checked` commit and `sources`; the check flags changed or missing sources, unknown checkpoints, broken links and missing successors. Supersession retains history. |
+| Agent behaviour validation | Requester trial for ordinary use; no discovery or learning trials. | No evidence of how agents investigate or preserve knowledge. | Realistic multi-session trials in disposable repositories, recorded in the [knowledge workflow evaluation](../validation/knowledge-workflow-evaluation.md). |
+
+Deferred:
+
+- Semantic retrieval. Conventional search and Markdown links work across models and need no new infrastructure.
+- Retrieval from issue trackers and pull requests is agent behaviour using whatever access the host provides. TADA has no adapter.
+- Semantic contradiction detection between documents and code. The check flags structural staleness only.
+- Retention and redaction rules for knowledge (Q11).

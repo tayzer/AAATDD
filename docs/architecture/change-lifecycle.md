@@ -2,7 +2,7 @@
 
 Status: **PARTIALLY DECIDED**. First discussion: 2026-10-23; reconciled 2026-10-26. [ADR 0001](../decisions/0001-separate-intent-and-baseline-approval.md) accepts approval boundaries, [ADR 0002](../decisions/0002-clarify-acceptance-changing-uncertainty.md) the clarification boundary, and [ADR 0003](../decisions/0003-support-change-appropriate-specification-artifacts.md) conditional artifacts. [ADR 0004](../decisions/0004-gherkin-business-specification-authority.md) makes Gherkin authoritative for business behaviour. The update agrees type/risk-adaptive workflow; exact progression, review contents and verification sufficiency remain open or provisional. See the [design reconciliation](2026-10-26-design-reconciliation.md).
 
-Update 2026-11-11: [ADR 0043](../decisions/0043-adopt-the-tada-north-star.md) adopts the North Star lifecycle below as the current workflow. [ADR 0044](../decisions/0044-separate-approval-authority-from-merge-enforcement.md) separates approval from merge enforcement, and [ADR 0045](../decisions/0045-classify-protected-verification-obligations.md) classifies protected obligations. Sections after "Current lifecycle" record the earlier design discussion and remain historical context.
+Update 2026-11-11: [ADR 0043](../decisions/0043-adopt-the-tada-north-star.md) adopts the North Star lifecycle below as the current workflow. [ADR 0044](../decisions/0044-separate-approval-authority-from-merge-enforcement.md) separates approval from merge enforcement, and [ADR 0045](../decisions/0045-classify-protected-verification-obligations.md) classifies protected obligations. [ADR 0046](../decisions/0046-investigate-before-agreeing-acceptance.md) adds risk-proportionate discovery and [ADR 0047](../decisions/0047-add-reference-and-augment-knowledge-modes.md) adds continuous learning with reference and augment knowledge modes. Sections after "Current lifecycle" record the earlier design discussion and remain historical context.
 
 ## Current lifecycle
 
@@ -12,12 +12,12 @@ These are responsibilities and decision boundaries. They are not six commands, d
 
 | Stage | AI responsibility | Human decision | Mechanical support |
 | --- | --- | --- | --- |
-| Understand | Inspect the request, current behaviour, existing scenarios, active and candidate obligations, affected components, constraints, tests and risks. Ask targeted questions about acceptance-critical unknowns. | Answers that change behaviour, compatibility, security, data integrity or other acceptance-critical outcomes | `.tada/context.md`, features, `.tada/enforcement.json`, `tada gate` without a run for status |
+| Understand | Separate the outcome from the suggested approach. Retrieve relevant knowledge and check its currency. Investigate the system in proportion to risk, including cross-service, data, failure and NFR effects where relevant. Share a change impact brief of verified, inferred and unknown findings. Ask targeted questions about acceptance-critical unknowns. | Answers that change behaviour, compatibility, security, data integrity or other acceptance-critical outcomes | `.tada/context.md`, features, `.tada/enforcement.json`, `tada gate` without a run for status, `tada knowledge check` for record currency |
 | Agree | Propose concrete Gherkin examples, edge cases, negative outcomes, NFR thresholds and contract expectations. Record open questions. | Approval of expectations and amendments. Approved but unimplemented scenarios can merge as candidates. | `tada baseline prepare`, `review`, `approve`; candidates in the enforcement ledger |
 | Select verification | Choose functional, contract, fitness and supporting checks by actual change, impact, risk and existing coverage. Record omissions with reasons. | Whether a contract or fitness obligation is protected | `obligations` declarations in `tada.json`; supporting tests stay outside the oracle |
 | Establish evidence | Write bindings, fixtures, assertions, drivers and observers. Show meaningful behavioural RED for new behaviour and defects, or passing preservation evidence for refactors. Never invent RED. | Review of the executable interpretation, which small changes may combine with agreement | `baseline review --against` lists changed obligations by kind; `tada run` distinguishes FAIL from INDETERMINATE |
 | Implement and verify | Implement in small increments. Never weaken protected obligations to reach GREEN. Return genuine requirement conflicts to the humans. | Amendments discovered during implementation | `tada run`, `tada verify`, `tada gate` |
-| Complete and preserve | Promote satisfied candidates. Report satisfied obligations, checks run and omitted, protected changes, gaps and residual risks. Update concise Git-native context. | Proportionate code review, independent review of protected changes, merge | `tada gate --base`; committed baselines, approvals, ledger and context |
+| Complete and preserve | Promote satisfied candidates. Report satisfied obligations, checks run and omitted, protected changes, gaps and residual risks. Preserve significant learning in its canonical home according to the knowledge mode. Replace finished work in the context handoff. | Proportionate code review, independent review of protected changes and knowledge proposals, merge, choice of knowledge mode | `tada gate --base`, `tada knowledge check --base`; committed baselines, approvals, ledger, context and knowledge |
 
 ### Change-type paths
 
@@ -26,6 +26,19 @@ These are responsibilities and decision boundaries. They are not six commands, d
 - **Behaviour-preserving refactor.** Reuse existing active obligations and supporting checks. Add characterisation where coverage is insufficient. No new business scenario and no new approval are needed when protected inputs are unchanged.
 - **Chore.** Select proportionate build, dependency, configuration or documentation checks. Run the gate when the chore can affect behaviour. A justified absence of tests is recorded as such and is never reported as a behavioural PASS.
 - **Mixed or architectural change.** Determine the actual effects rather than trusting a label. Preserve existing obligations and consider relevant fitness functions. A change labelled chore that alters behaviour returns to the feature or defect path.
+
+### Discovery and continuous learning
+
+Discovery strengthens Understand. Its depth follows impact and risk, it stops when the affected acceptance can be proposed responsibly, and it reports what was verified, inferred and unknown before agreement. Continuous learning runs alongside the lifecycle as **Retrieve → Validate → Learn → Propose → Preserve**. It is not a seventh stage. Reference mode, the default, reuses and improves existing knowledge. Augment mode, chosen by a human, may also propose focused records for meaningful gaps. Neither mode lets knowledge redefine acceptance. See the [discovery and knowledge guide](../knowledge.md).
+
+```mermaid
+flowchart LR
+    retrieve["Retrieve<br/>relevant features, decisions,<br/>docs, records, history"] --> validate["Validate<br/>against current code<br/>and accepted decisions"]
+    validate --> learn["Learn<br/>during discovery<br/>and implementation"]
+    learn --> propose["Propose<br/>links, updates, or a record<br/>(augment mode only)"]
+    propose --> preserve["Preserve<br/>through Git review;<br/>retire finished context"]
+    preserve -. "next change" .-> retrieve
+```
 
 Verification cannot be downgraded by declaring a change a chore or refactor. Protected inputs remain approval-bound whatever the label, and active obligations remain enforced.
 

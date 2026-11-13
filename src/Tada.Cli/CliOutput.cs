@@ -8,7 +8,27 @@ public static class CliOutput
     public static string Render(JsonElement value)
     {
         var text = new StringBuilder();
-        if (value.TryGetProperty("obligations", out var obligations) && value.TryGetProperty("outcome", out var gateOutcome))
+        if (value.TryGetProperty("knowledgeMode", out var mode))
+        {
+            text.AppendLine($"Knowledge {value.GetProperty("status").GetString()} — mode: {mode.GetString()} ({value.GetProperty("modeSource").GetString()})");
+            text.AppendLine(mode.GetString() == Knowledge.Augment
+                ? "Augment: TADA may propose focused, evidence-backed records for meaningful gaps. Proposals stay reviewable."
+                : "Reference: TADA reuses and improves existing knowledge and does not create standalone records.");
+            text.AppendLine($"Index: {(value.GetProperty("index").GetString() ?? "none")}");
+            if (value.GetProperty("context") is { ValueKind: JsonValueKind.Object } context)
+            {
+                string changed = context.GetProperty("lastChanged").GetString() ?? "not committed";
+                string later = context.GetProperty("laterCommits").ValueKind == JsonValueKind.Number ? $", {context.GetProperty("laterCommits").GetInt32()} later commit(s)" : "";
+                text.AppendLine($"Context handoff: {context.GetProperty("path").GetString()} (last changed {changed}{later})");
+            }
+            foreach (var record in value.GetProperty("records").EnumerateArray())
+                text.AppendLine($"  Record {record.GetProperty("path").GetString()}: {record.GetProperty("state").GetString()}, {record.GetProperty("status").GetString() ?? "no status"} {record.GetProperty("kind").GetString() ?? ""}".TrimEnd());
+            foreach (var finding in value.GetProperty("findings").EnumerateArray())
+                text.AppendLine($"  {finding.GetProperty("code").GetString()} [{finding.GetProperty("severity").GetString()}] {finding.GetProperty("path").GetString()}: {finding.GetProperty("detail").GetString()}");
+            foreach (var item in value.GetProperty("next").EnumerateArray()) text.AppendLine("Next: " + item.GetString());
+            text.AppendLine(value.GetProperty("notice").GetString());
+        }
+        else if (value.TryGetProperty("obligations", out var obligations) && value.TryGetProperty("outcome", out var gateOutcome))
         {
             text.AppendLine($"Gate {gateOutcome.GetString()} — local advisory L1");
             text.AppendLine($"Baseline: {value.GetProperty("baseline").GetString()}");

@@ -46,12 +46,16 @@ try
         tada run --baseline sha256:... [--dotnet PATH]
         tada verify --run ID
         tada gate [--run ID] [--base GIT-REVISION]
+        tada knowledge check [--base GIT-REVISION]
 
         --repo defaults to the current directory. --json prints structured output and suppresses progress.
         run/verify report phases and elapsed time to stderr every 10 seconds while busy.
         prepare/review never approve. Only a human may declare baseline approval.
         gate assesses mandatory (active) obligations from .tada/enforcement.json. Approved candidates
         are reported but do not block until promoted. --base compares with the target branch's ledger.
+        knowledge check reports the knowledge mode (.tada/knowledge.json, default reference) and checks
+        the context handoff, knowledge index and records for broken links, changed sources and mode policy.
+        Knowledge is supporting context, never acceptance authority. CURRENT/REVIEW=0, BLOCKED=1.
         Verification exits: PASS=0, FAIL=1, INDETERMINATE=2. Command errors=3. Gate NO_CHECKS=0.
         Read .tada/WORKFLOW.md for discovery, maintenance and session handoff.
         """);
@@ -149,6 +153,12 @@ try
                     options.ContainsKey("base"), baseLedger, DateOnly.FromDateTime(DateTime.UtcNow));
             Print(gate);
             return gate.ExitCode;
+        }
+        case "knowledge check":
+        {
+            var report = await Knowledge.Check(repository, Maybe("base"));
+            Print(report);
+            return report.ExitCode;
         }
         default: throw new TadaException("Unknown command. Use tada --help.");
     }
