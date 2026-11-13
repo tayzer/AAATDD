@@ -23,7 +23,7 @@ flowchart LR
 4. It publishes a GitHub **prerelease** tagged `v<version>`, with `release-manifest.json` (source commit, validation run, packaging run and asset hashes) and `SHA256SUMS`.
 5. The `marketplace` job downloads the published assets, runs `sha256sum --check`, confirms the version and pushes the marketplace content unchanged to `tayzer/tada-plugins`, with the same tag.
 
-Runs are serialised, so builds publish in order.
+Runs are serialised and queued, with up to 100 waiting, so every validated push is kept. Queue order is not guaranteed, so the marketplace job compares versions: an older build that finishes late receives its own tag in `tayzer/tada-plugins` but never replaces newer content on `main`.
 
 ## Versions
 
@@ -47,7 +47,7 @@ To use a different marketplace repository, set the repository variable `MARKETPL
 
 ## Republishing and recovery
 
-- **A release run failed after validation passed:** fix the cause on `main`. The next merge publishes a new build. To republish an existing validated commit, run the **Release** workflow manually from `main` with that commit. The manual run looks up the commit's successful validation run and reuses its run number.
+- **A release run failed after validation passed:** run the **Release** workflow manually from `main` with that commit, or fix the cause on `main` and let the next merge publish. A manual run looks up the commit's successful validation run and reuses its run number, so it produces the same version. If that version's GitHub release already exists for the same commit, with its checksums, manifest and marketplace ZIP, the run reuses those published assets and only retries the marketplace push. It never rebuilds or overwrites them.
 - **A bad build was published:** merge a fix. The next build supersedes it in every marketplace. Do not move or delete published tags; delete the GitHub prerelease only if its assets must not be downloaded.
 - **Pause publishing:** disable the **Release** workflow under **Actions**. Validation keeps running on `main`.
 

@@ -35,7 +35,7 @@ The same text is in the plugin README, which the Anthropic directory shows as th
 
 | Question | Answer |
 | --- | --- |
-| Reads or stores personal data? | No. It reads and writes the user's own repository files locally. |
+| Reads or stores personal data? | It can. TADA reads the user's repository, and it keeps byte-exact local snapshots of acceptance files, test inputs and run evidence in that repository. Any personal data in those files, such as names in acceptance examples or test data, is read and retained there. Nothing is sent to TADA or any other service. |
 | Sends data to services other than declared connectors? | No. The only network access is `dotnet` restoring the user's project dependencies from the package sources in the user's `NuGet.Config`. |
 | Data retention | Evidence stays in the user's repository until the user deletes it. TADA keeps nothing elsewhere. |
 | Intended for people under 18? | No; it is a professional developer tool. |
@@ -55,7 +55,7 @@ Submit at [claude.ai/directory/manage](https://claude.ai/directory/manage): **Su
 
 Submit at [platform.openai.com/plugins](https://platform.openai.com/plugins): **Upload new or existing plugin**. You need organisation owner rights, or **Apps Management Write**, and a verified publisher identity under organisation settings. See [Submit plugins](https://developers.openai.com/codex/submit-plugins).
 
-- [ ] Upload `TADA-plugin-<version>.zip` from the GitHub release. It contains `.codex-plugin/plugin.json` with every required `interface` field (`displayName`, `shortDescription`, `longDescription`, `developerName`, `category`, `capabilities`, `composerIcon` and `logo`). The release workflow checks these fields.
+- [ ] Upload `TADA-plugin-<version>.zip` from the GitHub release. The root `plugin.json` carries the OpenAI interface under `extensions.com.openai.interface`, which the upload reads, and `.codex-plugin/plugin.json` carries the identical interface for Codex-format readers. Both contain every required field (`displayName`, `shortDescription`, `longDescription`, `developerName`, `category`, `capabilities`, `composerIcon` and `logo`). The release workflow checks these fields and fails if the two interfaces differ.
 - [ ] Fix any automated findings. As a skills-only plugin, it needs no MCP test cases or listing URLs, but `websiteURL` is set.
 - [ ] Choose the verified developer identity, submit for review and publish after approval.
 - [ ] Upload each new release's ZIP to update the listing.

@@ -32,8 +32,8 @@ Start a fresh session in your application repository and describe the work norma
 
 | Host | Command |
 | --- | --- |
-| Codex | `codex plugin marketplace upgrade tada` |
-| Claude Code | `claude plugin marketplace update tada` |
+| Codex | `codex plugin marketplace upgrade tada`, then `codex plugin add tada@tada` |
+| Claude Code | `claude plugin marketplace update tada`, then `claude plugin update tada@tada` and restart Claude Code |
 | Cursor | Updates arrive through the marketplace |
 
 ## Layout

@@ -62,6 +62,12 @@ foreach ($field in @('displayName', 'shortDescription', 'longDescription', 'deve
 if ($codexManifest.interface.displayName.Length -gt 30 -or $codexManifest.interface.shortDescription.Length -gt 30) {
     throw 'Codex display name and short description must be 30 characters or fewer.'
 }
+# OpenAI reads the root manifest's inline interface when present, without merging it with
+# .codex-plugin/plugin.json, so the two interfaces must be identical.
+$inlineInterface = $manifest.extensions.'com.openai'.interface
+if ($inlineInterface -and (($inlineInterface | ConvertTo-Json -Depth 5 -Compress) -ne ($codexManifest.interface | ConvertTo-Json -Depth 5 -Compress))) {
+    throw 'The inline OpenAI interface in plugin.json differs from .codex-plugin/plugin.json.'
+}
 foreach ($icon in @($codexManifest.interface.logo, $codexManifest.interface.composerIcon, $claudeManifest.icon, $cursorManifest.logo)) {
     if (!$icon -or !(Test-Path -LiteralPath (Join-Path $plugin $icon) -PathType Leaf)) { throw "Plugin icon $icon is missing." }
 }

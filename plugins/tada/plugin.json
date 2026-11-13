@@ -10,9 +10,16 @@
       "interface": {
         "displayName": "TADA",
         "shortDescription": "Test-assured development",
-        "longDescription": "Discover agreed executable acceptance, verify small changes and recover project context through the TADA CLI.",
+        "longDescription": "Discover agreed executable acceptance, verify small changes and recover project context through the TADA CLI. Supports C#/.NET APIs with Reqnroll and MSTest on Windows x64. Results are local advisory (L1).",
+        "developerName": "TADA contributors",
         "category": "Productivity",
-        "capabilities": ["Read", "Write"]
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
+        "websiteURL": "https://github.com/tayzer/TADA",
+        "composerIcon": "./assets/icon.png",
+        "logo": "./assets/icon.png"
       }
     }
   }

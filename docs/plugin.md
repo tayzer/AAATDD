@@ -27,7 +27,7 @@ codex plugin marketplace add tayzer/tada-plugins      # or a local directory suc
 codex plugin add tada@tada
 ```
 
-An extracted standalone plugin ZIP also registers directly, because its bundled catalog resolves the plugin at its own root. `codex plugin marketplace upgrade tada` refreshes a Git marketplace.
+An extracted standalone plugin ZIP also registers directly, because its bundled catalog resolves the plugin at its own root. `codex plugin marketplace upgrade tada` refreshes a Git marketplace; run `codex plugin add tada@tada` afterwards to install the refreshed version.
 
 Open the host's Plugins browser, select the `tada` marketplace and install TADA. Use its normal plugin controls to enable or disable it. In Codex CLI, `/plugins` opens the browser and Space toggles an installed plugin. Start a fresh session after changing activation so the trial observes the selected skill set. [Official plugin controls](https://learn.chatgpt.com/docs/plugins)
 

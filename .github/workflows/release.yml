@@ -14,9 +14,12 @@ on:
         required: false
 permissions:
   contents: read
+# Keep every pending release (up to GitHub's 100) instead of replacing the pending one.
+# Queue order is not guaranteed, so the marketplace job never moves to an older version.
 concurrency:
   group: tada-release
   cancel-in-progress: false
+  queue: max
 defaults:
   run:
     shell: pwsh
@@ -79,12 +82,31 @@ jobs:
           "version=$version" >> $env:GITHUB_OUTPUT
           "tag=v$version" >> $env:GITHUB_OUTPUT
           "Publishing **$version** from ``$env:SOURCE_SHA``." >> $env:GITHUB_STEP_SUMMARY
+      - name: Reuse an existing release for this version
+        id: existing
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          # A rerun after a failed marketplace push must not rebuild or overwrite published assets.
+          gh release view $env:TAG --repo $env:GITHUB_REPOSITORY --json tagName 2>$null | Out-Null
+          if ($LASTEXITCODE) { "exists=false" >> $env:GITHUB_OUTPUT; exit 0 }
+          $tagged = gh api "repos/$env:GITHUB_REPOSITORY/commits/$env:TAG" --jq .sha
+          if ($LASTEXITCODE -or $tagged -ne $env:SOURCE_SHA) { throw "Release $env:TAG exists for commit $tagged, not $env:SOURCE_SHA." }
+          $assets = @(gh release view $env:TAG --repo $env:GITHUB_REPOSITORY --json assets --jq '.assets[].name')
+          foreach ($required in @('SHA256SUMS', 'release-manifest.json', "TADA-marketplace-$($env:TAG.Substring(1)).zip")) {
+            if ($assets -notcontains $required) { throw "Release $env:TAG exists but lacks $required. Inspect it before republishing." }
+          }
+          "exists=true" >> $env:GITHUB_OUTPUT
+          "Release $env:TAG already exists for this commit; reusing its published assets." >> $env:GITHUB_STEP_SUMMARY
       - name: Restore, build and pack
+        if: steps.existing.outputs.exists != 'true'
         run: |
           dotnet restore src/Tada.Cli/Tada.Cli.csproj --locked-mode
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
           dotnet pack src/Tada.Cli/Tada.Cli.csproj --no-restore --disable-build-servers -o .artifacts/packages
       - name: Package and check the plugin, marketplace and download bundle
+        if: steps.existing.outputs.exists != 'true'
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
@@ -124,6 +146,7 @@ jobs:
           }
           [IO.File]::WriteAllLines("$release/SHA256SUMS", [string[]]$sums, [Text.UTF8Encoding]::new($false))
       - name: Publish the GitHub prerelease
+        if: steps.existing.outputs.exists != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ steps.version.outputs.version }}
@@ -197,19 +220,49 @@ jobs:
           mkdir -p ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null
           git clone "git@github.com:$MARKETPLACE_REPOSITORY.git" marketplace
           cd marketplace
-          git checkout -B main
-          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
-          cp -a ../content/. .
+          # Base on the published main explicitly; the clone's default branch may not be main.
+          if git rev-parse -q --verify refs/remotes/origin/main >/dev/null; then
+            git checkout -q -B main refs/remotes/origin/main
+          else
+            git checkout -q -B main
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Never move marketplace main to an older build. Queued or retried runs can finish out of order.
+          incoming="${TAG#v}"
+          current=$(jq -r '.version // empty' tada/plugin.json 2>/dev/null || true)
+          newer=$(python3 - "$incoming" "$current" <<'PY'
+          import sys
+          def key(v):
+              core, _, pre = v.partition('-')
+              parts = [int(x) for x in core.split('.')]
+              ids = [(0, int(x), '') if x.isdigit() else (1, 0, x) for x in pre.split('.')] if pre else []
+              # A release sorts after its prereleases; within prereleases, more identifiers sort later.
+              return (parts, 0 if pre else 1, ids)
+          incoming, current = sys.argv[1], sys.argv[2]
+          print('yes' if not current or key(incoming) >= key(current) else 'no')
+          PY
+          )
+
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a ../content/. .
           git add --all
-          if git diff --cached --quiet; then
-            echo "Marketplace content already matches $TAG."
+          if [ "$newer" = "yes" ]; then
+            if git diff --cached --quiet; then
+              echo "Marketplace content already matches $TAG."
+            else
+              git commit -m "Release TADA $TAG" -m "Source: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$TAG"
+            fi
+            git tag -f "$TAG"
+            git push origin main
+            git push --force origin "refs/tags/$TAG"
+            echo "Published $TAG to $MARKETPLACE_REPOSITORY." >> "$GITHUB_STEP_SUMMARY"
           else
-            git commit -m "Release TADA $TAG" -m "Source: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$TAG"
+            # Keep the older build addressable by its tag without replacing newer content on main.
+            git commit -q --allow-empty -m "Release TADA $TAG (superseded by $current)" -m "Source: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$TAG"
+            git tag -f "$TAG"
+            git push --force origin "refs/tags/$TAG"
+            echo "$TAG is older than the published $current; tagged only, main unchanged." >> "$GITHUB_STEP_SUMMARY"
           fi
-          git tag -f "$TAG"
-          git push origin main
-          git push --force origin "refs/tags/$TAG"
           rm -f "$RUNNER_TEMP/deploy_key"
-          echo "Published $TAG to $MARKETPLACE_REPOSITORY." >> "$GITHUB_STEP_SUMMARY"
