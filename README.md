@@ -102,9 +102,12 @@ Every [release](https://github.com/tayzer/TADA/releases) also attaches `TADA-plu
 $expected = ((Select-String SHA256SUMS -Pattern 'TADA-plugin-').Line -split '\s+')[0]
 (Get-FileHash .\TADA-plugin-<version>.zip -Algorithm SHA256).Hash.ToLower() -eq $expected   # should print True
 Expand-Archive .\TADA-plugin-<version>.zip -DestinationPath "$HOME\tools\tada-plugin"
-codex plugin marketplace add "$HOME\tools\tada-plugin"; codex plugin add tada@tada
-# or: claude plugin marketplace add "$HOME\tools\tada-plugin"; claude plugin install tada@tada
+codex plugin marketplace add "$HOME\tools\tada-plugin"
+if ($LASTEXITCODE -eq 0) { codex plugin add tada@tada }
+# Claude Code: claude plugin marketplace add "$HOME\tools\tada-plugin", then claude plugin install tada@tada
 ```
+
+A host accepts only one marketplace named `tada`. To switch between the GitHub marketplace, a ZIP folder and a source build, first run `codex plugin marketplace remove tada` or `claude plugin marketplace remove tada`, then register the new source. Install only after registration succeeds, so you never install from the old source by mistake.
 
 Do not delete or move the extracted folder while a host uses it. The alpha.12 ZIP supports Codex only, and its plugin ID is `tada@tada-development`.
 
@@ -116,8 +119,9 @@ This needs PowerShell 7 as well:
 git clone https://github.com/tayzer/TADA.git; cd TADA
 dotnet pack src/Tada.Cli/Tada.Cli.csproj -o .artifacts/packages
 $plugin = & ./scripts/New-TadaPlugin.ps1 -Package .artifacts/packages/Tada.Cli.0.1.0-alpha.13.nupkg
-codex plugin marketplace add $plugin.marketplaceRoot; codex plugin add tada@tada
-# or: claude plugin marketplace add $plugin.marketplaceRoot; claude plugin install tada@tada
+codex plugin marketplace add $plugin.marketplaceRoot
+if ($LASTEXITCODE -eq 0) { codex plugin add tada@tada }
+# Claude Code: claude plugin marketplace add $plugin.marketplaceRoot, then claude plugin install tada@tada
 ```
 
 ### CLI only (no agent workflow)

@@ -248,21 +248,35 @@ jobs:
           find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
           cp -a ../content/. .
           git add --all
+
+          # Published tags never move. A retry may reuse a tag only when it holds exactly this content.
+          expected_tree=$(git write-tree)
+          tag_exists=no
+          if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+            if [ "$(git rev-parse "refs/tags/$TAG^{tree}")" != "$expected_tree" ]; then
+              echo "Marketplace tag $TAG already exists with different content. Refusing to move it." >&2
+              exit 1
+            fi
+            tag_exists=yes
+          fi
+
           if [ "$newer" = "yes" ]; then
             if git diff --cached --quiet; then
               echo "Marketplace content already matches $TAG."
             else
               git commit -m "Release TADA $TAG" -m "Source: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$TAG"
             fi
-            git tag -f "$TAG"
+            [ "$tag_exists" = "yes" ] || git tag "$TAG"
             git push origin main
-            git push --force origin "refs/tags/$TAG"
+            [ "$tag_exists" = "yes" ] || git push origin "refs/tags/$TAG"
             echo "Published $TAG to $MARKETPLACE_REPOSITORY." >> "$GITHUB_STEP_SUMMARY"
+          elif [ "$tag_exists" = "yes" ]; then
+            echo "$TAG is older than the published $current and is already tagged; nothing to do." >> "$GITHUB_STEP_SUMMARY"
           else
             # Keep the older build addressable by its tag without replacing newer content on main.
             git commit -q --allow-empty -m "Release TADA $TAG (superseded by $current)" -m "Source: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$TAG"
-            git tag -f "$TAG"
-            git push --force origin "refs/tags/$TAG"
+            git tag "$TAG"
+            git push origin "refs/tags/$TAG"
             echo "$TAG is older than the published $current; tagged only, main unchanged." >> "$GITHUB_STEP_SUMMARY"
           fi
           rm -f "$RUNNER_TEMP/deploy_key"

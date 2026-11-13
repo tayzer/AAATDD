@@ -35,8 +35,8 @@ The same text is in the plugin README, which the Anthropic directory shows as th
 
 | Question | Answer |
 | --- | --- |
-| Reads or stores personal data? | It can. TADA reads the user's repository, and it keeps byte-exact local snapshots of acceptance files, test inputs and run evidence in that repository. Any personal data in those files, such as names in acceptance examples or test data, is read and retained there. Nothing is sent to TADA or any other service. |
-| Sends data to services other than declared connectors? | No. The only network access is `dotnet` restoring the user's project dependencies from the package sources in the user's `NuGet.Config`. |
+| Reads or stores personal data? | It can. TADA reads the user's repository, and it keeps byte-exact local snapshots of acceptance files, test inputs and run evidence in that repository. Any personal data in those files, such as names in acceptance examples or test data, is read and retained there. TADA itself sends none of it to TADA or any other service; see the next row for the network requests the .NET SDK makes. |
+| Sends data to services other than declared connectors? | TADA itself contacts no service. The .NET SDK that TADA runs makes its usual network requests: restore requests package metadata and packages from the NuGet sources in the user's `NuGet.Config` (nuget.org by default), and the SDK sends usage telemetry unless the user has opted out (for example with `DOTNET_CLI_TELEMETRY_OPTOUT=1`). No repository content is uploaded. |
 | Data retention | Evidence stays in the user's repository until the user deletes it. TADA keeps nothing elsewhere. |
 | Intended for people under 18? | No; it is a professional developer tool. |
 
