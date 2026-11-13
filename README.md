@@ -154,7 +154,7 @@ Approval of an expectation is distinct from permission to implement or merge. An
 
 You do not need to name TADA, Gherkin or any workflow command. The enabled agent workflow inspects the repository, asks the questions that change acceptance, proposes examples for you to agree, prepares verification when it is needed, and implements in small increments. It records a concise current-work handoff in `.tada/context.md` so the next session can continue, and it reuses what earlier changes learned.
 
-The CLI operations used by the workflow are `tada init`, `tada baseline prepare | review | approve`, `tada plan prepare`, `tada run`, `tada verify`, `tada gate` and `tada knowledge check`. The [CI guide](docs/ci-pr-workflows.md) shows how to run the gate on pull requests.
+The CLI operations used by the workflow are `tada init`, `tada baseline prepare | review | approve`, `tada plan prepare`, `tada run`, `tada verify`, `tada gate` and `tada knowledge check`. `tada knowledge check` is in source only and not in the `0.1.0-alpha.12` release; to use it, build from source using the [quickstart](docs/quickstart.md). The [CI guide](docs/ci-pr-workflows.md) shows how to run the gate on pull requests.
 
 ## Current capabilities and roadmap
 
