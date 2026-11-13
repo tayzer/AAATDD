@@ -1,177 +1,343 @@
 # TADA
 
-**Test-Assured Development Assistance.** Formerly AAATDD.
+**Test-Assured Development Assistance.** Your coding agent agrees *what success means* with you before it writes code, then proves the result against that agreement. TADA works with Codex, Claude Code and Cursor.
 
-## What is TADA?
+[![Release](https://img.shields.io/github/v/release/tayzer/TADA?include_prereleases&label=release)](https://github.com/tayzer/TADA/releases)
+[![Licence: MIT](https://img.shields.io/badge/licence-MIT-blue)](LICENSE)
+![Platform](https://img.shields.io/badge/platform-Windows%20x64-lightgrey)
+![.NET](https://img.shields.io/badge/.NET-10.0-512BD4)
+![Hosts](https://img.shields.io/badge/hosts-Codex%20%7C%20Claude%20Code%20%7C%20Cursor-black)
 
-**TADA is an AI-first software development workflow built around collaborative executable specifications, incremental implementation and protected verification obligations. It shifts human attention toward agreeing behaviour, architectural constraints and consequential risks, while using trustworthy evidence to reduce the burden of reviewing AI-generated implementation code.**
+**[Install](#install)** · **[First use](#first-use)** · **[Turn it on and off](#turn-it-on-and-off)** · **[Optional pieces](#optional-pieces)** · **[Commands](#commands)** · **[Configuration](#configuration)** · **[Uninstall](#update-or-uninstall)** · **[Troubleshooting](#troubleshooting)** · **[How it works](docs/how-it-works.md)**
 
-Its central principle is:
+> AI may propose and implement changes, but it must not independently redefine the conditions by which those changes are judged successful.
 
-> **AI may propose and implement changes, but it must not independently redefine the conditions by which those changes are judged successful.**
+## What you get
 
-Humans agree what success means. AI helps implement it efficiently. Protected executable obligations and trustworthy evidence keep the implementation accountable to that agreement.
+You ask your agent for something in plain words. With TADA enabled, the agent:
 
-TADA is a development methodology supported by tooling. It is not just a test runner or an evidence verifier. Its tooling is an agent plugin, which guides ordinary development requests, and a repository-local `tada` CLI, which protects agreed expectations and assesses evidence. The current alpha supports C#/.NET with Gherkin, Reqnroll and MSTest on Windows x64. Its results are local and advisory (L1).
+1. **Investigates first.** It looks at the system you actually have and tells you what it verified, what it inferred and what it still doesn't know.
+2. **Asks the questions that matter.** It covers business rules, edge cases, compatibility and risks. It does not ask about routine engineering choices.
+3. **Writes the agreement down as Gherkin examples for you to approve.** The agent may propose them, but only you can approve them.
+4. **Locks the approved expectations.** It captures them byte for byte, so the agent cannot quietly change a test to make it pass.
+5. **Implements in small steps.** It shows a genuine failing check first, then makes it pass.
+6. **Reports `PASS`, `FAIL` or `INDETERMINATE` from retained evidence.** A green test runner on its own is not a TADA pass.
 
-## The problem with conventional AI-assisted SDD
+Chores and refactors take a lighter path. They reuse existing checks, and the agent does not invent business scenarios for ceremony.
 
-Specification-driven development with AI often follows a familiar shape. Humans and AI write a prose specification. AI plans and generates a large implementation. Tests are written alongside or after the code. Humans then review a large pull request.
+```text
+You:   Orders above five units should be rejected.
 
-This shape has gaps, although not every SDD tool has all of them:
-
-- **Prose is not executable.** AI can misread a requirement or fill a gap with an assumption nobody approved.
-- **Retrospective tests can confirm the implementation instead of the requirement.** Tests written against generated code may encode the same assumption.
-- **Review capacity does not scale with generation.** AI can produce code faster than people can understand it or confirm it matches the original intent.
-
-## How TADA approaches software development
-
-TADA moves agreement to the front and keeps it protected.
-
-- **Evidence before agreement.** Before proposing acceptance criteria, the agent investigates the existing system in proportion to risk and reports what it verified, what it inferred and what is still unknown.
-- **Executable acceptance first.** For business behaviour, humans and AI agree concrete Gherkin examples before production code is written. Gherkin is the authoritative specification. Supporting Markdown explains rationale and context. It does not restate the specification.
-- **Human authority over success criteria.** AI may propose expectations, contracts, thresholds and amendments. Only authorised humans approve acceptance-changing decisions. Routine engineering choices stay delegated.
-- **Non-functional requirements from the start.** Discovery considers performance, resilience, security, compatibility, accessibility, architecture rules and observability alongside behaviour. Objective checks become protected fitness obligations. Other concerns are recorded as required human review rather than manufactured automated assurance.
-- **Protected obligations.** Approved Gherkin, its executable interpretation, declared contracts and fitness thresholds, and verification configuration are captured byte for byte. Changing them requires renewed approval, and the change is classified so reviewers can see what kind of obligation moved.
-- **Small increments.** Implementation proceeds in small, reviewable steps against agreed expectations, starting from meaningful behavioural RED when there is something new to demonstrate.
-- **Trustworthy evidence.** A passing runner exit code is not a TADA PASS. TADA distinguishes `PASS`, `FAIL` and `INDETERMINATE`, retains failure history, and reports missing, skipped or invalid evidence explicitly.
-- **Learning that compounds.** Each change can leave the project easier to change next time. TADA reuses and improves the engineering knowledge a team already has, and creates new knowledge only when a human has enabled it and a real gap exists.
-
-## The TADA development lifecycle
-
-The lifecycle is **Understand → Agree → Select verification → Establish evidence → Implement and verify → Complete and preserve**. These are responsibilities and decision points, not six commands or six approval meetings. Small changes combine steps. Chores and refactors take proportionate paths.
-
-```mermaid
-flowchart TD
-    request["Change request<br/>(feature, defect, refactor, chore)"] --> discover["Evidence-driven discovery<br/>retrieve knowledge, investigate by risk,<br/>verified / inferred / unknown"]
-    discover --> kind{"Does agreed<br/>behaviour change?"}
-    kind -- "No: chore or refactor" --> reuse["Select proportionate checks<br/>reuse existing obligations,<br/>add characterisation if coverage is thin"]
-    kind -- "Yes: feature or defect" --> agree["Agree Gherkin examples<br/>plus contract and fitness expectations"]
-    agree --> approveSpec["Human approves expectations<br/>(may merge as approved candidates)"]
-    approveSpec --> baseline["Select verification and build<br/>executable baseline: bindings, fixtures, observers"]
-    baseline --> reviewOracle["Human reviews the<br/>executable interpretation"]
-    reviewOracle --> red["Establish starting evidence<br/>meaningful behavioural RED"]
-    reuse --> preserve["Establish preservation evidence<br/>existing obligations PASS"]
-    red --> increment["Small implementation increment"]
-    preserve --> increment
-    increment --> verify{"Verify<br/>PASS / FAIL / INDETERMINATE"}
-    verify -- "FAIL or INDETERMINATE" --> increment
-    verify -- "Acceptance-changing discovery" --> agree
-    verify -- "PASS" --> promote["Promote satisfied candidates<br/>to active obligations"]
-    promote --> gate["Protected-change review and CI gate<br/>active obligations must pass,<br/>protected changes listed for human review"]
-    gate -- "Blocked" --> increment
-    gate -- "Passed and code reviewed" --> merge["Merge and preserve learning<br/>decisions, approvals, evidence,<br/>knowledge by mode, current handoff"]
-    merge -. "next change retrieves it" .-> discover
+Agent: I checked OrdersController, the stock reservation path and the existing
+       order scenarios. Two questions before I change anything. Should the limit
+       apply per order line or per order? And should a rejected order return
+       400 or 422?
+       ...
+       Here are three proposed scenarios (features/orders.feature). Please review
+       them. When you are happy, run the approval command below yourself.
 ```
 
-The [lifecycle guide](docs/architecture/change-lifecycle.md) describes each stage and the change-type paths in detail.
+## Requirements
 
-## Evidence-driven discovery
-
-A change that looks local can reach other services, API consumers, shared data, asynchronous messages, retries, state transitions, security and operations. AI agents tend to start implementing after reading a few files. TADA asks the agent to understand the affected system first, so the examples you agree describe the system you actually have.
-
-Investigation is **risk-proportionate**. A documentation chore needs the relevant files and existing checks. A business fix follows behavioural paths, related scenarios, persistent state and regression history. A cross-service or security-sensitive change also traces data ownership, message consumers, idempotency, consistency, failure recovery and non-functional requirements. The agent stops when it can responsibly propose the affected expectations, and it names sources it could not reach instead of guessing.
-
-Before proposing Gherkin, the agent shares a short **change impact brief**:
-
-- **Verified** findings, each with a reference to code, tests, configuration, decisions or history.
-- **Inferred** conclusions that are plausible but not yet established.
-- **Unknowns** that would change acceptance, framed as questions for you.
-
-For a small change the brief is a sentence or two. It is conversation, not a document you must approve. Code shows what the system does today, not what it should do, so the agent never turns an inference into an agreed requirement.
-
-## Continuous learning
-
-TADA retrieves knowledge from earlier changes, checks that it is still true, and preserves significant new learning where future work will find it: **Retrieve → Validate → Learn → Propose → Preserve**. This runs alongside the lifecycle rather than as an extra stage, and most changes create no new documents.
-
-```mermaid
-flowchart LR
-    retrieve["Retrieve<br/>relevant decisions, docs,<br/>records and history"] --> validate["Validate<br/>against current code"]
-    validate --> learn["Learn<br/>during the change"]
-    learn --> propose["Propose<br/>links, updates or,<br/>in augment mode, a record"]
-    propose --> preserve["Preserve<br/>through normal Git review"]
-    preserve -.-> retrieve
-```
-
-The knowledge mode controls what TADA may create. It never limits what TADA reads.
-
-| Mode | What TADA does |
+| Need | Version |
 | --- | --- |
-| **Reference** (default) | Finds and reuses your existing documentation, decisions, issues, pull requests and history. Keeps a concise pointer index and a current-work handoff. Proposes updates to existing documents and flags outdated or conflicting knowledge. Never creates standalone knowledge documents just because something is undocumented. |
-| **Augment** (opt-in) | Everything in reference mode. When a significant finding, such as a root cause, invariant, pitfall or undocumented service responsibility, has no suitable home, TADA may propose one focused, evidence-backed record for review. |
+| OS | Windows x64 |
+| .NET SDK | 10.0.403 for the alpha.12 release and for building TADA. From source, application projects accept any stable .NET 10.0 SDK. |
+| Git | Git for Windows |
+| Agent host | [Codex](https://developers.openai.com/codex), [Claude Code](https://code.claude.com/docs) or [Cursor](https://cursor.com/docs/plugins) |
+| Project type | C#/.NET API, with acceptance tests in Reqnroll 3.3.4 and MSTest 4.5.2 (generated for you) |
 
-Select augment mode with `.tada/knowledge.json`: `{ "schemaVersion": 1, "mode": "augment" }`. The setting sits outside the captured oracle, so changing it never invalidates approved expectations. `tada knowledge check` shows the mode and flags records whose sources have changed since they were last validated.
+The current release is `0.1.0-alpha.12`, an early alpha. Its results are **local advisory (L1)**. See [Limits](#limits).
 
-## Knowledge authority
-
-TADA must not create a competing source of truth. Approved Gherkin, contracts and fitness obligations define what must hold. Your accepted decisions and project documentation keep their authority. Current code shows what the system does now. Earlier findings and AI inferences are leads to check, not requirements. When sources disagree, TADA reports the conflict and proposes an update or supersession; it never quietly picks the convenient answer or rewrites an accepted decision. The [discovery and knowledge guide](docs/knowledge.md) explains modes, records and checks.
-
-## Requirement and verification types
-
-| Type | Purpose | Approval |
+| Host | Released package | From source (`main`) |
 | --- | --- | --- |
-| **Functional behaviour** | Gherkin scenarios executed through Reqnroll, MSTest and the Microsoft Testing Platform | Human-approved. The authoritative business specification. |
-| **Executable interpretation** | Bindings, assertions, fixtures, observers and drivers that decide whether a scenario passes | Human-reviewed with the baseline. Changes need renewed approval. |
-| **Service contracts** (optional) | Agreed producer/consumer expectations, declared per project | Protected like acceptance criteria when declared. |
-| **Fitness functions** | Agreed NFR thresholds and architecture rules, such as latency budgets or dependency boundaries | Protected when declared. Non-automatable concerns are recorded as required human review. |
-| **Supporting engineering tests** | Unit tests and implementation-focused integration tests | Delegated to the developer and agent. Not individually approved. Can be coordinated with acceptance through a captured [verification plan](docs/multi-level-verification.md). |
+| Codex | alpha.12 | Yes |
+| Claude Code | First release in alpha.13 | Yes |
+| Cursor | First release in alpha.13 | Yes |
 
-Protection follows the requirement a check expresses, not its file type or test framework. See [ADR 0045](docs/decisions/0045-classify-protected-verification-obligations.md).
+## Install
 
-## Agreeing a specification before it is implemented
+TADA has two parts:
 
-An approved scenario is not automatically mandatory for merge. TADA tracks two separate questions:
+- **The plugin** gives the agent the workflow. Most people only install this. It carries the matching verifier with it.
+- **The `tada` CLI** handles approvals and verification. The plugin installs it into a project automatically when a task needs it.
 
-- **Is this expectation approved?** Recorded by human review and approval of an immutable baseline.
-- **Is it currently enforced?** Recorded in `.tada/enforcement.json`. Each approved scenario is either **active**, which means it must pass for merge, or a **candidate**, which means it is approved and pending implementation.
+### Step 1: get the plugin
 
-A spec-only change can therefore merge approved candidates without breaking mainline CI. `tada gate` requires every active obligation to pass, reports candidates with their age as non-blocking diagnostics, and requires a candidate to be promoted to active once it passes. Against the target branch, an active obligation cannot be demoted unless an approved amendment changed that scenario. See [ADR 0044](docs/decisions/0044-separate-approval-authority-from-merge-enforcement.md) and the [enforcement guide](docs/enforcement.md).
+**Released alpha.12 (Codex only):**
 
-## What human approval means
+```powershell
+# Download the plugin and checksums
+gh release download v0.1.0-alpha.12 -R tayzer/TADA -p "TADA-plugin-*.zip" -p SHA256SUMS
 
-| AI may | Humans decide |
-| --- | --- |
-| Investigate the system in proportion to risk and report verified, inferred and unknown findings | Business behaviour, compatibility, security and data-integrity questions |
-| Propose Gherkin, contracts, thresholds and amendments | Approval of acceptance-changing expectations and amendments |
-| Write bindings, fixtures, supporting tests and implementation | Review of the executable interpretation of protected expectations |
-| Select supporting checks and routine technical approaches | Whether a contract or fitness obligation is protected, and any weakening |
-| Run checks and report results, omissions and residual risks | Code review proportionate to risk, and merge |
-| Retrieve and validate knowledge; propose updates, and records in augment mode | The knowledge mode, and review of persistent knowledge changes |
+# Check the download (should print True)
+$expected = ((Select-String SHA256SUMS -Pattern 'TADA-plugin-0.1.0-alpha.12.zip').Line -split '\s+')[0]
+(Get-FileHash .\TADA-plugin-0.1.0-alpha.12.zip -Algorithm SHA256).Hash.ToLower() -eq $expected
 
-Approval of an expectation is distinct from permission to implement or merge. An agent may prepare an approval command, but it must never approve on a human's behalf.
+# Extract it somewhere permanent. The host reads the plugin from this folder.
+Expand-Archive .\TADA-plugin-0.1.0-alpha.12.zip -DestinationPath "$HOME\tools\tada-plugin"
+```
 
-**Assurance limits.** The current release is local advisory **L1**. Approval records are declarations by whoever controls the workspace. Exact hashes show that evidence corresponds to approved inputs, not that an assertion is adequate. In CI, approvals introduced by a pull request need independent authority, such as required code-owner review of the protected changes the gate lists. TADA does not claim protected L2 assurance. Passing obligations do not prove that arbitrary implementation changes are secure, maintainable or free of unintended behaviour, so proportionate code review still applies.
+You can also download the files by hand from the [release page](https://github.com/tayzer/TADA/releases/tag/v0.1.0-alpha.12).
 
-## Quickstart
+**From source (Codex, Claude Code and Cursor).** This needs PowerShell 7 as well:
 
-1. Download the [first public alpha](https://github.com/tayzer/TADA/releases/tag/v0.1.0-alpha.12), or build from source using the [quickstart](docs/quickstart.md). Requirements: Windows x64 and .NET SDK 10.0.403.
-2. Install and enable the [TADA plugin](docs/plugin.md) through your agent host's plugin controls.
-3. Start a fresh session in your application repository and describe your task normally, for example:
+```powershell
+git clone https://github.com/tayzer/TADA.git; cd TADA
+dotnet pack src/Tada.Cli/Tada.Cli.csproj -o .artifacts/packages
+$plugin = & ./scripts/New-TadaPlugin.ps1 -Package .artifacts/packages/Tada.Cli.0.1.0-alpha.13.nupkg
+Expand-Archive $plugin.archive -DestinationPath "$HOME\tools\tada-plugin"
+```
+
+Do not delete or move the extracted folder while a host uses it.
+
+### Step 2: install it in your host
+
+**Codex**
+
+```powershell
+codex plugin marketplace add "$HOME\tools\tada-plugin"
+codex plugin add tada@tada-development
+```
+
+In Codex, `/plugins` opens the plugin browser, where TADA appears under the `tada-development` marketplace.
+
+**Claude Code**
+
+```powershell
+claude plugin marketplace add "$HOME\tools\tada-plugin"
+claude plugin install tada@tada-development --scope user
+```
+
+Use `--scope project` instead to install for the current repository only. Inside Claude Code, `/plugin` opens the same controls.
+
+**Cursor**
+
+```powershell
+Copy-Item "$HOME\tools\tada-plugin" "$HOME\.cursor\plugins\local\tada" -Recurse
+```
+
+Quit and reopen Cursor; a window reload is not always enough. TADA then appears under **Customize**. If it does not, enable **Include third-party Plugins, Skills, and other configs** in Cursor settings. Copy the folder rather than linking it, because Cursor does not reliably load linked plugins on Windows. Teams can import the generated marketplace from a Git repository instead. See [plugin details](docs/plugin.md#install-and-toggle-in-cursor).
+
+### CLI only (no agent workflow)
+
+Use this to drive approvals and verification yourself, or from a different agent or tool.
+
+```powershell
+gh release download v0.1.0-alpha.12 -R tayzer/TADA -p "TADA-0.1.0-alpha.12-win-x64.zip"
+Expand-Archive .\TADA-0.1.0-alpha.12-win-x64.zip -DestinationPath "$HOME\tools\tada-cli"
+```
+
+Then follow the `README.md` inside the extracted folder. It installs `Tada.Cli` as a repository-local .NET tool from the bundled feed. `Tada.Cli` is not on NuGet.org yet. The [quickstart](docs/quickstart.md) covers building the CLI from source.
+
+## First use
+
+1. Open your application folder, or an empty folder for a new project, in your agent host.
+2. Start a **fresh** session.
+3. Describe the work normally:
 
    > Build me a simple API for tracking my reading list.
 
-   > Orders above five units should be rejected.
+   > Fix the bug where cancelled orders still reserve stock.
 
-You do not need to name TADA, Gherkin or any workflow command. The enabled agent workflow inspects the repository, asks the questions that change acceptance, proposes examples for you to agree, prepares verification when it is needed, and implements in small increments. It records a concise current-work handoff in `.tada/context.md` so the next session can continue, and it reuses what earlier changes learned.
+   > Upgrade the logging package. No behaviour change.
 
-The CLI operations used by the workflow are `tada init`, `tada baseline prepare | review | approve`, `tada plan prepare`, `tada run`, `tada verify`, `tada gate` and `tada knowledge check`. `tada knowledge check` is in source only and not in the `0.1.0-alpha.12` release; to use it, build from source using the [quickstart](docs/quickstart.md). The [CI guide](docs/ci-pr-workflows.md) shows how to run the gate on pull requests.
+You do not need to mention TADA, Gherkin or any command. The first time a task needs business verification, the agent runs `tada init` in your repository. Before you approve anything, read what you are approving. The agent prints the approval command; **you** run it:
 
-## Current capabilities and roadmap
+```powershell
+dotnet tool run tada baseline approve --review <review-id> --by "Your Name"
+```
 
-**Released in `0.1.0-alpha.12`:** plugin-guided workflow for ordinary requests; `tada init`; exact-byte baseline capture with review and approval; real Reqnroll/MSTest/MTP execution of a separate ASP.NET Core API; retained-evidence verification with `PASS`, `FAIL` and `INDETERMINATE`; preserved failure history; build-input and runtime observation with documented L1 limits. See the [release notes](docs/releases/0.1.0-alpha.12.md).
+The agent will never approve on your behalf. Commit the files under `.tada/`, `features/` and `tests/Acceptance/` along with your code. They are the agreement and its evidence.
 
-**In source for `0.1.0-alpha.13`, not yet released:** [change-aware multi-level verification](docs/multi-level-verification.md) with captured verification plans, supporting MSTest/MTP suites, several owned local .NET services and explicit `NO_CHECKS` results for justified no-test changes ([ADR 0042](docs/decisions/0042-add-change-aware-multi-level-verification.md)); the North Star workflow guidance; separate enforcement status with approved candidates and active obligations; `tada gate` with base-branch comparison; classification of protected contract, fitness, specification, interpretation and configuration changes; the end-to-end lifecycle controls in `scripts/Test-EnforcementWorkflow.ps1`; application SDK selection across stable .NET 10.0 feature bands, with existing application SDK policies preserved ([quickstart](docs/quickstart.md)); Claude Code plugin packaging alongside Codex ([plugin guide](docs/plugin.md)); and evidence-driven discovery and continuous learning with reference and augment knowledge modes ([ADR 0046](docs/decisions/0046-investigate-before-agreeing-acceptance.md), [ADR 0047](docs/decisions/0047-add-reference-and-augment-knowledge-modes.md)) and `tada knowledge check`.
+To continue the next day, start a fresh session and say something like *"carry on with the reading list API"*. The agent recovers its place from `.tada/context.md`.
 
-**Planned:** an independent approval adapter for team CI (L2), plan checks that run protected contract and fitness suites outside the acceptance harness, and further runners, languages and platforms. The [North Star assessment](docs/architecture/north-star-assessment.md) records the gap analysis and prioritised roadmap.
+## Turn it on and off
 
-## Further reading
+TADA installs no global instructions. The plugin is the only switch, so turning the plugin off turns TADA off. Start a **fresh session** after any change.
 
-- [Project charter](docs/vision.md) and [decision records](docs/decisions/)
-- [Development lifecycle](docs/architecture/change-lifecycle.md), [enforcement guide](docs/enforcement.md) and [multi-level verification](docs/multi-level-verification.md)
-- [Discovery and continuous learning](docs/knowledge.md)
-- [CI and PR workflows](docs/ci-pr-workflows.md)
-- [Quickstart](docs/quickstart.md), [plugin](docs/plugin.md) and [native testing](docs/native-testing.md)
-- [Build-task contracts](docs/build-task-contracts.md) and [provenance audit](docs/validation/provenance-audit.md) for verifier trust boundaries
-- [Release checklist](docs/release-readiness.md) and [design status](docs/design-status.md)
+| I want to… | Codex | Claude Code | Cursor |
+| --- | --- | --- | --- |
+| Toggle it interactively | `/plugins`, select TADA, press Space | `/plugin` | **Customize** lists installed plugins and their controls |
+| Turn it off everywhere | `enabled = false` in `~/.codex/config.toml` | `claude plugin disable tada@tada-development --scope user` | Remove `~/.cursor/plugins/local/tada` and restart Cursor |
+| Turn it on for one repository | `enabled = true` in `<repo>/.codex/config.toml` | `claude plugin enable tada@tada-development --scope project` | Install from a team marketplace with project scope |
+| Skip it for one task | Say so: *"Don't use TADA for this one."* | Same | Same |
+| Remove it completely | [Uninstall](#update-or-uninstall) | [Uninstall](#update-or-uninstall) | [Uninstall](#update-or-uninstall) |
+
+### Off by default, on per project
+
+**Codex.** Disable TADA in your user configuration, `~/.codex/config.toml`:
+
+```toml
+[plugins."tada@tada-development"]
+enabled = false
+```
+
+Then enable it in each repository that should use it, in `<repo>/.codex/config.toml`:
+
+```toml
+[plugins."tada@tada-development"]
+enabled = true
+```
+
+Codex applies project configuration only in repositories you have marked as trusted.
+
+**Claude Code.** Install with project scope only, in each repository that should use TADA:
+
+```powershell
+claude plugin install tada@tada-development --scope project
+```
+
+If you already installed it for your user, run `claude plugin disable tada@tada-development --scope user` once, then `claude plugin enable tada@tada-development --scope project` in each repository.
+
+**Cursor.** A plugin in `~/.cursor/plugins/local` applies to every workspace. For per-repository control, install TADA from a team marketplace and choose project scope. Otherwise, remove the local folder when you don't want TADA.
+
+Commit the project-level setting (`.codex/config.toml` or `.claude/settings.json`) if your whole team should get the same default.
+
+### What turning it off keeps
+
+Disabling the plugin stops the agent from following the workflow. **It does not delete anything.** Your approved features, baselines, run evidence and `.tada/context.md` stay in the repository. The `tada` CLI still works, so you can run `tada verify` or `tada gate` by hand or in CI. When you re-enable the plugin, the agent picks up where you left off.
+
+## Optional pieces
+
+Only the plugin is required. Everything else is added when a task needs it. Each piece can be added or removed on its own.
+
+| Piece | What it does | Added by | Remove or skip |
+| --- | --- | --- | --- |
+| **Plugin** (workflow) | Makes the agent follow discovery, agreement, RED/GREEN and handoff | [Install](#install) | Disable or uninstall the plugin |
+| **`tada` CLI** (verifier) | Approves, runs and verifies acceptance baselines | Installed automatically by the plugin, or [by hand](#cli-only-no-agent-workflow) | `dotnet tool uninstall Tada.Cli` in the repository |
+| **Acceptance baseline** | Locks the approved Gherkin plus its bindings and fixtures | `tada baseline prepare`, then review and approve | Not needed for chores and refactors with existing checks |
+| **Contract and fitness obligations** | Protects agreed API contracts and NFR thresholds, such as latency budgets and architecture rules | `obligations` in `tada.json` | Leave `obligations` out |
+| **Several local services** | One acceptance run across several of your .NET services | `execution.services` in `tada.json` (schema 2) | Use a single `sutProject` |
+| **Enforcement ledger** *(source)* | Splits approved scenarios into **active** (must pass to merge) and **candidates** (agreed, not built yet) | `.tada/enforcement.json` | Leave out the file. `tada gate` then reports `NO_CHECKS` |
+| **Verification plan** *(source)* | Coordinates acceptance, unit, contract and journey checks for a change | `tada plan prepare --file .tada/verification-plan.json` | Leave it out and run `tada run --baseline` directly |
+| **CI merge gate** *(source)* | Blocks pull requests when active obligations fail | `tada gate --run <id> --base origin/main` in CI | Leave it out of CI |
+| **Knowledge augment mode** *(source)* | Lets the agent propose short, evidence-backed knowledge records when a real gap exists. The default **reference** mode only reuses and updates your existing docs. | `.tada/knowledge.json` with `{ "schemaVersion": 1, "mode": "augment" }` | Delete the file to return to reference mode |
+| **Native test runs** | The same scenarios in Visual Studio Test Explorer and `dotnet test` | Generated by `tada init` | Optional; recorded TADA runs work without it |
+
+Items marked *(source)* are on `main` for alpha.13 but are not in the released alpha.12 package.
+
+## Commands
+
+You rarely type these yourself, because the agent runs them. The one exception is `baseline approve`, which only a human should run.
+
+| Command | What it does |
+| --- | --- |
+| `tada init` | Prepares the repository. It creates files but never overwrites existing ones. |
+| `tada baseline prepare` | Captures the current Gherkin, bindings and fixtures as an immutable baseline |
+| `tada baseline review --baseline <digest> [--against <old>]` | Shows what you are about to approve, or what changed since an earlier baseline |
+| `tada baseline approve --review <id> --by <name> [--replaces <old>]` | **Human only.** Records approval of a reviewed baseline |
+| `tada run --baseline <digest> [--dotnet <path>]` | Restores and rebuilds from scratch, runs the scenarios once and keeps all evidence |
+| `tada verify --run <id>` | Checks the retained evidence without re-running anything |
+| `tada plan prepare --file <path>` *(source)* | Captures a verification plan |
+| `tada run --plan <digest>` *(source)* | Runs a captured verification plan |
+| `tada gate [--run <id>] [--base <branch>]` *(source)* | Checks the merge obligations in `.tada/enforcement.json` |
+| `tada knowledge check` *(source)* | Shows the knowledge mode and flags records whose sources have changed |
+
+Run each one as `dotnet tool run tada …` inside the repository.
+
+**Options for every command:** `--repo <dir>` (defaults to the current directory), `--json` (structured output, no progress lines), `--help` and `--version`.
+
+**Exit codes:** `0` PASS (or `NO_CHECKS` from `gate`), `1` FAIL, `2` INDETERMINATE, `3` command error.
+
+## Configuration
+
+`tada init` writes a working `tada.json`. You only edit it to add optional pieces.
+
+```json
+{
+  "schemaVersion": 1,
+  "oracleRoots": ["features", "tests/Acceptance"],
+  "implementationRoots": ["src"],
+  "execution": {
+    "project": "tests/Acceptance/Acceptance.csproj",
+    "assembly": "Acceptance.dll",
+    "messagesFile": "tada-messages.ndjson",
+    "timeoutSeconds": 120,
+    "sutProject": "src/Api/Api.csproj",
+    "sutAssembly": "Api.dll"
+  }
+}
+```
+
+The [configuration reference](docs/configuration.md) lists every key with its default, plus the `enforcement.json`, knowledge and host settings.
+
+**Changing `tada.json` or anything under `oracleRoots` changes the agreement.** That includes line-ending changes. You will need to review and approve a new baseline afterwards. This is deliberate.
+
+### Files TADA adds to your repository
+
+| Path | Purpose | Commit it? |
+| --- | --- | --- |
+| `features/*.feature` | The agreed business behaviour, in Gherkin | Yes |
+| `tests/Acceptance/` | Bindings and fixtures that run the features | Yes |
+| `tada.json` | Verifier configuration | Yes |
+| `.tada/context.md` | Short handoff notes for the next session | Yes |
+| `.tada/WORKFLOW.md` | Detailed runner rules for the agent | Yes |
+| `.tada/` baselines, reviews and approvals | Immutable approval history | Yes. Never edit them by hand. |
+| `.tada/runs/`, `.tada/plan-runs/`, `.tada/scratch/` | Local run output | No. `init` adds them to `.gitignore`. |
+| `global.json`, `NuGet.Config`, `Directory.Build.*`, `.gitattributes` | SDK policy, locked restore and exact-byte checkouts | Yes. They are only created when missing. |
+
+On Windows, run `git config core.longpaths true` once in the repository, because snapshot paths can be deep.
+
+## Update or uninstall
+
+**Update:** extract the new plugin to a new folder, then point your host at it.
+
+| Host | Update |
+| --- | --- |
+| Codex | `codex plugin marketplace remove tada-development`, then `codex plugin marketplace add <new-folder>` and `codex plugin add tada@tada-development` |
+| Claude Code | `claude plugin marketplace remove tada-development`, then `claude plugin marketplace add <new-folder>` and `claude plugin install tada@tada-development` |
+| Cursor | Replace `~/.cursor/plugins/local/tada` with the new folder, then restart Cursor |
+
+A new CLI version can change captured tool bytes. Expect to review and re-approve the baseline once, so the agreement stays honest.
+
+**Uninstall the plugin.** This keeps all project files.
+
+| Host | Uninstall |
+| --- | --- |
+| Codex | `codex plugin remove tada@tada-development`, then `codex plugin marketplace remove tada-development` |
+| Claude Code | `claude plugin uninstall tada@tada-development`, then `claude plugin marketplace remove tada-development` |
+| Cursor | Delete `~/.cursor/plugins/local/tada` and restart Cursor |
+
+**Remove the CLI from a repository:** run `dotnet tool uninstall Tada.Cli` in that repository.
+
+**Remove TADA's records from a repository:** delete `.tada/`, `tada.json` and, if you no longer want them, `features/` and `tests/Acceptance/`.
+
+> **Warning:** Deleting `.tada/` permanently removes the approval and failure history. Commit or archive it first if you might need it again.
+
+## Troubleshooting
+
+**The agent ignores TADA.** Start a fresh session after installing or toggling. Check that the plugin is enabled in your host and that no project setting turns it off. In Claude Code you can also invoke it explicitly with `/tada:tada`.
+
+**Cursor doesn't show TADA.** Fully quit and reopen Cursor. Check that `~/.cursor/plugins/local/tada/.cursor-plugin/plugin.json` exists; a nested extraction folder will not load. Enable **Include third-party Plugins, Skills, and other configs**. Organisation accounts may need an admin to allow local plugin imports.
+
+**`INDETERMINATE` instead of FAIL.** The evidence could not be trusted. Common causes are a build error, a missing step binding, the API failing to start, or a timeout. Read the reasons that `tada verify` prints. INDETERMINATE does not mean your feature is wrong.
+
+**It asks me to approve again after a small edit.** Any byte change under `oracleRoots` is a new agreement, including whitespace and line endings. Review the diff with `tada baseline review --baseline <new> --against <old>` and approve it if it is fine.
+
+**Path too long on checkout.** Run `git config core.longpaths true` in the repository.
+
+**The wrong SDK was picked up.** `global.json` selects the SDK. Install a matching SDK, or pass `--dotnet <path-to-dotnet.exe>` to `tada run`. The host chosen during setup is recorded in `.tada/context.md`.
+
+**Workspace path problems.** Spaces work. Commas and semicolons in the workspace path are not supported in this alpha.
+
+## Limits
+
+- Results are **local advisory L1**. Anyone who controls the machine can forge approvals or evidence. Hash checks prove that evidence matches the approved inputs, not that the assertions are good enough.
+- In team CI, approvals added by a pull request need an independent check, such as required code-owner review of the protected files that `tada gate` lists.
+- Passing checks do not replace proportionate code review.
+- Supported today: Windows x64, .NET 10, Reqnroll, MSTest and the Microsoft Testing Platform, with ASP.NET Core APIs. Scenario Outlines are not supported yet.
+
+The [quickstart](docs/quickstart.md) and [release notes](docs/releases/0.1.0-alpha.12.md) list the full trust boundary.
+
+## Learn more
+
+- [How TADA works](docs/how-it-works.md): the method, evidence-driven discovery, continuous learning and what human approval means
+- [Configuration reference](docs/configuration.md)
+- [Plugin details](docs/plugin.md) for Codex, Claude Code and Cursor
+- [Quickstart](docs/quickstart.md): building from source and running the verifier by hand
+- [Native testing](docs/native-testing.md) and [CI and PR workflows](docs/ci-pr-workflows.md)
+- [Enforcement guide](docs/enforcement.md), [multi-level verification](docs/multi-level-verification.md) and [discovery and knowledge](docs/knowledge.md)
+- [Project charter](docs/vision.md), [decision records](docs/decisions/) and [release checklist](docs/release-readiness.md)
 
 Source licence: [MIT](LICENSE). Historical ADRs and probe evidence retain the earlier AAATDD name.
