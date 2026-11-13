@@ -20,6 +20,8 @@ claude plugin marketplace add tayzer/tada-plugins
 claude plugin install tada@tada
 ```
 
+To install for one repository only, change to that application repository and add `--scope project` to the install command there. `claude plugin disable tada@tada` and `claude plugin enable tada@tada` turn it off and on.
+
 **Cursor:** install TADA from the Cursor marketplace, or copy this folder to `~/.cursor/plugins/local/tada` and restart Cursor.
 
 You can also register an extracted plugin ZIP as a local marketplace: run `codex plugin marketplace add <folder>` or `claude plugin marketplace add <folder>` with the extracted folder.
