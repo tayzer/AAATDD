@@ -7,7 +7,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $plugin = (Resolve-Path -LiteralPath $PluginRoot).Path
-# The Claude Code marketplace sits beside the packaged plugin, not inside the standalone ZIP.
+# The Claude Code and Cursor marketplaces sit beside the packaged plugin, not inside the standalone ZIP.
 $marketplaceRoot = Split-Path $plugin -Parent
 $repository = Split-Path $PSScriptRoot -Parent
 $workspace = Join-Path $repository ('.artifacts/plugin-controls/' + [guid]::NewGuid().ToString('N'))
@@ -32,6 +32,27 @@ $claudeCatalog = Get-Content -LiteralPath (Join-Path $marketplaceRoot '.claude-p
 if ($claudeCatalog.name -ne 'tada-development' -or !$claudeCatalog.owner.name -or @($claudeCatalog.plugins).Count -ne 1 -or
     $claudeCatalog.plugins[0].name -ne $manifest.name -or $claudeCatalog.plugins[0].source -ne './tada') {
     throw 'Claude Code marketplace does not resolve the shared TADA plugin.'
+}
+$standaloneClaudeCatalog = Get-Content -LiteralPath (Join-Path $plugin '.claude-plugin/marketplace.json') -Raw | ConvertFrom-Json
+if ($standaloneClaudeCatalog.name -ne 'tada-development' -or @($standaloneClaudeCatalog.plugins).Count -ne 1 -or
+    $standaloneClaudeCatalog.plugins[0].name -ne $manifest.name -or $standaloneClaudeCatalog.plugins[0].source -ne './') {
+    throw 'Standalone Claude Code marketplace must resolve its own plugin root.'
+}
+$cursorManifest = Get-Content -LiteralPath (Join-Path $plugin '.cursor-plugin/plugin.json') -Raw | ConvertFrom-Json
+if ($cursorManifest.name -ne $manifest.name -or $cursorManifest.version -ne $manifest.version -or $cursorManifest.license -ne $manifest.license -or
+    $cursorManifest.name -cnotmatch '^[a-z0-9][a-z0-9.-]*$') {
+    throw 'Cursor and Codex plugin metadata differ.'
+}
+# Cursor resolves each marketplace entry as <source>/.cursor-plugin/plugin.json beside the catalog.
+$cursorCatalog = Get-Content -LiteralPath (Join-Path $marketplaceRoot '.cursor-plugin/marketplace.json') -Raw | ConvertFrom-Json
+if ($cursorCatalog.name -ne 'tada-development' -or !$cursorCatalog.owner.name -or @($cursorCatalog.plugins).Count -ne 1 -or
+    $cursorCatalog.plugins[0].name -ne $manifest.name -or $cursorCatalog.plugins[0].source -ne 'tada' -or
+    !(Test-Path -LiteralPath (Join-Path $marketplaceRoot "$($cursorCatalog.plugins[0].source)/.cursor-plugin/plugin.json"))) {
+    throw 'Cursor marketplace does not resolve the shared TADA plugin.'
+}
+$skillHeader = (Get-Content -LiteralPath (Join-Path $plugin 'skills/tada/SKILL.md') -TotalCount 4) -join "`n"
+if ($skillHeader -notmatch '(?m)^name: tada$' -or $skillHeader -notmatch '(?m)^description: \S') {
+    throw 'Shared skill frontmatter must give the kebab-case name and description that Codex, Claude Code and Cursor read.'
 }
 $entry = Join-Path $plugin 'skills/tada/SKILL.md'
 if (!(Test-Path -LiteralPath $entry) -or !(Test-Path -LiteralPath (Join-Path $plugin 'skills/tada/agents/openai.yaml'))) { throw 'Plugin skill or invocation metadata is missing.' }
@@ -87,6 +108,7 @@ try {
         originalInstructionsByteExact = $true
         installationOnboardingSkillAbsent = $true
         claudeCodeManifestAndMarketplace = $true
+        cursorManifestAndMarketplace = $true
         sharedSkillAndVerifierFeed = $true
         resolvedSdk = $resolvedSdk
         existingSdkPolicyByteExact = [bool]$SdkVersion

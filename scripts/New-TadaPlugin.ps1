@@ -8,6 +8,10 @@ $claudeManifest = Get-Content -LiteralPath (Join-Path $source '.claude-plugin/pl
 if ($claudeManifest.name -ne $manifest.name -or $claudeManifest.version -ne $manifest.version) {
     throw 'Codex and Claude Code plugin identities must match.'
 }
+$cursorManifest = Get-Content -LiteralPath (Join-Path $source '.cursor-plugin/plugin.json') -Raw | ConvertFrom-Json
+if ($cursorManifest.name -ne $manifest.name -or $cursorManifest.version -ne $manifest.version) {
+    throw 'Codex and Cursor plugin identities must match.'
+}
 $packagePath = (Resolve-Path -LiteralPath $Package).Path
 $packageZip = [IO.Compression.ZipFile]::OpenRead($packagePath)
 try {
@@ -53,6 +57,18 @@ $claudeCatalog = [ordered]@{
     plugins = @(@{ name = $manifest.name; source = './tada' })
 }
 $claudeCatalog | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $claudeCatalogDirectory 'marketplace.json') -Encoding utf8
+# The standalone ZIP also registers as a Claude Code marketplace that resolves its own root.
+$claudeCatalog.plugins[0].source = './'
+$claudeCatalog | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $plugin '.claude-plugin/marketplace.json') -Encoding utf8
+$cursorCatalogDirectory = Join-Path $marketplaceRoot '.cursor-plugin'
+New-Item -ItemType Directory -Path $cursorCatalogDirectory -Force | Out-Null
+$cursorCatalog = [ordered]@{
+    name = 'tada-development'
+    owner = @{ name = 'TADA contributors' }
+    metadata = @{ description = 'TADA development previews for test-assured software development.' }
+    plugins = @([ordered]@{ name = $manifest.name; source = 'tada'; description = $manifest.description })
+}
+$cursorCatalog | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $cursorCatalogDirectory 'marketplace.json') -Encoding utf8
 $archive = Join-Path $output "TADA-plugin-$($manifest.version).zip"
 [IO.Compression.ZipFile]::CreateFromDirectory($plugin, $archive)
 $result = [pscustomobject]@{
@@ -63,7 +79,7 @@ $result = [pscustomobject]@{
     packageSha256 = (Get-FileHash -LiteralPath $packagePath).Hash.ToLowerInvariant()
     marketplaceRoot = $marketplaceRoot
     pluginRoot = $plugin
-    hosts = @('Codex', 'Claude Code')
+    hosts = @('Codex', 'Claude Code', 'Cursor')
     status = 'Local plugin prepared for host installation and enable/disable testing'
 }
 $result | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $output 'plugin.json') -Encoding utf8

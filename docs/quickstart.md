@@ -66,7 +66,7 @@ Approved scenarios do not all have to pass immediately. `.tada/enforcement.json`
 
 Alpha.13 selects verification levels during discovery and supports [coordinated checks and several local services](multi-level-verification.md). Existing single-baseline commands remain available. Chores and refactors retain proportionate existing checks and can justify no new tests.
 
-Enable the installed TADA plugin in Codex or Claude Code, start a fresh session in the application directory and ask for the project normally. The [plugin guide](plugin.md) gives each host's installation and toggle commands.
+Enable the installed TADA plugin in Codex, Claude Code or Cursor, start a fresh session in the application directory and ask for the project normally. The [plugin guide](plugin.md) gives each host's installation and toggle commands.
 
 Plugin installation does not ask for an application folder or install the verifier. The enabled skill prepares verification in the active application repository when the work needs it. The source-build commands above are an explicit manual CLI setup alternative.
 
