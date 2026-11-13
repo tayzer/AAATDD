@@ -4,7 +4,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-    types: [opened, synchronize, reopened, ready_for_review, edited]
+    types: [opened, synchronize, reopened, ready_for_review]
   merge_group:
     types: [checks_requested]
   workflow_dispatch:
@@ -18,9 +18,13 @@ concurrency:
   cancel-in-progress: true
 jobs:
   windows:
-    name: Windows validation
+    name: Windows validation (${{ matrix.suite }})
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [core, orders, multi-service, enforcement, onboarding, earlier-sdk]
     runs-on: windows-2025
-    timeout-minutes: 50
+    timeout-minutes: 30
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: '1'
       DOTNET_GENERATE_ASPNET_CERTIFICATE: 'false'
@@ -29,6 +33,13 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
+      - name: Disable real-time scanning on the ephemeral runner
+        run: |
+          try {
+            Set-MpPreference -DisableRealtimeMonitoring $true -ErrorAction Stop
+            Write-Host 'Real-time scanning disabled for this job.'
+          }
+          catch { Write-Warning "Real-time scanning remains enabled: $_" }
       - name: Record validation identity
         env:
           PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
@@ -41,6 +52,7 @@ jobs:
             commit = $env:GITHUB_SHA
             prHead = $env:PR_HEAD_SHA
             prBase = $env:PR_BASE_SHA
+            suite = '${{ matrix.suite }}'
             run = $env:GITHUB_RUN_ID
             attempt = $env:GITHUB_RUN_ATTEMPT
           }
@@ -60,21 +72,28 @@ jobs:
           dotnet restore tests/Tada.Core.Tests/Tada.Core.Tests.csproj --locked-mode
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
           dotnet restore src/Tada.Cli/Tada.Cli.csproj --locked-mode
-      - name: Build and run focused/replay tests
+      # Every suite builds the test project because it also builds the native fixtures
+      # that the end-to-end controls use.
+      - name: Build core, CLI and native fixtures
+        run: dotnet build tests/Tada.Core.Tests/Tada.Core.Tests.csproj --no-restore --disable-build-servers -c Release
+      - name: Run focused/replay tests
+        if: matrix.suite == 'core'
         run: |
-          dotnet build tests/Tada.Core.Tests/Tada.Core.Tests.csproj --no-restore --disable-build-servers -c Release
-          if ($LASTEXITCODE) { exit $LASTEXITCODE }
           dotnet tests/Tada.Core.Tests/bin/Release/net10.0/Tada.Core.Tests.dll --progress off --no-ansi | Tee-Object .artifacts/core-tests.log
           exit $LASTEXITCODE
       - name: Pack the tool
         run: dotnet pack src/Tada.Cli/Tada.Cli.csproj --no-restore --disable-build-servers -o .artifacts/packages
       - name: Orders end-to-end and negative controls
+        if: matrix.suite == 'orders'
         run: pwsh -File scripts/Test-OrdersWorkflow.ps1
       - name: Multi-level and multi-service installed-package controls
+        if: matrix.suite == 'multi-service'
         run: pwsh -File scripts/Test-MultiServiceWorkflow.ps1
       - name: Enforcement lifecycle controls
+        if: matrix.suite == 'enforcement'
         run: pwsh -File scripts/Test-EnforcementWorkflow.ps1
       - name: Package the TADA plugin and check project setup
+        if: matrix.suite == 'core'
         run: |
           [xml]$properties = Get-Content Directory.Build.props -Raw
           $version = [string]$properties.Project.PropertyGroup.Version
@@ -83,10 +102,13 @@ jobs:
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
           pwsh -File scripts/Test-TadaPlugin.ps1 -PluginRoot $plugin.pluginRoot -SdkVersion 10.0.103
       - name: Installed-package onboarding and second API
+        if: matrix.suite == 'onboarding'
         run: pwsh -File scripts/Test-Onboarding.ps1
       - name: Installed-package workflow with an existing earlier SDK policy
+        if: matrix.suite == 'earlier-sdk'
         run: pwsh -File scripts/Test-Onboarding.ps1 -SdkVersion 10.0.103
       - name: Observed task-only tool environment identity
+        if: matrix.suite == 'onboarding'
         run: |
           $file = Get-ChildItem .artifacts/onboarding -Filter validation.json -Recurse -File | Sort-Object LastWriteTime -Descending | Select-Object -First 1
           $report = Get-Content -LiteralPath $file.FullName -Raw | ConvertFrom-Json
@@ -94,6 +116,7 @@ jobs:
           $record = Get-Content -LiteralPath (Join-Path $report.workspace ".tada/runs/$reference/run.json") -Raw | ConvertFrom-Json
           pwsh -File scripts/Test-TaskEnvironment.ps1 -Workspace $report.workspace -Baseline $record.baseline -ReferenceRun $reference
       - name: Prepare and install the download bundle
+        if: matrix.suite == 'core'
         run: |
           [xml]$properties = Get-Content Directory.Build.props -Raw
           $version = [string]$properties.Project.PropertyGroup.Version
@@ -103,7 +126,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: windows-validation-${{ github.sha }}
+          name: windows-validation-${{ matrix.suite }}-${{ github.sha }}
           if-no-files-found: error
           include-hidden-files: true
           retention-days: 14

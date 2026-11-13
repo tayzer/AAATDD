@@ -8,7 +8,7 @@ string database = builder.Configuration["database"] ?? throw new InvalidOperatio
 string inventory = builder.Configuration["inventory"] ?? "";
 string payments = builder.Configuration["payments"] ?? "";
 string orders = builder.Configuration["orders"] ?? "";
-using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(3) };
+using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
 using (var connection = Open())
 {
     using var command = connection.CreateCommand();

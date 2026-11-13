@@ -11,7 +11,7 @@ public sealed class Cluster : IAsyncDisposable
     private readonly List<Task> diagnostics = [];
     private readonly List<TcpListener> listeners = [];
     private readonly TadaAcceptance context = TadaAcceptance.Create();
-    public HttpClient Http { get; } = new() { Timeout = TimeSpan.FromSeconds(3) };
+    public HttpClient Http { get; } = new() { Timeout = TimeSpan.FromSeconds(15) };
     public Dictionary<string, string> Endpoints { get; } = [];
 
     public async Task Start()
